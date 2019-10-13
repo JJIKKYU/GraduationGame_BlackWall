@@ -1,0 +1,16 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{F82C94F9-41E7-D5BB-F884-B1950E848EFA}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "BlackWall",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	]
+}
