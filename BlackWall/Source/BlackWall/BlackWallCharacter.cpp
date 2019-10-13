@@ -20,9 +20,12 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bShiftDown(false), bLMBDown(false)
 
 	// Movement and Status
-	, MovementStatus(EMovementStatus::EMS_Normal)
+	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true)
 	, mRunningSpeed(850.f)
-	, bCanDash(true), bDashStop(0.15f), DashDistance(6000.f), DashCollDown(1.f)
+	, bCanDash(true), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
+
+	// HP & MP
+	, mMaxHealth(100.f), mHealth(85.f), mMaxMP(100.f), mMP(50.f)
 	
 {
 	// Set size for collision capsule
@@ -53,8 +56,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 void ABlackWallCharacter::Tick(float DeltaTime)
 {
-	
-
+	UE_LOG(LogTemp, Warning, TEXT("%d"), bIsCharacterForward);
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -121,26 +123,20 @@ void ABlackWallCharacter::Dash()
 	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
 	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
 
-	// This location must have animation and utility montage.
 	setMovementStatus(EMovementStatus::EMS_Dash);
 	Animation->Montage_Play(UtilityMontage, 1.0f);
 	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
-
-	UE_LOG(LogTemp, Log, TEXT("Dash()"));
-
+	UseMp(mDashUsingMP);
+	
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
-	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * DashDistance,true, true);
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance,true, true);
 	bCanDash = false;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
-	
-	
 }
 
 void ABlackWallCharacter::ShiftDown()
 {
-	UE_LOG(LogTemp, Log, TEXT("ShiftDown()"));
-
 	bShiftDown = true;
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
 	Dash();
@@ -148,19 +144,15 @@ void ABlackWallCharacter::ShiftDown()
 
 void ABlackWallCharacter::StopDashing()
 {
-	UE_LOG(LogTemp, Log, TEXT("stopDashing()"));
-
 //	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, DashCollDown, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, mDashCollDown, false);
 	setMovementStatus(EMovementStatus::EMS_Normal);
 	
 }
 
 void ABlackWallCharacter::ResetDash()
 {
-	UE_LOG(LogTemp, Log, TEXT("ResetDash()"));
-
 	bCanDash = true;
 }
 
@@ -182,6 +174,10 @@ void ABlackWallCharacter::MoveForward(float Value)
 
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
+
+		// set Character direction
+		if (Value <= 0) bIsCharacterForward = false;
+		else bIsCharacterForward = true;
 	}
 }
 

@@ -48,10 +48,29 @@ public:
 	*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enums")
 	EMovementStatus MovementStatus;
+
 	// Set Movement Status adn running speed
 	void setMovementStatus(EMovementStatus status);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float mRunningSpeed;
+
+
+protected: // Player Stats
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mMaxHealth;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mMaxMP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mMP;
+
+	FORCEINLINE void UseMp(float mp) { mMP - mp; }
 
 
 protected: // Player Input Interface
@@ -65,6 +84,8 @@ protected: // Player Input Interface
 	FORCEINLINE void LMBDown() { bLMBDown = true; }
 	FORCEINLINE void LMBUp() { bLMBDown = false; }
 
+///////////////////
+
 	/**
 	* Dash
 	* Left Shift Button Up and Down
@@ -72,29 +93,44 @@ protected: // Player Input Interface
 	*/
 	bool bShiftDown;
 	void ShiftDown();
+	
 	FORCEINLINE void ShiftUp() { bShiftDown = false; }
+	
 	void Dash();
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Utils")
 	class UAnimMontage* UtilityMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float DashDistance;
+	float mDashDistance;
+	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float DashCollDown;
+	float mDashCollDown;
+	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float bDashStop;
+
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float mDashUsingMP;
+	
 	UPROPERTY()
 	bool bCanDash;
+	
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
+	
 	UFUNCTION(BlueprintCallable)
 	void StopDashing();
+	
 	UFUNCTION()
 	void ResetDash();
+
+///////////////////
 
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
+	bool bIsCharacterForward;
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
