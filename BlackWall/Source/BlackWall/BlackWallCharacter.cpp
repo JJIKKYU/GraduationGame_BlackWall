@@ -8,16 +8,21 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+//////////////////////////////////////////////////////////////////////////
 #include "Animation/AnimInstance.h" // UAnimInstance
+#include "Runtime/Engine/Public/TimerManager.h" // set timers
 
 //////////////////////////////////////////////////////////////////////////
 // ABlackWallCharacter
 
 ABlackWallCharacter::ABlackWallCharacter()
 	: BaseTurnRate(90.f), BaseLookUpRate(90.f)
-	, bShiftDown(false), bLMBDown(false), bDashing(false)
+	, bShiftDown(false), bLMBDown(false)
+
+	// Movement and Status
 	, MovementStatus(EMovementStatus::EMS_Normal)
-	, mDashSpeed(1200.f), mRunningSpeed(850.f)
+	, mRunningSpeed(850.f)
+	, bCanDash(true), bDashStop(0.15f), DashDistance(6000.f), DashCollDown(1.f)
 	
 {
 	// Set size for collision capsule
@@ -44,23 +49,19 @@ ABlackWallCharacter::ABlackWallCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+}
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+void ABlackWallCharacter::Tick(float DeltaTime)
+{
+	
+
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
 {
 	MovementStatus = status;
-	if (MovementStatus == EMovementStatus::EMS_Dash)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = mDashSpeed;
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
-	}
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -114,36 +115,55 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 void ABlackWallCharacter::Dash()
 {
 	// If the character is alive and moving
-	if (MovementStatus == EMovementStatus::EMS_Dead ||
-		MovementStatus != EMovementStatus::EMS_Moving) return;
+	if (!bCanDash ||
+		MovementStatus != EMovementStatus::EMS_Moving ||
+		MovementStatus == EMovementStatus::EMS_Dead) return;
 	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
 	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
 
 	// This location must have animation and utility montage.
 	setMovementStatus(EMovementStatus::EMS_Dash);
-	bDashing = true;
 	Animation->Montage_Play(UtilityMontage, 1.0f);
 	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
-	
-	
+
 	UE_LOG(LogTemp, Log, TEXT("Dash()"));
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * DashDistance,true, true);
+	bCanDash = false;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
+	
+	
 }
 
 void ABlackWallCharacter::ShiftDown()
 {
 	UE_LOG(LogTemp, Log, TEXT("ShiftDown()"));
+
 	bShiftDown = true;
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
 	Dash();
 }
 
-// Dash Ability End
-void ABlackWallCharacter::DashEnd()
+void ABlackWallCharacter::StopDashing()
 {
-	bDashing = false;
-	if (bShiftDown) Dash();
-	UE_LOG(LogTemp, Log, TEXT("DashEnd()"));
+	UE_LOG(LogTemp, Log, TEXT("stopDashing()"));
+
+//	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, DashCollDown, false);
+	setMovementStatus(EMovementStatus::EMS_Normal);
+	
 }
+
+void ABlackWallCharacter::ResetDash()
+{
+	UE_LOG(LogTemp, Log, TEXT("ResetDash()"));
+
+	bCanDash = true;
+}
+
 
 void ABlackWallCharacter::MoveForward(float Value)
 {
@@ -159,6 +179,9 @@ void ABlackWallCharacter::MoveForward(float Value)
 
 		// set Movement Status
 		setMovementStatus(EMovementStatus::EMS_Moving);
+
+		// set runningSpeed
+		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
 	}
 }
 
@@ -177,5 +200,8 @@ void ABlackWallCharacter::MoveRight(float Value)
 
 		// set Movement Status
 		setMovementStatus(EMovementStatus::EMS_Moving);
+
+		// set runningSpeed
+		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
 	}
 }

@@ -30,6 +30,9 @@ class ABlackWallCharacter : public ACharacter
 public:
 	ABlackWallCharacter();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -48,9 +51,8 @@ public:
 	// Set Movement Status adn running speed
 	void setMovementStatus(EMovementStatus status);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
-	float mDashSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float mRunningSpeed;
+
 
 protected: // Player Input Interface
 
@@ -69,14 +71,26 @@ protected: // Player Input Interface
 	* Xbox Game Pad A Button
 	*/
 	bool bShiftDown;
-	bool bDashing;
 	void ShiftDown();
 	FORCEINLINE void ShiftUp() { bShiftDown = false; }
 	void Dash();
-	UFUNCTION(BlueprintCallable)
-	void DashEnd();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Utils")
 	class UAnimMontage* UtilityMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float DashDistance;
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float DashCollDown;
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float bDashStop;
+	UPROPERTY()
+	bool bCanDash;
+	UPROPERTY()
+	FTimerHandle UnusedHandle;
+	UFUNCTION(BlueprintCallable)
+	void StopDashing();
+	UFUNCTION()
+	void ResetDash();
 
 
 	/** Called for forwards/backward input */
