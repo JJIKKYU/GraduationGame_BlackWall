@@ -11,6 +11,8 @@
 //////////////////////////////////////////////////////////////////////////
 #include "Animation/AnimInstance.h" // UAnimInstance
 #include "Runtime/Engine/Public/TimerManager.h" // set timers
+#include "Kismet/KismetSystemLibrary.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // ABlackWallCharacter
@@ -25,7 +27,11 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bCanDash(true), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
 
 	// HP & MP
-	, mMaxHealth(100.f), mHealth(85.f), mMaxMP(100.f), mMP(50.f)
+	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
+	, mMaxMP(100.f), mMP(50.f), mMPrecoveryRate(.5f)
+
+	// temporary var
+	, bWeaponEquipped(false)
 	
 {
 	// Set size for collision capsule
@@ -56,7 +62,13 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 void ABlackWallCharacter::Tick(float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%d"), bIsCharacterForward);
+	Super::Tick(DeltaTime);
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	float DeltaMP = mMPrecoveryRate * DeltaTime;
+	float DeltaHP = mHPrecoveryRate * DeltaTime;
+	mMP += DeltaMP;
+	mHP += DeltaHP;
+	
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -116,6 +128,7 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 // Dash Ability
 void ABlackWallCharacter::Dash()
 {
+	if (mMP < mDashUsingMP) return;
 	// If the character is alive and moving
 	if (!bCanDash ||
 		MovementStatus != EMovementStatus::EMS_Moving ||
@@ -200,4 +213,14 @@ void ABlackWallCharacter::MoveRight(float Value)
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Pickup Item
+
+// Debuging 
+void ABlackWallCharacter::ShowPickupLocations()
+{
+	for (auto Location : PickupLocations)
+		UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Green, 10.f, 0.5f);
 }

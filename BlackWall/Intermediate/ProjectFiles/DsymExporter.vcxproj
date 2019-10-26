@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{961B1DC4-C5F1-4364-A7F4-D8D5D53BD843}</ProjectGuid>
+    <ProjectGuid>{E7E1C921-2BDC-44CC-8B1C-BA11D5BA7D46}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>DsymExporter</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
@@ -159,11 +159,11 @@
     <NMakeOutput>C:\Users\JJiKKYU\Desktop\UE\Engine\Binaries\Mac\DsymExporter-Mac-Test</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\DsymExporter.Target.cs"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\DsymExporter.Build.cs"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Private\DsymExporterApp.cpp"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Private\Mac\DsymExporterMainMac.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Public\DsymExporterApp.h"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\DsymExporter.Target.cs"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\DsymExporter.Build.cs"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Private\DsymExporterApp.cpp"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Private\Mac\DsymExporterMainMac.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\Mac\DsymExporter\Public\DsymExporterApp.h"/>
   </ItemGroup>
   <PropertyGroup>
     <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions);IS_PROGRAM=1;ENABLE_PGO_PROFILE=0;USE_VORBIS_FOR_STREAMING=1;USE_XMA2_FOR_STREAMING=1;WITH_DEV_AUTOMATION_TESTS=1;WITH_PERF_AUTOMATION_TESTS=1;UNICODE;_UNICODE;__UNREAL__;IS_MONOLITHIC=1;WITH_ENGINE=0;WITH_UNREAL_DEVELOPER_TOOLS=0;WITH_APPLICATION_CORE=1;WITH_COREUOBJECT=0;USE_STATS_WITHOUT_ENGINE=0;WITH_PLUGIN_SUPPORT=0;WITH_ACCESSIBILITY=0;WITH_PERFCOUNTERS=0;USE_LOGGING_IN_SHIPPING=0;WITH_LOGGING_TO_MEMORY=0;USE_CACHE_FREED_OS_ALLOCS=1;USE_CHECKS_IN_SHIPPING=0;WITH_EDITOR=0;WITH_SERVER_CODE=1;WITH_CEF3=1;WITH_LIVE_CODING=0;WITH_XGE_CONTROLLER=0;UBT_MODULE_MANIFEST="DsymExporter.modules";UBT_MODULE_MANIFEST_DEBUGGAME="DsymExporter-Win64-DebugGame.modules";UBT_COMPILED_PLATFORM=Win64;UBT_COMPILED_TARGET=Program;UE_APP_NAME="DsymExporter";NDIS_MINIPORT_MAJOR_VERSION=0;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;OVERRIDE_PLATFORM_HEADER_NAME=Windows;NDEBUG=1;UE_BUILD_DEVELOPMENT=1;UE_IS_ENGINE_MODULE=0;WIN10_SDK_VERSION=18362;IMPLEMENT_ENCRYPTION_KEY_REGISTRATION()=;IMPLEMENT_SIGNING_KEY_REGISTRATION()=;DEPRECATED_FORGAME=DEPRECATED;UE_DEPRECATED_FORGAME=UE_DEPRECATED;UE_ENABLE_ICU=1;WITH_VS_PERF_PROFILER=0;WITH_DIRECTXMATH=0;WITH_MALLOC_STOMP=1;CORE_VTABLE=;CORE_API=;TRACELOG_VTABLE=;TRACELOG_API=;APPLICATIONCORE_VTABLE=;APPLICATIONCORE_API=;RHI_VTABLE=;RHI_API=;LOAD_PLUGINS_FOR_TARGET_PLATFORMS=0;PROJECTS_VTABLE=;PROJECTS_API=;JSON_VTABLE=;JSON_API=;WITH_LAUNCHERCHECK=0;LAUNCH_VTABLE=;LAUNCH_API=;PROFILERSERVICE_VTABLE=;PROFILERSERVICE_API=;DSYMEXPORTER_VTABLE=;DSYMEXPORTER_API=</NMakePreprocessorDefinitions>

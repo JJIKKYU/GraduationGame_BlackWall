@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2E4C467A-6EFF-427D-8D8D-DCF7FB37B65A}</ProjectGuid>
+    <ProjectGuid>{C8758120-FEA4-4E87-AD8C-9160DC8643ED}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>WebRTCProxy</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
@@ -159,57 +159,57 @@
     <NMakeOutput>C:\Users\JJiKKYU\Desktop\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\WebRTCProxy-Win64-Test.exe</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\WebRTCProxy.Target.cs"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\README.md"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\WebRTCProxy.Build.cs"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\_clang-format"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_AWS_WebRTCProxy.bat"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_AWS_WebRTCProxy.ps1"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_WebRTCProxy.bat"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\WebRTCProxy.exe"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\AsyncConnection.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\AsyncConnection.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CirrusConnection.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CirrusConnection.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ClientSession.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ClientSession.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CmdLine.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CmdLine.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Conductor.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Conductor.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Console.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Console.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CrashDetection.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CrashDetection.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\FileLogOutput.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\FileLogOutput.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\H264FrameBuffer.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Logging.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Logging.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkAudioCapturer.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkAudioCapturer.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkVideoCapturer.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkVideoCapturer.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ScopeGuard.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Semaphore.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\SetSessionDescriptionObserver.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\SharedQueue.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\StringUtils.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\StringUtils.h"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\targetver.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\TimeUtils.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\TimeUtils.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\UE4Connection.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\UE4Connection.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\VideoEncoder.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\VideoEncoder.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCLogging.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCLogging.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxy.cpp"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyCommon.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyCommon.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyPCH.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyPCH.h"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\WebRTCProxy.Target.cs"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\README.md"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\WebRTCProxy.Build.cs"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\_clang-format"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_AWS_WebRTCProxy.bat"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_AWS_WebRTCProxy.ps1"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\Start_WebRTCProxy.bat"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\bin\WebRTCProxy.exe"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\AsyncConnection.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\AsyncConnection.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CirrusConnection.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CirrusConnection.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ClientSession.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ClientSession.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CmdLine.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CmdLine.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Conductor.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Conductor.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Console.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Console.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CrashDetection.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\CrashDetection.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\FileLogOutput.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\FileLogOutput.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\H264FrameBuffer.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Logging.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Logging.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkAudioCapturer.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkAudioCapturer.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkVideoCapturer.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\NetworkVideoCapturer.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\ScopeGuard.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\Semaphore.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\SetSessionDescriptionObserver.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\SharedQueue.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\StringUtils.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\StringUtils.h"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\targetver.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\TimeUtils.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\TimeUtils.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\UE4Connection.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\UE4Connection.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\VideoEncoder.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\VideoEncoder.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCLogging.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCLogging.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxy.cpp"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyCommon.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyCommon.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyPCH.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\PixelStreaming\WebRTCProxy\src\WebRTCProxyPCH.h"/>
   </ItemGroup>
   <PropertyGroup>
     <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions);IS_PROGRAM=1;WEBRTC_WIN;INCL_EXTRA_HTON_FUNCTIONS;ENABLE_PGO_PROFILE=0;USE_VORBIS_FOR_STREAMING=1;USE_XMA2_FOR_STREAMING=1;ENGINE_BASE_DIR_ADJUST=7;WITH_DEV_AUTOMATION_TESTS=1;WITH_PERF_AUTOMATION_TESTS=1;UNICODE;_UNICODE;__UNREAL__;IS_MONOLITHIC=1;WITH_ENGINE=0;WITH_UNREAL_DEVELOPER_TOOLS=0;WITH_APPLICATION_CORE=1;WITH_COREUOBJECT=0;USE_STATS_WITHOUT_ENGINE=0;WITH_PLUGIN_SUPPORT=0;WITH_ACCESSIBILITY=0;WITH_PERFCOUNTERS=0;USE_LOGGING_IN_SHIPPING=0;WITH_LOGGING_TO_MEMORY=0;USE_CACHE_FREED_OS_ALLOCS=1;USE_CHECKS_IN_SHIPPING=0;WITH_EDITOR=0;WITH_EDITORONLY_DATA=0;WITH_SERVER_CODE=1;WITH_CEF3=1;WITH_LIVE_CODING=0;WITH_XGE_CONTROLLER=0;UBT_MODULE_MANIFEST="WebRTCProxy.modules";UBT_MODULE_MANIFEST_DEBUGGAME="WebRTCProxy-Win64-DebugGame.modules";UBT_COMPILED_PLATFORM=Win64;UBT_COMPILED_TARGET=Program;UE_APP_NAME="WebRTCProxy";NDIS_MINIPORT_MAJOR_VERSION=0;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;OVERRIDE_PLATFORM_HEADER_NAME=Windows;NDEBUG=1;UE_BUILD_DEVELOPMENT=1;UE_IS_ENGINE_MODULE=0;WIN10_SDK_VERSION=18362;IMPLEMENT_ENCRYPTION_KEY_REGISTRATION()=;IMPLEMENT_SIGNING_KEY_REGISTRATION()=;DEPRECATED_FORGAME=DEPRECATED;UE_DEPRECATED_FORGAME=UE_DEPRECATED;UE_ENABLE_ICU=1;WITH_VS_PERF_PROFILER=0;WITH_DIRECTXMATH=0;WITH_MALLOC_STOMP=1;CORE_VTABLE=;CORE_API=;TRACELOG_VTABLE=;TRACELOG_API=;WEBRTCPROXY_VTABLE=;WEBRTCPROXY_API=</NMakePreprocessorDefinitions>

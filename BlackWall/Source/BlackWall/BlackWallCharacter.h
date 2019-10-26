@@ -59,10 +59,13 @@ public:
 protected: // Player Stats
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mMaxHealth;
+	float mMaxHP;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mHealth;
+	float mHP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mHPrecoveryRate;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mMaxMP;
@@ -70,7 +73,11 @@ protected: // Player Stats
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mMP;
 
-	FORCEINLINE void UseMp(float mp) { mMP - mp; }
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mMPrecoveryRate;
+
+	FORCEINLINE void UseMp(float mp) { mMP -= mp; }
+
 
 
 protected: // Player Input Interface
@@ -81,6 +88,10 @@ protected: // Player Input Interface
 	* Xbox Game Pad Y button
 	*/
 	bool bLMBDown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
+	bool bWeaponEquipped;
+
 	FORCEINLINE void LMBDown() { bLMBDown = true; }
 	FORCEINLINE void LMBUp() { bLMBDown = false; }
 
@@ -146,6 +157,14 @@ protected: // Player Input Interface
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+public: // Pickup Item
+
+	TArray<FVector> PickupLocations;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowPickupLocations();
+
 
 protected:
 	// APawn interface

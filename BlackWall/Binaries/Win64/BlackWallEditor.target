@@ -10,13 +10,13 @@
 	{
 		"MajorVersion": 4,
 		"MinorVersion": 23,
-		"PatchVersion": 0,
+		"PatchVersion": 1,
 		"Changelist": 0,
-		"CompatibleChangelist": 0,
+		"CompatibleChangelist": 8386587,
 		"IsLicenseeVersion": 0,
 		"IsPromotedBuild": 0,
 		"BranchName": "++UE4+Release-4.23",
-		"BuildId": "5cec4a1e-eee3-4eee-b992-857bc8b34961",
+		"BuildId": "78182835-8d39-4aac-81b5-656d9a05de17",
 		"BuildVersion": ""
 	},
 	"BuildProducts": [

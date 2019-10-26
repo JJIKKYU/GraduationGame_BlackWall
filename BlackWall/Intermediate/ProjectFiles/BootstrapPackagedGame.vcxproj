@@ -59,7 +59,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1EE86885-3C04-4B0B-9B0B-B479F0BF6A8E}</ProjectGuid>
+    <ProjectGuid>{B578B41D-DB9B-4098-AB2A-4C07831A23F6}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>BootstrapPackagedGame</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
@@ -298,10 +298,10 @@
     <NMakeOutput>C:\Users\JJiKKYU\Desktop\UE\Engine\Binaries\Mac\BootstrapPackagedGame-Mac-Shipping</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\BootstrapPackagedGame.Target.cs"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\BootstrapPackagedGame.Build.cs"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\Private\BootstrapPackagedGame.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\Private\BootstrapPackagedGame.h"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\BootstrapPackagedGame.Target.cs"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\BootstrapPackagedGame.Build.cs"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\Private\BootstrapPackagedGame.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\Windows\BootstrapPackagedGame\Private\BootstrapPackagedGame.h"/>
   </ItemGroup>
   <PropertyGroup>
     <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions);IS_PROGRAM=1;ENABLE_PGO_PROFILE=0;USE_VORBIS_FOR_STREAMING=1;USE_XMA2_FOR_STREAMING=1;WITH_DEV_AUTOMATION_TESTS=1;WITH_PERF_AUTOMATION_TESTS=1;UNICODE;_UNICODE;__UNREAL__;IS_MONOLITHIC=1;WITH_ENGINE=0;WITH_UNREAL_DEVELOPER_TOOLS=0;WITH_APPLICATION_CORE=1;WITH_COREUOBJECT=0;USE_STATS_WITHOUT_ENGINE=0;WITH_PLUGIN_SUPPORT=0;WITH_ACCESSIBILITY=1;WITH_PERFCOUNTERS=0;USE_LOGGING_IN_SHIPPING=0;WITH_LOGGING_TO_MEMORY=0;USE_CACHE_FREED_OS_ALLOCS=1;USE_CHECKS_IN_SHIPPING=0;WITH_EDITOR=0;WITH_EDITORONLY_DATA=0;WITH_SERVER_CODE=1;WITH_CEF3=1;WITH_LIVE_CODING=0;WITH_XGE_CONTROLLER=0;UBT_MODULE_MANIFEST="BootstrapPackagedGame.modules";UBT_MODULE_MANIFEST_DEBUGGAME="BootstrapPackagedGame-Win64-DebugGame.modules";UBT_COMPILED_PLATFORM=Win64;UBT_COMPILED_TARGET=Program;UE_APP_NAME="BootstrapPackagedGame";NDIS_MINIPORT_MAJOR_VERSION=0;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;OVERRIDE_PLATFORM_HEADER_NAME=Windows;NDEBUG=1;UE_BUILD_DEVELOPMENT=1;UE_IS_ENGINE_MODULE=0;WIN10_SDK_VERSION=18362;IMPLEMENT_ENCRYPTION_KEY_REGISTRATION()=;IMPLEMENT_SIGNING_KEY_REGISTRATION()=;DEPRECATED_FORGAME=DEPRECATED;UE_DEPRECATED_FORGAME=UE_DEPRECATED;BOOTSTRAPPACKAGEDGAME_VTABLE=;BOOTSTRAPPACKAGEDGAME_API=</NMakePreprocessorDefinitions>

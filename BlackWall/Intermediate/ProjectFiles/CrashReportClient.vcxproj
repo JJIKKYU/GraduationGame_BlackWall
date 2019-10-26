@@ -59,7 +59,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A15BEFD2-D26C-48E2-A2F0-BC2019C9278E}</ProjectGuid>
+    <ProjectGuid>{FC7A6EAA-54DE-403B-B253-EB2C1A7744BE}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>CrashReportClient</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
@@ -298,23 +298,23 @@
     <NMakeOutput>C:\Users\JJiKKYU\Desktop\UE\Engine\Binaries\Mac\CrashReportClient</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\CrashReportClient.Target.cs"/>
-    <None Include="..\..\..\..\UE\Engine\Programs\CrashReportClient\Config\DefaultEngine.ini"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\CrashReportClient.Build.cs"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClient.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClient.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientApp.cpp"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientStyle.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientStyle.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\MainLoopTiming.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\MainLoopTiming.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\SCrashReportClient.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\SCrashReportClient.h"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Linux\CrashReportClientMainLinux.cpp"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Mac\CrashReportClientMainMac.cpp"/>
-    <ClCompile Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Windows\CrashReportClientMainWindows.cpp"/>
-    <ClInclude Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Public\CrashReportClientApp.h"/>
-    <None Include="..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Resources\Mac\Info.plist"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\CrashReportClient.Target.cs"/>
+    <None Include="..\..\..\..\..\UE\Engine\Programs\CrashReportClient\Config\DefaultEngine.ini"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\CrashReportClient.Build.cs"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClient.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClient.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientApp.cpp"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientStyle.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\CrashReportClientStyle.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\MainLoopTiming.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\MainLoopTiming.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\SCrashReportClient.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\SCrashReportClient.h"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Linux\CrashReportClientMainLinux.cpp"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Mac\CrashReportClientMainMac.cpp"/>
+    <ClCompile Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Private\Windows\CrashReportClientMainWindows.cpp"/>
+    <ClInclude Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Public\CrashReportClientApp.h"/>
+    <None Include="..\..\..\..\..\UE\Engine\Source\Programs\CrashReportClient\Resources\Mac\Info.plist"/>
   </ItemGroup>
   <PropertyGroup>
     <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions);IS_PROGRAM=1;NOINITCRASHREPORTER=1;ENABLE_PGO_PROFILE=0;USE_VORBIS_FOR_STREAMING=1;USE_XMA2_FOR_STREAMING=1;WITH_DEV_AUTOMATION_TESTS=1;WITH_PERF_AUTOMATION_TESTS=1;UNICODE;_UNICODE;__UNREAL__;IS_MONOLITHIC=1;WITH_ENGINE=0;WITH_UNREAL_DEVELOPER_TOOLS=0;WITH_APPLICATION_CORE=1;WITH_COREUOBJECT=1;USE_STATS_WITHOUT_ENGINE=0;WITH_PLUGIN_SUPPORT=0;WITH_ACCESSIBILITY=1;WITH_PERFCOUNTERS=0;USE_LOGGING_IN_SHIPPING=1;WITH_LOGGING_TO_MEMORY=0;USE_CACHE_FREED_OS_ALLOCS=1;USE_CHECKS_IN_SHIPPING=1;WITH_EDITOR=0;WITH_SERVER_CODE=1;WITH_CEF3=1;WITH_LIVE_CODING=0;WITH_XGE_CONTROLLER=0;UBT_MODULE_MANIFEST="CrashReportClient.modules";UBT_MODULE_MANIFEST_DEBUGGAME="CrashReportClient-Win64-DebugGame.modules";UBT_COMPILED_PLATFORM=Win64;UBT_COMPILED_TARGET=Program;UE_APP_NAME="CrashReportClient";NDIS_MINIPORT_MAJOR_VERSION=0;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;OVERRIDE_PLATFORM_HEADER_NAME=Windows;NDEBUG=1;UE_BUILD_DEVELOPMENT=1;UE_IS_ENGINE_MODULE=0;WIN10_SDK_VERSION=18362;IMPLEMENT_ENCRYPTION_KEY_REGISTRATION()=;IMPLEMENT_SIGNING_KEY_REGISTRATION()=;DEPRECATED_FORGAME=DEPRECATED;UE_DEPRECATED_FORGAME=UE_DEPRECATED;UE_ENABLE_ICU=1;WITH_VS_PERF_PROFILER=0;WITH_DIRECTXMATH=0;WITH_MALLOC_STOMP=1;CORE_VTABLE=;CORE_API=;TRACELOG_VTABLE=;TRACELOG_API=;COREUOBJECT_VTABLE=;COREUOBJECT_API=;APPLICATIONCORE_VTABLE=;APPLICATIONCORE_API=;RHI_VTABLE=;RHI_API=;CRASHDEBUGHELPER_VTABLE=;CRASHDEBUGHELPER_API=;SOURCE_CONTROL_WITH_SLATE=1;SOURCECONTROL_VTABLE=;SOURCECONTROL_API=;INPUTCORE_VTABLE=;INPUTCORE_API=;WITH_CRASHREPORTER=1;CRASHREPORTCORE_VTABLE=;CRASHREPORTCORE_API=;XMLPARSER_VTABLE=;XMLPARSER_API=;ANALYTICS_VTABLE=;ANALYTICS_API=;ANALYTICSET_VTABLE=;ANALYTICSET_API=;HTTP_PACKAGE=1;CURL_ENABLE_DEBUG_CALLBACK=1;CURL_ENABLE_NO_TIMEOUTS_OPTION=1;HTTP_VTABLE=;HTTP_API=;JSON_VTABLE=;JSON_API=;LOAD_PLUGINS_FOR_TARGET_PLATFORMS=0;PROJECTS_VTABLE=;PROJECTS_API=;PAKFILE_VTABLE=;PAKFILE_API=;RSA_VTABLE=;RSA_API=;DESKTOPPLATFORM_VTABLE=;DESKTOPPLATFORM_API=;LAUNCHERPLATFORM_VTABLE=;LAUNCHERPLATFORM_API=;SLATE_VTABLE=;SLATE_API=;WITH_FREETYPE=1;SLATECORE_VTABLE=;SLATECORE_API=;WITH_UNREALPNG=1;WITH_UNREALJPEG=1;WITH_UNREALEXR=1;IMAGEWRAPPER_VTABLE=;IMAGEWRAPPER_API=;STANDALONERENDERER_VTABLE=;STANDALONERENDERER_API=;MESSAGELOG_VTABLE=;MESSAGELOG_API=;SLATE_REFLECTOR_HAS_SESSION_SERVICES=0;SLATE_REFLECTOR_HAS_DESKTOP_PLATFORM=1;SLATEREFLECTOR_VTABLE=;SLATEREFLECTOR_API=;CRASHREPORTCLIENT_VTABLE=;CRASHREPORTCLIENT_API=</NMakePreprocessorDefinitions>
