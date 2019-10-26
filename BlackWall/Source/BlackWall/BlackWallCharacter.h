@@ -12,6 +12,7 @@ enum class EMovementStatus : uint8
 	EMS_Normal UMETA(DisplayName = "Normal"),
 	EMS_Moving UMETA(DisplayName = "Moving"),
 	EMS_Dash UMETA(DisplayName = "Dash"),
+	EMS_Attack UMETA(DisplayName = "Attack"),
 	EMS_Dead UMETA(DisplayName = "Dead")
 };
 
@@ -82,19 +83,6 @@ protected: // Player Stats
 
 protected: // Player Input Interface
 
-	/**
-	* Attack
-	* Left Mouse Button(LMB) Up and Down
-	* Xbox Game Pad Y button
-	*/
-	bool bLMBDown;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
-	bool bWeaponEquipped;
-
-	FORCEINLINE void LMBDown() { bLMBDown = true; }
-	FORCEINLINE void LMBUp() { bLMBDown = false; }
-
 ///////////////////
 
 	/**
@@ -126,6 +114,8 @@ protected: // Player Input Interface
 	
 	UPROPERTY()
 	bool bCanDash;
+
+	bool bDashing;
 	
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
@@ -137,6 +127,34 @@ protected: // Player Input Interface
 	void ResetDash();
 
 ///////////////////
+	
+	/**
+	* Attack
+	* Left Mouse Button Up and Down
+	* Xbox Game Pad Y Button
+	*/
+
+	bool bLMBDown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
+	bool bWeaponEquipped;
+
+	void LMBDown();
+	void LMBUp();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims | Attack")
+	bool bAttacking;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attacak")
+	class UAnimMontage* AttackMontage;
+
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
+
+///////////////////
 
 
 	/** Called for forwards/backward input */
@@ -145,6 +163,7 @@ protected: // Player Input Interface
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+	bool bIsCharacterRight;
 
 	/** 
 	 * Called via input to turn at a given rate. 

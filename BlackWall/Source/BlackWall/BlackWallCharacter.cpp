@@ -22,9 +22,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bShiftDown(false), bLMBDown(false)
 
 	// Movement and Status
-	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true)
+	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true), bIsCharacterRight(false)
 	, mRunningSpeed(850.f)
-	, bCanDash(true), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
+	, bCanDash(true), bDashing(false), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
 
 	// HP & MP
 	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
@@ -32,6 +32,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 	// temporary var
 	, bWeaponEquipped(false)
+
+	// Attack
+	, bAttacking(false)
 	
 {
 	// Set size for collision capsule
@@ -64,11 +67,12 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+
+	// Auto Recovery HP, MP
 	float DeltaMP = mMPrecoveryRate * DeltaTime;
 	float DeltaHP = mHPrecoveryRate * DeltaTime;
 	mMP += DeltaMP;
 	mHP += DeltaHP;
-	
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -124,53 +128,6 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-
-
-// Dash Ability
-void ABlackWallCharacter::Dash()
-{
-	if (mMP < mDashUsingMP) return;
-	// If the character is alive and moving
-	if (!bCanDash ||
-		MovementStatus != EMovementStatus::EMS_Moving ||
-		MovementStatus == EMovementStatus::EMS_Dead) return;
-	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
-	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
-
-	setMovementStatus(EMovementStatus::EMS_Dash);
-	Animation->Montage_Play(UtilityMontage, 1.0f);
-	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
-	UseMp(mDashUsingMP);
-	
-	GetCharacterMovement()->StopMovementImmediately();
-	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
-	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance,true, true);
-	bCanDash = false;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
-}
-
-void ABlackWallCharacter::ShiftDown()
-{
-	bShiftDown = true;
-	if (MovementStatus == EMovementStatus::EMS_Dead) return;
-	Dash();
-}
-
-void ABlackWallCharacter::StopDashing()
-{
-//	GetCharacterMovement()->StopMovementImmediately();
-	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, mDashCollDown, false);
-	setMovementStatus(EMovementStatus::EMS_Normal);
-	
-}
-
-void ABlackWallCharacter::ResetDash()
-{
-	bCanDash = true;
-}
-
-
 void ABlackWallCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -184,37 +141,130 @@ void ABlackWallCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		setMovementStatus(EMovementStatus::EMS_Moving);
+		//setMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
 
 		// set Character direction
-		if (Value <= 0) bIsCharacterForward = false;
-		else bIsCharacterForward = true;
+		if (Value <= 0)
+			bIsCharacterForward = false;
+		else
+			bIsCharacterForward = true;
 	}
 }
 
 void ABlackWallCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
+
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		setMovementStatus(EMovementStatus::EMS_Moving);
+		//setMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
+
+		// set Character direction
+		if (Value <= 0)
+			bIsCharacterRight = false;
+		else
+			bIsCharacterRight = true;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Dash Ability
+void ABlackWallCharacter::Dash()
+{
+	if (mMP < mDashUsingMP) return;
+	// If the character is alive and moving
+	if (!bCanDash ||
+		MovementStatus == EMovementStatus::EMS_Dead) return;
+	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
+	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
+	bDashing = true;
+	setMovementStatus(EMovementStatus::EMS_Dash);
+	Animation->Montage_Play(UtilityMontage, 1.0f);
+	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
+	UseMp(mDashUsingMP);
+	
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance,true, true);
+	bCanDash = false;
+	
+	if (bAttacking)
+	{
+		bAttacking = false; // if Attacking, Attack boolean initialize
+	}
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
+}
+
+void ABlackWallCharacter::ShiftDown()
+{
+	bShiftDown = true;
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	Dash();
+}
+
+void ABlackWallCharacter::StopDashing()
+{
+//	GetCharacterMovement()->StopMovementImmediately();
+	bDashing = false;
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, mDashCollDown, false);
+	setMovementStatus(EMovementStatus::EMS_Normal);
+}
+
+void ABlackWallCharacter::ResetDash()
+{
+	bCanDash = true;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+// Atack
+void ABlackWallCharacter::Attack()
+{
+	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance || !AttackMontage) return;
+	bAttacking = true;
+	setMovementStatus(EMovementStatus::EMS_Attack);
+	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
+	AnimInstance->Montage_Play(AttackMontage);
+}
+
+void ABlackWallCharacter::AttackEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
+	setMovementStatus(EMovementStatus::EMS_Normal);
+	bAttacking = false;
+}
+
+void ABlackWallCharacter::LMBDown()
+{
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
+	bLMBDown = true;
+	Attack();
+}
+
+void ABlackWallCharacter::LMBUp()
+{
+	UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
+	bLMBDown = false;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Pickup Item
@@ -227,7 +277,7 @@ void ABlackWallCharacter::ShowPickupLocations()
 }
 
 /**
-* 포션을 먹었을 때 호출되는 함수
+* Function called if player has eaten potion
 */
 void ABlackWallCharacter::IncrementHP(float Amount)
 {
