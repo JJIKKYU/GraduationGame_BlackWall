@@ -8,6 +8,7 @@
 #include "Engine/Classes/Sound/SoundCue.h"
 
 APickup::APickup()
+	: IncrementHPAmount(25.f), IncrementMPAmount(50.f)
 {
 
 }

@@ -80,6 +80,7 @@ void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
 //////////////////////////////////////////////////////////////////////////
 // Input
 
+
 void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -223,4 +224,19 @@ void ABlackWallCharacter::ShowPickupLocations()
 {
 	for (auto Location : PickupLocations)
 		UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Green, 10.f, 0.5f);
+}
+
+/**
+* 포션을 먹었을 때 호출되는 함수
+*/
+void ABlackWallCharacter::IncrementHP(float Amount)
+{
+	if (mHP + Amount >= mMaxHP) mHP = mMaxHP;
+	else mHP += Amount;
+}
+
+void ABlackWallCharacter::IncrementMP(float Amount)
+{
+	if (mMP + Amount >= mMaxMP) mMP = mMaxMP;
+	else mMP += Amount;
 }

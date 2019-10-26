@@ -165,6 +165,11 @@ public: // Pickup Item
 	UFUNCTION(BlueprintCallable)
 	void ShowPickupLocations();
 
+	UFUNCTION(BlueprintCallable)
+	void IncrementHP(float Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void IncrementMP(float Amount);
 
 protected:
 	// APawn interface
