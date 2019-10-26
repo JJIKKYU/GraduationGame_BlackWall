@@ -232,6 +232,12 @@ void ABlackWallCharacter::ResetDash()
 	bCanDash = true;
 }
 
+void ABlackWallCharacter::PlayDashSound()
+{
+	if (DashSound)
+		UGameplayStatics::PlaySound2D(this, DashSound);
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Atack

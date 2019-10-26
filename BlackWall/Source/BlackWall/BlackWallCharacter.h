@@ -100,6 +100,12 @@ protected: // Player Input Interface
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Utils")
 	class UAnimMontage* UtilityMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | DashSound")
+	class USoundCue* DashSound;
+
+	UFUNCTION(BlueprintCallable)
+	void PlayDashSound();
+
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float mDashDistance;
 	
