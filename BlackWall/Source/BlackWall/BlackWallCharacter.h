@@ -153,6 +153,12 @@ protected: // Player Input Interface
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	TArray<class USoundCue*> AttackSound;
+
+	UFUNCTION(BlueprintCallable)
+	void PlayAttackSound();
+
 
 ///////////////////
 

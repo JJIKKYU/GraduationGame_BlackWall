@@ -12,6 +12,8 @@
 #include "Animation/AnimInstance.h" // UAnimInstance
 #include "Runtime/Engine/Public/TimerManager.h" // set timers
 #include "Kismet/KismetSystemLibrary.h"
+#include "Engine/Classes/Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -265,6 +267,13 @@ void ABlackWallCharacter::LMBUp()
 	bLMBDown = false;
 }
 
+void ABlackWallCharacter::PlayAttackSound()
+{
+	if (AttackSound[0])
+	{
+		UGameplayStatics::PlaySound2D(this, AttackSound[0]);
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Pickup Item
