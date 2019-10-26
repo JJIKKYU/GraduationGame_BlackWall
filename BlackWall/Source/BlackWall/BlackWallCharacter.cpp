@@ -36,7 +36,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bWeaponEquipped(false)
 
 	// Attack
-	, bAttacking(false)
+	, bAttacking(false), ComboCnt(0), AttackMovementDistance(500.f)
 	
 {
 	// Set size for collision capsule
@@ -249,7 +249,32 @@ void ABlackWallCharacter::Attack()
 	bAttacking = true;
 	setMovementStatus(EMovementStatus::EMS_Attack);
 	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
-	AnimInstance->Montage_Play(AttackMontage);
+	
+	if (ComboCnt == 0)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboA1"), AttackMontage);
+	}
+	else if (ComboCnt == 1)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboA2"), AttackMontage);
+	}
+	else if (ComboCnt == 2)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboA3"), AttackMontage);
+	}
+	else if (ComboCnt == 3)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboA4"), AttackMontage);
+	}
+	else if (ComboCnt == 4)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboA5"), AttackMontage);
+	}
 }
 
 void ABlackWallCharacter::AttackEnd()
@@ -270,6 +295,7 @@ void ABlackWallCharacter::LMBDown()
 void ABlackWallCharacter::LMBUp()
 {
 	UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
+	ComboCnt += 1;
 	bLMBDown = false;
 }
 
@@ -279,6 +305,11 @@ void ABlackWallCharacter::PlayAttackSound()
 	{
 		UGameplayStatics::PlaySound2D(this, AttackSound[0]);
 	}
+}
+
+void ABlackWallCharacter::AttackMovement(float Amount)
+{
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * Amount, true, true);
 }
 
 //////////////////////////////////////////////////////////////////////////

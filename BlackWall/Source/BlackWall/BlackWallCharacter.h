@@ -145,15 +145,20 @@ protected: // Player Input Interface
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	bool bWeaponEquipped;
 
-	void LMBDown();
-	void LMBUp();
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims | Attack")
 	bool bAttacking;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attacak")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
 	class UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | ComboCount")
+	int ComboCnt;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
+	float AttackMovementDistance;
+
+	void LMBDown();
+	void LMBUp();
 	void Attack();
 
 	UFUNCTION(BlueprintCallable)
@@ -164,6 +169,9 @@ protected: // Player Input Interface
 
 	UFUNCTION(BlueprintCallable)
 	void PlayAttackSound();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackMovement(float Amount);
 
 
 ///////////////////
