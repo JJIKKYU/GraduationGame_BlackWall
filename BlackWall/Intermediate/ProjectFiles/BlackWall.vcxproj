@@ -1334,7 +1334,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\BlackWall\Pickup.cpp" />
+    <ClCompile Include="..\..\Source\BlackWall\Weapon.cpp" />
     <ClInclude Include="..\..\Source\BlackWall\Pickup.h" />
+    <ClInclude Include="..\..\Source\BlackWall\Weapon.h" />
     <None Include="..\..\BlackWall.uproject" />
     <None Include="..\..\Source\BlackWall.Target.cs" />
     <None Include="..\..\Source\BlackWallEditor.Target.cs" />
