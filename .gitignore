@@ -685,3 +685,41 @@ build/
 
 
 # End of https://www.gitignore.io/api/visualstudio,unrealengine
+BlackWall/Content
+BlackWall/Intermediate/CachedAssetRegistry.bin
+BlackWall/Intermediate/Config/CoalescedSourceConfigs/GameUserSettings.ini
+BlackWall/Intermediate/ProjectFiles/BlackWall.vcxproj
+BlackWall/Intermediate/ProjectFiles/BlankProgram.vcxproj
+BlackWall/Intermediate/ProjectFiles/BootstrapPackagedGame.vcxproj
+BlackWall/Intermediate/ProjectFiles/BuildPatchTool.vcxproj
+BlackWall/Intermediate/ProjectFiles/CrashReportClient.vcxproj
+BlackWall/Intermediate/ProjectFiles/DsymExporter.vcxproj
+BlackWall/Intermediate/ProjectFiles/LiveCodingConsole.vcxproj
+BlackWall/Intermediate/ProjectFiles/MinidumpDiagnostics.vcxproj
+BlackWall/Intermediate/ProjectFiles/ShaderCompileWorker.vcxproj
+BlackWall/Intermediate/ProjectFiles/SlateViewer.vcxproj
+BlackWall/Intermediate/ProjectFiles/SymbolDebugger.vcxproj
+BlackWall/Intermediate/ProjectFiles/TestPAL.vcxproj
+BlackWall/Intermediate/ProjectFiles/UE4.vcxproj
+BlackWall/Intermediate/ProjectFiles/UE4EditorServices.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealAtoS.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealCEFSubProcess.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealDisasterRecoveryService.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealFileServer.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealFrontend.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealHeaderTool.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealInsights.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealLaunchDaemon.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealLightmass.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealMultiUserServer.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealPak.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealVersionSelector.vcxproj
+BlackWall/Intermediate/ProjectFiles/UnrealWatchdog.vcxproj
+BlackWall/Intermediate/ProjectFiles/WebRTCProxy.vcxproj
+BlackWall/Saved/AutoScreenshot.png
+BlackWall/Saved/Config/Windows/Editor.ini
+BlackWall/Saved/Config/Windows/EditorPerProjectUserSettings.ini
+BlackWall/Saved/Config/Windows/Engine.ini
+BlackWall/Saved/Config/Windows/Game.ini
+BlackWall/Saved/Config/Windows/GameUserSettings.ini
+BlackWall/Saved/Config/Windows/Input.ini
