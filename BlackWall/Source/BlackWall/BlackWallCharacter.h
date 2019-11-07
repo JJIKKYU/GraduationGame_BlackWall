@@ -133,16 +133,6 @@ protected: // Player Input Interface
 	void ResetDash();
 
 ///////////////////
-	/**
-	* Weapon
-	*/
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Weapon")
-	class AWeapon* EquippedWeapon;
-
-	void SetEquippedWeapon(AWeapon* weaponToSet);
-
-///////////////////
 	
 	/**
 	* Attack
