@@ -29,8 +29,8 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bCanDash(true), bDashing(false), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
 
 	// HP & MP
-	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
-	, mMaxMP(100.f), mMP(50.f), mMPrecoveryRate(.5f)
+	, mMaxHP(100.f), mHP(85.f), HPrecoveryRate(.1f)
+	, mMaxMP(100.f), mMP(50.f), MPrecoveryRate(.5f)
 
 	// temporary var
 	, bWeaponEquipped(false)

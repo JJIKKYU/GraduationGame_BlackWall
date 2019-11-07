@@ -7,6 +7,7 @@
 #include "BlackWallCharacter.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 
 AWeapon::AWeapon()
@@ -43,6 +44,13 @@ void AWeapon::BeginPlay()
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	/*
+	if ((WeaponState == EWeaponState::EMS_Equipped) && OtherActor)
+	{
+		ABlackWallCharacter* BlackWallCharacter = Cast<ABlackWallCharacter>(OtherActor);
+	}
+	*/
 }
 
 void AWeapon::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -50,3 +58,31 @@ void AWeapon::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	Super::OnOverlapEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
+void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!OtherActor) return;
+}
+
+void AWeapon::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+}
+
+void AWeapon::Equip(ABlackWallCharacter* BWCharacter)
+{
+	if (!BWCharacter) return;
+	const USkeletalMeshSocket* SwordSocket = BWCharacter->GetMesh()->GetSocketByName("Sword");
+	if (!SwordSocket) return;
+
+	SwordSocket->AttachActor(this, BWCharacter->GetMesh());
+	if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
+}
+
+void AWeapon::ActivateCollision()
+{
+	CombatCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AWeapon::DeActivateCollision()
+{
+	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
