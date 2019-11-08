@@ -56,6 +56,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float mRunningSpeed;
 
+	bool CanMove(float Value);
+
 ///////////////////
 	// Controller
 		
@@ -64,6 +66,9 @@ public:
 
 ///////////////////
 	// Weapon Equip
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Weapon")
+	class USoundCue* OnEquipSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	class AWeapon* EquippedWeapon;
@@ -250,6 +255,8 @@ public: // Pickup Item
 	void IncrementMP(float Amount);
 
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface

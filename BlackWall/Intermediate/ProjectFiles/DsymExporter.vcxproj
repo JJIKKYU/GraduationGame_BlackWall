@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1DF351A4-FB3F-47DB-ADE0-FEB4B63D7A9D}</ProjectGuid>
+    <ProjectGuid>{C4BB2219-91AA-47EF-AC73-F3282885F639}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>DsymExporter</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

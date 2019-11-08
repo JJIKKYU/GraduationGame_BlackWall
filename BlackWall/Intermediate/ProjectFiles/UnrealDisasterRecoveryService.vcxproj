@@ -91,7 +91,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3AF488C4-2194-49F3-B0B3-172C3F488AA9}</ProjectGuid>
+    <ProjectGuid>{0CE4DB6B-53BE-4303-829E-7EB0FDF5B03D}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>UnrealDisasterRecoveryService</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

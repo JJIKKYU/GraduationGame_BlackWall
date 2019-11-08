@@ -69,10 +69,25 @@ ABlackWallCharacter::ABlackWallCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+}
+
+
+void ABlackWallCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BWCharacterController = Cast<ABWCharacterController>(GetController());
 
 	// Weapon Setup
 	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("sheath");
-	if (SwordSocket) { SwordSocket->AttachActor(EquippedWeapon, this->GetMesh()); }
+	if (SwordSocket)
+	{
+		if (EquippedWeapon)
+		{
+			EquippedWeapon->SetActorRelativeRotation(FRotator(0.f, 170.f, 0.f));
+			SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
+		}
+	}
 }
 
 void ABlackWallCharacter::Tick(float DeltaTime)
@@ -96,6 +111,15 @@ void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
 //////////////////////////////////////////////////////////////////////////
 // Input
 
+bool ABlackWallCharacter::CanMove(float Value)
+{
+	if (BWCharacterController)
+	{
+		return (Value != 0.0f) && (!bAttacking);
+	}
+	return false;
+	
+}
 
 void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -143,7 +167,7 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 
 void ABlackWallCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if (CanMove(Value))
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -169,7 +193,7 @@ void ABlackWallCharacter::MoveForward(float Value)
 
 void ABlackWallCharacter::MoveRight(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if (CanMove(Value))
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -375,5 +399,5 @@ void ABlackWallCharacter::EquipWeapon()
 	{
 		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
 	}
-	// if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
+	 if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
 }
