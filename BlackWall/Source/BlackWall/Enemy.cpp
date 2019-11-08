@@ -12,6 +12,10 @@ AEnemy::AEnemy()
 	:
 	// Status
 	mHP(75.f), mMaxHP(100.f), mDamage(15.f)
+
+	// AI
+	,bHasValidTarget(false)
+
 {
 	
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,6 +29,9 @@ AEnemy::AEnemy()
 	mCombatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatSphere"));
 	mCombatSphere->SetupAttachment(GetRootComponent());
 	mCombatSphere->InitSphereRadius(75.f);
+
+	mCombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
+	mCombatCollision->SetupAttachment(GetRootComponent());
 
 	EnemyMovementStatus = EEnemyMovementStatus::EMS_Idle;
 	
@@ -48,8 +55,6 @@ void AEnemy::BeginPlay()
 	
 
 	// CombatCollision Initialized
-	mCombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
-	mCombatCollision->SetupAttachment(GetRootComponent());
 	mCombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	mCombatCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	mCombatCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -80,15 +85,36 @@ void AEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	if (!OtherActor) return;
 	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 	if (!BWCharacter) return;
+
 	MoveToTarget(BWCharacter);
 }
 
 void AEnemy::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!OtherActor) return;
+	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
+	if (!BWCharacter) return;
+
+	///
+
+	bHasValidTarget = false;
+
+	BWCharacter->SetHasCombatTarget(false);
+	BWCharacter->UpdateCombatTarget();
+	
+	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_Idle);
+	if (mAIController) mAIController->StopMovement();
 }
 
 void AEnemy::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!OtherActor) return;
+	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
+	if (!BWCharacter) return;
+
+	bHasValidTarget = true;
+
+
 }
 
 void AEnemy::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)

@@ -51,6 +51,8 @@ public:
 	* AI
 	*/
 
+	bool bHasValidTarget;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	class USphereComponent* mAgroSphere;
 
