@@ -37,6 +37,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 	// Attack
 	, bAttacking(false), ComboCnt(0), AttackMovementDistance(500.f)
+
+	// Combat
+	, bHasCombatTarget(false)
 	
 {
 	// Set size for collision capsule
@@ -129,6 +132,7 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
+
 
 void ABlackWallCharacter::MoveForward(float Value)
 {
@@ -335,4 +339,14 @@ void ABlackWallCharacter::IncrementMP(float Amount)
 {
 	if (mMP + Amount >= mMaxMP) mMP = mMaxMP;
 	else mMP += Amount;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Combat
+
+void ABlackWallCharacter::UpdateCombatTarget()
+{
+	TArray<AActor*> OverlappingActors;
+
+
 }

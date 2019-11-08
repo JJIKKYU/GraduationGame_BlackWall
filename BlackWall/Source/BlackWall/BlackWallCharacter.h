@@ -56,8 +56,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float mRunningSpeed;
 
+///////////////////
+	// Controller
 
-protected: // Player Stats
+
+
+///////////////////
+	// Player Stats
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mMaxHP;
@@ -140,6 +145,8 @@ protected: // Player Input Interface
 	* Xbox Game Pad Y Button
 	*/
 
+	// Var
+
 	bool bLMBDown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
@@ -154,8 +161,10 @@ protected: // Player Input Interface
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | ComboCount")
 	int ComboCnt;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Chracter | Attack")
 	float AttackMovementDistance;
+
+	// Function
 
 	void LMBDown();
 	void LMBUp();
@@ -172,6 +181,26 @@ protected: // Player Input Interface
 
 	UFUNCTION(BlueprintCallable)
 	void AttackMovement(float Amount);
+
+
+public: ///////////////////
+
+	/**
+	/* Combat
+	*/
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bHasCombatTarget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	class AEnemy* CombatTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	TSubclassOf<AEnemy> EnemyFilters;
+
+	void UpdateCombatTarget();
+
+	FORCEINLINE void SetHasCombatTarget(bool HasTarget) { bHasCombatTarget = HasTarget;	}
 
 
 ///////////////////
