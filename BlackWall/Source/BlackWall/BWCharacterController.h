@@ -35,24 +35,25 @@ public:
 	UUserWidget* PauseMenu;
 
 	bool bPauseMenuVisible;
-	/*
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HUD")
-	void DisplayPauseMenu();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HUD")
-	void RemovePauseMenu();
-	void TogglePauseMenu();
+	FVector EnemyLocation;
 
 	bool bEnemyHealthBarVisible;
+	
+	//UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HUD")
+	void DisplayPauseMenu();
+
+	//UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "HUD")
+	void RemovePauseMenu();
+	void TogglePauseMenu();	
 
 	void DisplayEnemyHealthBar();
 
 	void RemoveEnemyHealthBar();
 
-	FVector EnemyLocation;
 
 	void GameModeOnly();
-	*/
+	
 
 protected:
 
