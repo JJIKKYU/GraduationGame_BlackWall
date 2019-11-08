@@ -58,8 +58,18 @@ public:
 
 ///////////////////
 	// Controller
+		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Controller")
+	class ABWCharacterController* BWCharacterController;
 
+///////////////////
+	// Weapon Equip
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	class AWeapon* EquippedWeapon;
+
+	UFUNCTION(Blueprintcallable)
+	void EquipWeapon();
 
 ///////////////////
 	// Player Stats
@@ -196,7 +206,7 @@ public: ///////////////////
 	class AEnemy* CombatTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	TSubclassOf<AEnemy> EnemyFilters;
+	TSubclassOf<AActor> EnemyFilter;
 
 	void UpdateCombatTarget();
 

@@ -14,6 +14,9 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/Classes/Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "BWCharacterController.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Weapon.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,6 +69,10 @@ ABlackWallCharacter::ABlackWallCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// Weapon Setup
+	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("sheath");
+	if (SwordSocket) { SwordSocket->AttachActor(EquippedWeapon, this->GetMesh()); }
 }
 
 void ABlackWallCharacter::Tick(float DeltaTime)
@@ -346,7 +353,27 @@ void ABlackWallCharacter::IncrementMP(float Amount)
 
 void ABlackWallCharacter::UpdateCombatTarget()
 {
-	TArray<AActor*> OverlappingActors;
+	TSet<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors, EnemyFilter);
 
+	if (OverlappingActors.Num() == 0)
+	{
+		if (BWCharacterController)
+		{
+			BWCharacterController->RemoveEnemyHealthBar();
+		}
+	}
+}
 
+//////////////////////////////////////////////////////////////////////////
+// Weapon
+
+void ABlackWallCharacter::EquipWeapon()
+{
+	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("Sword");
+	if (SwordSocket)
+	{
+		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
+	}
+	// if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
 }

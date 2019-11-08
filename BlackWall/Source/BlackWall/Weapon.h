@@ -51,13 +51,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
 	float Damage;
 
-	/*
+	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCollision();
 
 	UFUNCTION(BlueprintCallable)
 	void DeActivateCollision();
-	*/
+	
 
 
 public: // FUNCTION
@@ -65,14 +65,14 @@ public: // FUNCTION
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	/*
+	
 	UFUNCTION()
 	virtual void CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void Equip(class ABlackWallCharacter* BWCharacter);
-	*/
+	
 
 
 	FORCEINLINE void SetWeaponState(EWeaponState State) { WeaponState = State; }
