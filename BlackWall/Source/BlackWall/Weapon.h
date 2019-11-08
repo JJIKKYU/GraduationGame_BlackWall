@@ -51,6 +51,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
 	float Damage;
 
+///////////////////// Mesh
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+	class UMaterialInterface* OnDissolveMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+	class UMaterial* OffDissolveMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+	class UMaterialInterface* OriginalMaterial;
+
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCollision();

@@ -9,7 +9,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMeshSocket.h"
 
-
 AWeapon::AWeapon()
 	// WeeponState
 	: WeaponState(EWeaponState::EMS_Idle),
@@ -24,6 +23,9 @@ AWeapon::AWeapon()
 	// BoxComponent(Combatcollision) component initialize
 	CombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
 	CombatCollision->SetupAttachment(GetRootComponent());
+
+	OnDissolveMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("OnDissolveMaterial"));
+	
 }
 
 void AWeapon::BeginPlay()
@@ -39,6 +41,16 @@ void AWeapon::BeginPlay()
 	CombatCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	CombatCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+	// Weapon Material Initialize
+	//SkeletalMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, OriginalMaterial);
+	//SkeletalMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(1, OnDissolveMaterial);
+	SkeletalMesh->SetMaterial(0, OriginalMaterial);
+	SkeletalMesh->SetMaterial(1, OnDissolveMaterial);
+	//SkeletalMesh->OverrideMaterials.Add(OnDissolveMaterial);
+	
+	
+	
 }
 
 void AWeapon::ActivateCollision()

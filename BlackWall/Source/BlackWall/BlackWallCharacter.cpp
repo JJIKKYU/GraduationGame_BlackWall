@@ -278,6 +278,7 @@ void ABlackWallCharacter::PlayDashSound()
 // Atack
 void ABlackWallCharacter::Attack()
 {
+	if (!bWeaponEquipped) return;
 	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AttackMontage) return;
@@ -322,6 +323,12 @@ void ABlackWallCharacter::AttackEnd()
 void ABlackWallCharacter::LMBDown()
 {
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	if (bWeaponEquipped == false)
+	{
+		bWeaponEquipped = true;
+		EquipWeapon();
+		return;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
 	bLMBDown = true;
 	Attack();
@@ -400,4 +407,15 @@ void ABlackWallCharacter::EquipWeapon()
 		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
 	}
 	 if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
+}
+
+void ABlackWallCharacter::UnEquipWeapon()
+{
+	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("sheath");
+	if (SwordSocket)
+	{
+		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
+		bWeaponEquipped = false;
+	}
+	// if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
 }

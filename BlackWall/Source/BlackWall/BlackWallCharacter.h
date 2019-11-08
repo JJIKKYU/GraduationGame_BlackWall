@@ -76,6 +76,9 @@ public:
 	UFUNCTION(Blueprintcallable)
 	void EquipWeapon();
 
+	UFUNCTION(Blueprintcallable)
+	void UnEquipWeapon();
+
 ///////////////////
 	// Player Stats
 	
