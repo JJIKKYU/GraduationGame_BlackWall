@@ -59,7 +59,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0A190408-6FC1-49F4-8E97-ABE1F780725E}</ProjectGuid>
+    <ProjectGuid>{81B098F5-EBC1-4CB3-A9A1-F29FF4581C75}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>UnrealCEFSubProcess</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

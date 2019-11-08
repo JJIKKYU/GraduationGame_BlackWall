@@ -91,7 +91,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{997FFC78-4861-47F6-8CFC-93D445EEA758}</ProjectGuid>
+    <ProjectGuid>{E06CCB4E-A273-4559-865F-03888C3AE234}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>UnrealLightmass</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

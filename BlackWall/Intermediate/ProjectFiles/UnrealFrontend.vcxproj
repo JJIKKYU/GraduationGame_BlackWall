@@ -91,7 +91,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8F1D7FF1-21BD-4E14-A58D-D57C0FB6AC5A}</ProjectGuid>
+    <ProjectGuid>{48A4A7F6-F89C-4573-A2DD-F00C06157C32}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>UnrealFrontend</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

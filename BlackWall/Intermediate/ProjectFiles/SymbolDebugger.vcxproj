@@ -91,7 +91,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6861A8A8-728F-438F-8802-C379B09DE038}</ProjectGuid>
+    <ProjectGuid>{9CCB0203-7E5A-4605-A884-819D02CBF4E1}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>SymbolDebugger</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

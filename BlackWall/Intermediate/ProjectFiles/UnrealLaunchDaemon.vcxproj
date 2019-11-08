@@ -7,7 +7,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CA7DA149-5F91-4AB9-A004-7FD952A73E45}</ProjectGuid>
+    <ProjectGuid>{2DDA60D1-5B3F-4BDC-8765-EAA950AAB177}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>UnrealLaunchDaemon</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
