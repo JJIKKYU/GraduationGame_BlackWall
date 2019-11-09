@@ -2,6 +2,6 @@
 	"BuildId": "c242d72f-6c07-42d0-a722-2ceda223d0af",
 	"Modules": 
 	{
-		"BlackWall": "UE4Editor-BlackWall-8308.dll"
+		"BlackWall": "UE4Editor-BlackWall.dll"
 	}
 }

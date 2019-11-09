@@ -404,7 +404,9 @@ void ABlackWallCharacter::EquipWeapon()
 	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("Sword");
 	if (SwordSocket)
 	{
+		EquippedWeapon->Equip();
 		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
+		// Weapon Dissolve Effects
 	}
 	 if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
 }
@@ -414,6 +416,7 @@ void ABlackWallCharacter::UnEquipWeapon()
 	const USkeletalMeshSocket* SwordSocket = GetMesh()->GetSocketByName("sheath");
 	if (SwordSocket)
 	{
+		EquippedWeapon->UnEquip();
 		SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
 		bWeaponEquipped = false;
 	}

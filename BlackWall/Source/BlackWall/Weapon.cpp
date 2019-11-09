@@ -8,13 +8,17 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 AWeapon::AWeapon()
 	// WeeponState
-	: WeaponState(EWeaponState::EMS_Idle),
+	: WeaponState(EWeaponState::EMS_Idle)
 
  	// Damage
-	Damage(25.f)
+	, Damage(25.f)
+
+	// Material
+	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)
 {
 	// Skeletal mesh component initialize
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -24,7 +28,7 @@ AWeapon::AWeapon()
 	CombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
 	CombatCollision->SetupAttachment(GetRootComponent());
 
-	OnDissolveMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("OnDissolveMaterial"));
+	DissolveMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("DissolveMaterial"));
 	
 }
 
@@ -43,14 +47,28 @@ void AWeapon::BeginPlay()
 	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	// Weapon Material Initialize
-	//SkeletalMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, OriginalMaterial);
-	//SkeletalMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(1, OnDissolveMaterial);
-	SkeletalMesh->SetMaterial(0, OriginalMaterial);
-	SkeletalMesh->SetMaterial(1, OnDissolveMaterial);
-	//SkeletalMesh->OverrideMaterials.Add(OnDissolveMaterial);
-	
-	
-	
+	SkeletalMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, OriginalMaterial);	
+	DissolveMaterial_Dynamic = Mesh->CreateAndSetMaterialInstanceDynamic(0);
+	DissolveMaterial_Dynamic = UMaterialInstanceDynamic::Create(DissolveMaterial, this);
+}
+
+void AWeapon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bMaterialChange)
+	{
+		appearenceValue += (DeltaTime * 1.5f);
+		UE_LOG(LogTemp, Log, TEXT("%f"), appearenceValue);
+		DissolveMaterial_Dynamic->SetScalarParameterValue(TEXT("Appearence"), appearenceValue);
+
+		if (appearenceValue >= 1.f)
+		{
+			Equip();
+			bMaterialChange = false;
+			return;
+		}
+	}
 }
 
 void AWeapon::ActivateCollision()
@@ -81,19 +99,19 @@ void AWeapon::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActo
 {
 }
 
-void AWeapon::Equip(ABlackWallCharacter* BWCharacter)
+void AWeapon::Equip()
 {
-	/*
-	if (BWCharacter)
-	{
-		const USkeletalMeshSocket* SwordSocket = BWCharacter->GetMesh()->GetSocketByName("Sword");
-		if (SwordSocket)
-		{
-			SwordSocket->AttachActor(this, BWCharacter->GetMesh());
-			BWCharacter->SetEquippedWeapon(this);
-		}
-		if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
-	}
-	*/
+	bMaterialChange = true;
+	appearenceValue = 0.f;
+	SkeletalMesh->SetMaterial(0, DissolveMaterial_Dynamic);
+	
+	
 }
+
+void AWeapon::UnEquip()
+{
+	bMaterialChange = true;
+	appearenceValue = 0.f;	
+}
+
 

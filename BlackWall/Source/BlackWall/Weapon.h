@@ -27,6 +27,8 @@ class BLACKWALL_API AWeapon : public AItem
 public:
 
 	virtual void BeginPlay() override;
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	AWeapon();
 
@@ -53,13 +55,19 @@ public:
 
 ///////////////////// Mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
-	class UMaterialInterface* OnDissolveMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
-	class UMaterial* OffDissolveMaterial;
+	class UMaterialInterface* DissolveMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 	class UMaterialInterface* OriginalMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+	UMaterialInstanceDynamic* DissolveMaterial_Dynamic;
+
+	bool bMaterialChange;
+
+	bool bEquipped;
+
+	float appearenceValue;
 
 	
 	UFUNCTION(BlueprintCallable)
@@ -81,10 +89,12 @@ public: // FUNCTION
 	UFUNCTION()
 	virtual void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void Equip(class ABlackWallCharacter* BWCharacter);
+	void Equip();
+	void UnEquip();
 	
 
 
 	FORCEINLINE void SetWeaponState(EWeaponState State) { WeaponState = State; }
 	FORCEINLINE EWeaponState GetWeaponState() { return WeaponState; }
+
 };
