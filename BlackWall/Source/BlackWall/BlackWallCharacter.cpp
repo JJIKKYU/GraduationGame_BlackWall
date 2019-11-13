@@ -235,7 +235,7 @@ void ABlackWallCharacter::Dash()
 	UseMp(mDashUsingMP);
 	
 	GetCharacterMovement()->StopMovementImmediately();
-	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+	GetCharacterMovement()->BrakingFrictionFactor = .5f;
 	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance,true, true);
 	bCanDash = false;
 	
