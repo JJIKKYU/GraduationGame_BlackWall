@@ -104,8 +104,6 @@ void AWeapon::Equip()
 	bMaterialChange = true;
 	appearenceValue = 0.f;
 	SkeletalMesh->SetMaterial(0, DissolveMaterial_Dynamic);
-	
-	
 }
 
 void AWeapon::UnEquip()
