@@ -32,8 +32,8 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bCanDash(true), bDashing(false), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
 
 	// HP & MP
-	, mMaxHP(8.f), mHP(4.f), mHPrecoveryRate(.1f)
-	, mMaxMP(10.f), mMP(2.f), mMPrecoveryRate(.5f)
+	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
+	, mMaxMP(100.f), mMP(50.f), mMPrecoveryRate(.5f)
 
 	// temporary var
 	, bWeaponEquipped(false)
@@ -96,12 +96,10 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
 
 	// Auto Recovery HP, MP
-	/*
 	float DeltaMP = mMPrecoveryRate * DeltaTime;
 	float DeltaHP = mHPrecoveryRate * DeltaTime;
 	mMP += DeltaMP;
 	mHP += DeltaHP;
-	*/
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
