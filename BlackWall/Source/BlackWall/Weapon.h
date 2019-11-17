@@ -51,7 +51,7 @@ public:
 	class UBoxComponent* CombatCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
-	float Damage;
+	float mDamage;
 
 ///////////////////// Mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
@@ -75,6 +75,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DeActivateCollision();
+
+///////////////////// Combat
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	TSubclassOf<UDamageType> DamageTypeClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	AController* WeaponInstigator;
 	
 
 

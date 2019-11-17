@@ -108,6 +108,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	mMP += DeltaMP;
 	mHP += DeltaHP;
 
+	/**
 	if (bInterpToEnemy && CombatTarget)
 	{
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
@@ -115,6 +116,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 
 		SetActorRotation(InterpRotation);
 	}
+	*/
 
 	if (CombatTarget)
 	{
@@ -336,6 +338,7 @@ void ABlackWallCharacter::Attack()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA5"), AttackMontage);
+		ComboCnt = 0;
 	}
 }
 
@@ -420,8 +423,10 @@ void ABlackWallCharacter::UpdateCombatTarget()
 		{
 			BWCharacterController->RemoveEnemyHealthBar();
 		}
+		return;
 	}
 
+	
 	AEnemy* ClosestEnemy = Cast<AEnemy>(OverlappingActors[0]);
 	if (ClosestEnemy)
 	{
@@ -449,6 +454,7 @@ void ABlackWallCharacter::UpdateCombatTarget()
 		SetCombatTarget(ClosestEnemy);
 		bHasCombatTarget = true;
 	}
+	
 }
 
 //////////////////////////////////////////////////////////////////////////

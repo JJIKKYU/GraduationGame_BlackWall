@@ -91,7 +91,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FCE7551F-45CC-403D-A82C-85384AD91A15}</ProjectGuid>
+    <ProjectGuid>{8FF2F6C9-917E-4013-BCCA-3FF49B91BDDC}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>SlateViewer</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>

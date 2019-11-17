@@ -9,13 +9,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Enemy.h"
 
 AWeapon::AWeapon()
 	// WeeponState
 	: WeaponState(EWeaponState::EMS_Idle)
 
  	// Damage
-	, Damage(25.f)
+	, mDamage(25.f)
 
 	// Material
 	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)
@@ -93,6 +94,34 @@ void AWeapon::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor)
+	{
+		AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+		if (Enemy)
+		{
+			/*
+			if (Enemy->HitParticles)
+			{
+				const USkeletalMeshSocket* WeaponSocket = SkeletalMesh->GetSocketByName("WeaponSocket");
+				if (WeaponSocket)
+				{
+					FVector SocketLocation = WeaponSocket->GetSocketLocation(SkeletalMesh);
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Enemy->HitParticles, SocketLocation, FRotator(0.f), false);
+				}
+			}
+			*/
+			if (Enemy->mHitSound)
+			{
+				UGameplayStatics::PlaySound2D(this, Enemy->mHitSound);
+			}
+			
+			//death
+			if (DamageTypeClass)
+			{
+				UGameplayStatics::ApplyDamage(Enemy, mDamage, WeaponInstigator, this, DamageTypeClass);
+			}
+		}
+	}
 }
 
 void AWeapon::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)

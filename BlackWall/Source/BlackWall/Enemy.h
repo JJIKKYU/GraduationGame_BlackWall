@@ -54,10 +54,10 @@ public:
 
 	bool bHasValidTarget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class USphereComponent* mAgroSphere;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class USphereComponent* mCombatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -111,7 +111,7 @@ public:
 	* Attack
 	*/
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	class UBoxComponent* mCombatCollision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
