@@ -12,11 +12,13 @@
 #include "Animation/AnimInstance.h" // UAnimInstance
 #include "Runtime/Engine/Public/TimerManager.h" // set timers
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/Classes/Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "BWCharacterController.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon.h"
+#include "Enemy.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,6 +45,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 	// Combat
 	, bHasCombatTarget(false)
+
+	// 보간
+	, mInterpSpeed(15.f), bInterpToEnemy(false)
 	
 {
 	// Set size for collision capsule
@@ -88,6 +93,8 @@ void ABlackWallCharacter::BeginPlay()
 			SwordSocket->AttachActor(EquippedWeapon, this->GetMesh());
 		}
 	}
+
+
 }
 
 void ABlackWallCharacter::Tick(float DeltaTime)
@@ -100,6 +107,23 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	float DeltaHP = mHPrecoveryRate * DeltaTime;
 	mMP += DeltaMP;
 	mHP += DeltaHP;
+
+	if (bInterpToEnemy && CombatTarget)
+	{
+		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, mInterpSpeed);
+
+		SetActorRotation(InterpRotation);
+	}
+
+	if (CombatTarget)
+	{
+		CombatTargetLocation = CombatTarget->GetActorLocation();
+		if (BWCharacterController)
+		{
+			BWCharacterController->EnemyLocation = CombatTargetLocation;
+		}
+	}
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -163,7 +187,6 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
-
 
 void ABlackWallCharacter::MoveForward(float Value)
 {
@@ -282,7 +305,10 @@ void ABlackWallCharacter::Attack()
 	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AttackMontage) return;
+
 	bAttacking = true;
+	SetInterpToEnemy(true);
+
 	setMovementStatus(EMovementStatus::EMS_Attack);
 	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
 	
@@ -317,6 +343,7 @@ void ABlackWallCharacter::AttackEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
 	setMovementStatus(EMovementStatus::EMS_Normal);
+	SetInterpToEnemy(false);
 	bAttacking = false;
 }
 
@@ -384,7 +411,7 @@ void ABlackWallCharacter::IncrementMP(float Amount)
 
 void ABlackWallCharacter::UpdateCombatTarget()
 {
-	TSet<AActor*> OverlappingActors;
+	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors, EnemyFilter);
 
 	if (OverlappingActors.Num() == 0)
@@ -393,6 +420,34 @@ void ABlackWallCharacter::UpdateCombatTarget()
 		{
 			BWCharacterController->RemoveEnemyHealthBar();
 		}
+	}
+
+	AEnemy* ClosestEnemy = Cast<AEnemy>(OverlappingActors[0]);
+	if (ClosestEnemy)
+	{
+		FVector Location = GetActorLocation();
+		float MinDistance = (ClosestEnemy->GetActorLocation() - Location).Size();
+
+		for (auto Actor : OverlappingActors)
+		{
+			AEnemy* Enemy = Cast<AEnemy>(Actor);
+			if (Enemy)
+			{
+				float DistanceToActor = (Enemy->GetActorLocation() - Location).Size();
+				if (DistanceToActor < MinDistance)
+				{
+					MinDistance = DistanceToActor;
+					ClosestEnemy = Enemy;
+				}
+			}
+		}
+
+		if (BWCharacterController)
+		{
+			BWCharacterController->DisplayEnemyHealthBar();
+		}
+		SetCombatTarget(ClosestEnemy);
+		bHasCombatTarget = true;
 	}
 }
 
@@ -421,4 +476,46 @@ void ABlackWallCharacter::UnEquipWeapon()
 		bWeaponEquipped = false;
 	}
 	// if (OnEquipSound) UGameplayStatics::PlaySound2D(this, OnEquipSound);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 보간
+
+void ABlackWallCharacter::SetInterpToEnemy(bool Interp)
+{
+	bInterpToEnemy = Interp;
+}
+
+FRotator ABlackWallCharacter::GetLookAtRotationYaw(FVector Target)
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target);
+	FRotator LookAtRotationYaw(0.f, LookAtRotation.Yaw, 0.f);
+	return LookAtRotationYaw;
+}
+
+float ABlackWallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (mHP - DamageAmount <= 0.f)
+	{
+		mHP = 0.f;
+		Die();
+
+		if (DamageCauser)
+		{
+			AEnemy* Enemy = Cast<AEnemy>(DamageCauser);
+			if (Enemy)
+				Enemy->bHasValidTarget = false;
+		}
+	}
+	else
+	{
+		mHP -= DamageAmount;
+	}
+
+	return DamageAmount;
+}
+
+void ABlackWallCharacter::Die()
+{
+
 }

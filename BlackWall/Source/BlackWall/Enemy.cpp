@@ -106,32 +106,33 @@ void AEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (!OtherActor) return;
 	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
-	if (!BWCharacter) return;
-
-	MoveToTarget(BWCharacter);
+	if (BWCharacter && Alive())
+	{
+		MoveToTarget(BWCharacter);
+	}
 }
 
 void AEnemy::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (!OtherActor) return;
 	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
-	if (!BWCharacter) return;
+	if (BWCharacter)
 
-	///
-
-	bHasValidTarget = false;
-	
-	if (BWCharacter->GetCombatTarget() == this)
 	{
-		BWCharacter->SetCombatTarget(nullptr);
-	}
+		bHasValidTarget = false;
 
-	BWCharacter->SetHasCombatTarget(false);
-	BWCharacter->UpdateCombatTarget();
-	
-	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_Idle);
-	if (mAIController)
-		mAIController->StopMovement();
+		if (BWCharacter->GetCombatTarget() == this)
+		{
+			BWCharacter->SetCombatTarget(nullptr);
+		}
+
+		BWCharacter->SetHasCombatTarget(false);
+		BWCharacter->UpdateCombatTarget();
+
+		SetEnemyMovementStatus(EEnemyMovementStatus::EMS_Idle);
+		if (mAIController)
+			mAIController->StopMovement();
+	}
 }
 
 void AEnemy::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -216,6 +217,7 @@ void AEnemy::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 
 void AEnemy::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
 }
 
 void AEnemy::ActivateCollision()
@@ -238,10 +240,9 @@ void AEnemy::DeactivateCollision()
 
 void AEnemy::MoveToTarget(ABlackWallCharacter* Target)
 {
-	
-	if (!mAIController) return;
-
 	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_MoveToTarget);
+
+	if (!mAIController) return;
 
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalActor(Target);

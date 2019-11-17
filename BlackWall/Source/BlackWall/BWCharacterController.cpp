@@ -17,11 +17,11 @@ void ABWCharacterController::BeginPlay()
 
 	if (WEnemyHealthBar)
 	{
-		EnemyHealthBar = CreateWidget<UUserWidget>(this, HUDOverlayAsset);
+		EnemyHealthBar = CreateWidget<UUserWidget>(this, WEnemyHealthBar);
 		if (EnemyHealthBar)
 		{
 			EnemyHealthBar->AddToViewport();
-			EnemyHealthBar->SetVisibility(ESlateVisibility::Visible);
+			EnemyHealthBar->SetVisibility(ESlateVisibility::Hidden);
 		}
 		
 		FVector2D Alignment(0.f, 0.f);

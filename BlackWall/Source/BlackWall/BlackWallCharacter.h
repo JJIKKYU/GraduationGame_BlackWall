@@ -242,6 +242,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<AActor> EnemyFilter;
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
+	FVector CombatTargetLocation;
+
 
 	void UpdateCombatTarget();
 
@@ -250,6 +253,30 @@ public:
 	FORCEINLINE void SetHasCombatTarget(bool HasTarget) { bHasCombatTarget = HasTarget;	}
 
 	FORCEINLINE void SetCombatTarget(AEnemy* Enemy) { CombatTarget = Enemy;	}
+
+
+///////////////////
+
+	/*
+	* º¸°£
+	*/
+
+	float mInterpSpeed;
+	bool bInterpToEnemy;
+	void SetInterpToEnemy(bool Interp);
+
+	FRotator GetLookAtRotationYaw(FVector Target);
+
+
+///////////////////
+
+	/*
+	* Damage
+	*/
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	void Die();
 
 
 ///////////////////

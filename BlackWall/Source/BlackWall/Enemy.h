@@ -114,7 +114,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	class UBoxComponent* mCombatCollision;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	class UAnimMontage* mCombatMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
@@ -128,7 +128,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float mAttackMaxTime;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void MoveToTarget(class ABlackWallCharacter* Target);
 
 	void Attack();
