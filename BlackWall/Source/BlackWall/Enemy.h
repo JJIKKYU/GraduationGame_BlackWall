@@ -38,6 +38,7 @@ public:
 	/**
 	* Enemy Status
 	*/
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float mHP;
 
@@ -72,6 +73,21 @@ public:
 	virtual void CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	virtual void CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	virtual void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/**
+	* Collider
+	*/
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateCollision();
+
+	UFUNCTION(BlueprintCallable)
+	void DeactivateCollision();
 	
 
 	/**
@@ -94,8 +110,24 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	class UAnimMontage* mCombatMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bAttacking;
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float mAttackMinTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float mAttackMaxTime;
+
 	UFUNCTION()
 	void MoveToTarget(class ABlackWallCharacter* Target);
+
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
 
 	
 
