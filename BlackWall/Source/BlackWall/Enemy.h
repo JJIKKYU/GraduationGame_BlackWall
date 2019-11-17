@@ -62,6 +62,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	class AAIController* mAIController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	bool bOverlappingCombatSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	class ABlackWallCharacter* CombatTarget;
 	
 	
 	UFUNCTION()
@@ -78,6 +84,7 @@ public:
 	virtual void CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 
 	/**
 	* Collider
@@ -98,7 +105,7 @@ public:
 	class USoundCue* mHitSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	class USoundCue* mSwingSound;
+	class USoundBase* mSwingSound;
 
 	/**
 	* Attack
@@ -113,7 +120,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bAttacking;
 
-	FTimerHandle AttackTimer;
+	FTimerHandle mAttackTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float mAttackMinTime;
@@ -128,6 +135,30 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
+
+	/**
+	* Death
+	*/
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	TSubclassOf<UDamageType> mDamageTypeClass;
+
+	FTimerHandle mDeathTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float mDeathDelay;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	void Die(AActor* Causer);
+
+	UFUNCTION(BlueprintCallable)
+	void DeathEnd();
+
+	UFUNCTION(BlueprintCallable)
+	bool Alive();
+
+	void Disappear();
 
 	
 

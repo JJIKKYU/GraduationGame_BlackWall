@@ -343,9 +343,9 @@ void ABlackWallCharacter::LMBUp()
 
 void ABlackWallCharacter::PlayAttackSound()
 {
-	if (AttackSound[0])
+	if (mAttackSound[0])
 	{
-		UGameplayStatics::PlaySound2D(this, AttackSound[0]);
+		UGameplayStatics::PlaySound2D(this, mAttackSound[0]);
 	}
 }
 

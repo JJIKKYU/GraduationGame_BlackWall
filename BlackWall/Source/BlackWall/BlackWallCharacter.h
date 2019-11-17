@@ -58,11 +58,14 @@ public:
 
 	bool CanMove(float Value);
 
-///////////////////
+public: ///////////////////
 	// Controller
-		
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Controller")
 	class ABWCharacterController* BWCharacterController;
+
+	FORCEINLINE ABWCharacterController* GetBWCharacterController() { return BWCharacterController; }
 
 ///////////////////
 	// Weapon Equip
@@ -156,6 +159,8 @@ protected: // Player Input Interface
 	void ResetDash();
 
 ///////////////////
+
+public:
 	
 	/**
 	* Attack
@@ -179,8 +184,11 @@ protected: // Player Input Interface
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | ComboCount")
 	int ComboCnt;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Chracter | Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
 	float AttackMovementDistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
+	class UParticleSystem* mHitParticle;
 
 	// Function
 
@@ -192,7 +200,13 @@ protected: // Player Input Interface
 	void AttackEnd();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
-	TArray<class USoundCue*> AttackSound;
+	TArray<class USoundCue*> mAttackSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	TArray<class USoundCue*> mHitSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	class USoundBase* mHitSoundd;
 
 	UFUNCTION(BlueprintCallable)
 	void PlayAttackSound();
@@ -200,12 +214,24 @@ protected: // Player Input Interface
 	UFUNCTION(BlueprintCallable)
 	void AttackMovement(float Amount);
 
+	FORCEINLINE UParticleSystem* GetHitParticle() { return mHitParticle; }
 
-public: ///////////////////
+	FORCEINLINE TArray<class USoundCue*> GetHitSound() { return mHitSound; }
+
+	FORCEINLINE bool IsValidHitSound()
+	{
+		if (mHitSound[0]) return true;
+		return false;
+	}
+
+
+///////////////////
 
 	/**
 	/* Combat
 	*/
+
+public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bHasCombatTarget;
@@ -216,9 +242,14 @@ public: ///////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<AActor> EnemyFilter;
 
+
 	void UpdateCombatTarget();
 
+	FORCEINLINE AEnemy* GetCombatTarget() {	return CombatTarget; }
+
 	FORCEINLINE void SetHasCombatTarget(bool HasTarget) { bHasCombatTarget = HasTarget;	}
+
+	FORCEINLINE void SetCombatTarget(AEnemy* Enemy) { CombatTarget = Enemy;	}
 
 
 ///////////////////
