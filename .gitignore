@@ -685,6 +685,7 @@ build/
 
 
 # End of https://www.gitignore.io/api/visualstudio,unrealengine
+*.uasset
 BlackWall/Content
 BlackWall/Intermediate/CachedAssetRegistry.bin
 BlackWall/Intermediate/Config/CoalescedSourceConfigs/GameUserSettings.ini
