@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float mDamage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	float mEnemyExp;
+
 	/**
 	* AI
 	*/
@@ -67,7 +70,10 @@ public:
 	bool bOverlappingCombatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class ABlackWallCharacter* CombatTarget;
+	class ABlackWallCharacter* mCombatTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	class ABlackWallCharacter* mBWChracter;
 	
 	
 	UFUNCTION()

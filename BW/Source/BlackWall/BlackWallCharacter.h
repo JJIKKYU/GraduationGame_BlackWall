@@ -84,6 +84,12 @@ public: ///////////////////
 
 ///////////////////
 	// Player Stats
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	float mExp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	int mLevel;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mMaxHP;
@@ -103,7 +109,18 @@ public: ///////////////////
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mMPrecoveryRate;
 
+	void levelUp();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Stats")
+	class USoundBase* mlevelUpSound;
+
 	FORCEINLINE void UseMp(float mp) { mMP -= mp; }
+
+	FORCEINLINE int getLevel() { return mLevel; }
+	FORCEINLINE void setLevel(int level) { mLevel = level; }
+	
+	FORCEINLINE float getExp() { return mExp; }
+	FORCEINLINE void setExp(float exp) { mExp = exp; }
 
 
 

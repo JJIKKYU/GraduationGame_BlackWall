@@ -19,6 +19,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon.h"
 #include "Enemy.h"
+#include "Engine/Engine.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	// HP & MP
 	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
 	, mMaxMP(100.f), mMP(50.f), mMPrecoveryRate(.5f)
+	, mLevel(1), mExp(0.f)
 
 	// temporary var
 	, bWeaponEquipped(false)
@@ -126,6 +128,9 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 			BWCharacterController->EnemyLocation = CombatTargetLocation;
 		}
 	}
+
+	/* 레벨업 관리 */
+	levelUp();
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -271,6 +276,8 @@ void ABlackWallCharacter::Dash()
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
 }
 
+
+
 void ABlackWallCharacter::ShiftDown()
 {
 	bShiftDown = true;
@@ -312,7 +319,7 @@ void ABlackWallCharacter::Attack()
 	SetInterpToEnemy(true);
 
 	setMovementStatus(EMovementStatus::EMS_Attack);
-	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
+//	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
 	
 	if (ComboCnt == 0)
 	{
@@ -344,7 +351,7 @@ void ABlackWallCharacter::Attack()
 
 void ABlackWallCharacter::AttackEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
+	// UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
 	setMovementStatus(EMovementStatus::EMS_Normal);
 	SetInterpToEnemy(false);
 	bAttacking = false;
@@ -359,14 +366,14 @@ void ABlackWallCharacter::LMBDown()
 		EquipWeapon();
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
+	//UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
 	bLMBDown = true;
 	Attack();
 }
 
 void ABlackWallCharacter::LMBUp()
 {
-	UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
+	//UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
 	ComboCnt += 1;
 	bLMBDown = false;
 }
@@ -524,4 +531,18 @@ float ABlackWallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 void ABlackWallCharacter::Die()
 {
 
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 레벨
+
+void ABlackWallCharacter::levelUp()
+{
+	if (mExp >= 100.f)
+	{
+		if (mlevelUpSound)
+			UGameplayStatics::PlaySound2D(this, mlevelUpSound);
+		mLevel++;
+		mExp = 0.f;
+	}
 }

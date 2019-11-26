@@ -12,12 +12,14 @@
 #include "BWCharacterController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h" // UAnimInstance
+#include "Engine/Engine.h"
 
 
 AEnemy::AEnemy()
 	:
 	// Status
 	mHP(75.f), mMaxHP(100.f), mDamage(15.f), EnemyMovementStatus(EEnemyMovementStatus::EMS_Idle)
+	, mEnemyExp(50.f)
 
 	// AI
 	, bHasValidTarget(false), bOverlappingCombatSphere(false)
@@ -153,7 +155,7 @@ void AEnemy::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 			BWCharacter->SetHasCombatTarget(true);
 			BWCharacter->UpdateCombatTarget();
 
-			CombatTarget = BWCharacter;
+			mCombatTarget = BWCharacter;
 			bOverlappingCombatSphere = true;
 
 			float AttackTime = FMath::FRandRange(mAttackMinTime, mAttackMaxTime);
@@ -172,7 +174,7 @@ void AEnemy::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, 
 		{
 			bOverlappingCombatSphere = false;
 			MoveToTarget(BWCharacter);
-			CombatTarget = nullptr;
+			mCombatTarget = nullptr;
 
 			if (BWCharacter->GetCombatTarget() == this)
 			{
@@ -201,6 +203,7 @@ void AEnemy::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 		if (BWCharacter)
 		{
+
 			/*
 			if (BWCharacter->GetHitParticle())
 			{
@@ -334,10 +337,19 @@ void AEnemy::Die(AActor* Causer)
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	bAttacking = false;
-
+	
 	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(Causer);
 	if (BWCharacter)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CAST"));
 		BWCharacter->UpdateCombatTarget();
+	}
+
+	if (mBWChracter)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%f"), mBWChracter->getExp()));
+		mBWChracter->setExp(mBWChracter->getExp() + mEnemyExp);
+	}	
 }
 
 void AEnemy::DeathEnd()
@@ -345,6 +357,7 @@ void AEnemy::DeathEnd()
 	UE_LOG(LogTemp, Warning, TEXT("DEATHEND()"));
 	GetMesh()->bPauseAnims = true;
 	GetMesh()->bNoSkeletonUpdate = true;
+
 
 	GetWorldTimerManager().SetTimer(mDeathTimer, this, &AEnemy::Disappear, mDeathDelay);
 }
