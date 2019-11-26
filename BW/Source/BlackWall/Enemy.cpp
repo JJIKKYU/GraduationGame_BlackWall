@@ -214,7 +214,7 @@ void AEnemy::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 			
 			if (BWCharacter->IsValidHitSound())
 			{
-				UGameplayStatics::PlaySound2D(this, BWCharacter->mHitSoundd);
+				UGameplayStatics::PlaySound2D(this, BWCharacter->mHitSound);
 			}
 			*/
 			if (mDamageTypeClass)
@@ -326,6 +326,7 @@ void AEnemy::Die(AActor* Causer)
 		AnimInstance->Montage_JumpToSection(FName("Death"), mCombatMontage);
 	}
 	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_Death);
+	if (mDeathSound) UGameplayStatics::PlaySound2D(this, mDeathSound);
 
 	mCombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	mAgroSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);

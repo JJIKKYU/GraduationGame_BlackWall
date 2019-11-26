@@ -105,7 +105,12 @@ public:
 	class USoundCue* mHitSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	class USoundBase* mDeathSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
 	class USoundBase* mSwingSound;
+
+
 
 	/**
 	* Attack
