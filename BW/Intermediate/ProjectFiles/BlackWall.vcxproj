@@ -396,7 +396,9 @@
     <ClInclude Include="..\..\Source\BlackWall\level\FloorSwitch.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC.h" />
     <ClInclude Include="..\..\Source\BlackWall\Pickup.h" />
+    <ClCompile Include="..\..\Source\BlackWall\tutorial\TutorialCheckpoint.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Weapon.cpp" />
+    <ClInclude Include="..\..\Source\BlackWall\tutorial\TutorialCheckpoint.h" />
     <ClInclude Include="..\..\Source\BlackWall\Weapon.h" />
   </ItemGroup>
   <PropertyGroup>

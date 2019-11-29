@@ -96,7 +96,6 @@ void AFloorSwitch::UpdateDoorLocation(float Z)
 		RaiseDoorSound();
 	}
 	mDoor->SetWorldLocation(NewLocation);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%f"), mDoor->GetComponentLocation().Z));
 }
 
 // ¹ßÆÇ
