@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
 
 #include "FloorSwitch.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Engine/Engine.h"
 #include "TimerManager.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
@@ -56,7 +56,10 @@ void AFloorSwitch::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("Floor OverlapBegin")));
 	if (!bCharacterOnSwitch)
+	{
 		bCharacterOnSwitch = true;
+	}
+		
 	RaiseDoor();
 	LowerFloorSwitch();
 }
@@ -67,12 +70,19 @@ void AFloorSwitch::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 	if (bCharacterOnSwitch)
 		bCharacterOnSwitch = false;
 	GetWorldTimerManager().SetTimer(mSwitchHandle, this, &AFloorSwitch::CloseDoor, mSwitchTime);
+	GetWorldTimerManager().SetTimer(mSoundHandle, this, &AFloorSwitch::LowerDoorSound, mSwitchTime + 1.5f);
 }
 
-void AFloorSwitch::RaiseDoor()
+void AFloorSwitch::RaiseDoorSound()
 {
-	if (mDoorSound)
-		UGameplayStatics::PlaySound2D(this, mDoorSound);
+	if (mRaiseDoorSound)
+		UGameplayStatics::PlaySound2D(this, mRaiseDoorSound);
+}
+
+void AFloorSwitch::LowerDoorSound()
+{
+	if (mLowerDoorSound)
+		UGameplayStatics::PlaySound2D(this, mLowerDoorSound);
 }
 
 // ¹®Â¦
@@ -80,7 +90,13 @@ void AFloorSwitch::UpdateDoorLocation(float Z)
 {
 	FVector NewLocation = mInitialDoorLocation;
 	NewLocation.Z += Z;
+	if (mInitialDoorLocation.Z == mDoor->GetComponentLocation().Z)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Play")));
+		RaiseDoorSound();
+	}
 	mDoor->SetWorldLocation(NewLocation);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%f"), mDoor->GetComponentLocation().Z));
 }
 
 // ¹ßÆÇ
@@ -89,6 +105,9 @@ void AFloorSwitch::UpdateFloorSwitchLocation(float Z)
 	FVector NewLocation = mInitialSwitchLocation;
 	NewLocation.Z += Z;
 	mFloorSwitch->SetWorldLocation(NewLocation);
+	//GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(printf("%f", mFloorSwitch->GetComponentLocation)));
+//	UE_LOG(LogTemp, Warning, TEXT("%f"), mFloorSwitch->GetComponentLocation);
+	
 }
 
 void AFloorSwitch::CloseDoor()
@@ -96,6 +115,7 @@ void AFloorSwitch::CloseDoor()
 	if (!bCharacterOnSwitch)
 	{
 		LowerDoor();
+		//LowerDoorSound();
 		RaiseFloorSwitch();
 	}
 }

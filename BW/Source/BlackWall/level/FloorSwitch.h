@@ -35,11 +35,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Floor Switch")
 	FVector mInitialSwitchLocation;
 
-	/** If door open, play sound effect */
+	/** If door opening, play sound effect */
 	UPROPERTY(EditAnywhere, Category = "Sound")
-	class USoundCue* mDoorSound;
+	class USoundCue* mRaiseDoorSound;
+
+	/** If door closing, play sound effect */
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundCue* mLowerDoorSound;
 
 	FTimerHandle mSwitchHandle;
+	FTimerHandle mSoundHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floor Switch")
 	float mSwitchTime;
@@ -61,6 +66,12 @@ public:
 
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void RaiseDoorSound();
+
+	UFUNCTION(BlueprintCallable)
+	void LowerDoorSound();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Floor Switch")
 	void RaiseDoor();
