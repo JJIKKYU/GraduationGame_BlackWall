@@ -390,8 +390,10 @@
     <ClInclude Include="..\..\Source\BlackWall\EnemyAnimInstance.h" />
     <ClCompile Include="..\..\Source\BlackWall\Item.cpp" />
     <ClInclude Include="..\..\Source\BlackWall\Item.h" />
+    <ClCompile Include="..\..\Source\BlackWall\level\FloorSwitch.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\NPC.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Pickup.cpp" />
+    <ClInclude Include="..\..\Source\BlackWall\level\FloorSwitch.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC.h" />
     <ClInclude Include="..\..\Source\BlackWall\Pickup.h" />
     <ClCompile Include="..\..\Source\BlackWall\Weapon.cpp" />
