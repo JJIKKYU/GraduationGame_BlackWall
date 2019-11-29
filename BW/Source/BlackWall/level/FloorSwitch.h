@@ -35,6 +35,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Floor Switch")
 	FVector mInitialSwitchLocation;
 
+	/** If door open, play sound effect */
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundCue* mDoorSound;
+
 	FTimerHandle mSwitchHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floor Switch")

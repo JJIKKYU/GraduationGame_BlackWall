@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/Engine.h"
 #include "TimerManager.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFloorSwitch::AFloorSwitch()
@@ -67,6 +69,13 @@ void AFloorSwitch::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 	GetWorldTimerManager().SetTimer(mSwitchHandle, this, &AFloorSwitch::CloseDoor, mSwitchTime);
 }
 
+void AFloorSwitch::RaiseDoor()
+{
+	if (mDoorSound)
+		UGameplayStatics::PlaySound2D(this, mDoorSound);
+}
+
+// ¹®Â¦
 void AFloorSwitch::UpdateDoorLocation(float Z)
 {
 	FVector NewLocation = mInitialDoorLocation;
@@ -74,6 +83,7 @@ void AFloorSwitch::UpdateDoorLocation(float Z)
 	mDoor->SetWorldLocation(NewLocation);
 }
 
+// ¹ßÆÇ
 void AFloorSwitch::UpdateFloorSwitchLocation(float Z)
 {
 	FVector NewLocation = mInitialSwitchLocation;
