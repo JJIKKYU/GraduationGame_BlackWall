@@ -6,6 +6,7 @@
 #include "Engine/Engine.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Animation/AnimInstance.h"
 
 // Sets default values
 ANPC::ANPC()

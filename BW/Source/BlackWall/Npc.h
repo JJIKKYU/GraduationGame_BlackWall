@@ -31,6 +31,12 @@ public:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	/*
+	애니메이션
+	*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Animation")
+	class UAnimMontage* mAnimMontage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
