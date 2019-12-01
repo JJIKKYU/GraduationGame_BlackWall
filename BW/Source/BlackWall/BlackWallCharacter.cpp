@@ -1,4 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
+
 
 #include "BlackWallCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
@@ -27,7 +30,7 @@
 
 ABlackWallCharacter::ABlackWallCharacter()
 	: BaseTurnRate(90.f), BaseLookUpRate(90.f)
-	, bShiftDown(false), bLMBDown(false)
+	, bShiftDown(false), bLMBDown(false), bRMBDown(false)
 
 	// Movement and Status
 	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true), bIsCharacterRight(false)
@@ -43,7 +46,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bWeaponEquipped(false)
 
 	// Attack
-	, bAttacking(false), ComboCnt(0), AttackMovementDistance(500.f)
+	, bAttacking(false), ComboCntA(0), ComboCntB(0), AttackMovementDistance(500.f)
 
 	// Combat
 	, bHasCombatTarget(false)
@@ -177,6 +180,10 @@ void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// Attack ,Left Mouse Button & Game Pad Y Button Biding
 	PlayerInputComponent->BindAction("LMB", IE_Pressed, this, &ABlackWallCharacter::LMBDown);
 	PlayerInputComponent->BindAction("LMB", IE_Released, this, &ABlackWallCharacter::LMBUp);
+
+	// Attack ComboB2 , Right Mouse button & Game Pad O Button Binding
+	PlayerInputComponent->BindAction("RMB", IE_Pressed, this, &ABlackWallCharacter::RMBDown);
+	PlayerInputComponent->BindAction("RMB", IE_Released, this, &ABlackWallCharacter::RMBUp);
 	
 	// Dash, Left Shift Key & Game Pad A Button Binding
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABlackWallCharacter::ShiftDown);
@@ -208,7 +215,7 @@ void ABlackWallCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		//setMovementStatus(EMovementStatus::EMS_Moving);
+		setMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
@@ -235,7 +242,7 @@ void ABlackWallCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		//setMovementStatus(EMovementStatus::EMS_Moving);
+		setMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
 		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
@@ -263,6 +270,9 @@ void ABlackWallCharacter::Dash()
 	Animation->Montage_Play(UtilityMontage, 1.0f);
 	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
 	UseMp(mDashUsingMP);
+
+	// ComboCnt Initialization
+	ComboCntA = 0; ComboCntB = 0;
 	
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = .5f;
@@ -317,35 +327,87 @@ void ABlackWallCharacter::Attack()
 
 	bAttacking = true;
 	SetInterpToEnemy(true);
-
-	setMovementStatus(EMovementStatus::EMS_Attack);
 //	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
 	
-	if (ComboCnt == 0)
+	if (ComboCntA == 0)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA1"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
-	else if (ComboCnt == 1)
+	else if (ComboCntA == 1)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA2"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
-	else if (ComboCnt == 2)
+	else if (ComboCntA == 2)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA3"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
-	else if (ComboCnt == 3)
+	else if (ComboCntA == 3)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA4"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
-	else if (ComboCnt == 4)
+	else if (ComboCntA == 4)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA5"), AttackMontage);
-		ComboCnt = 0;
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
+		ComboCntA = -1;
+	}
+}
+
+void ABlackWallCharacter::AttackB()
+{
+	if (!bWeaponEquipped) return;
+	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance || !AttackMontage) return;
+
+	bAttacking = true;
+	SetInterpToEnemy(true);
+
+	if (ComboCntB == 0)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboB1"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+	}
+	else if (ComboCntB == 1)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboB2"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		//AnimInstance->Montage_SetNextSection(FName("ComboB1"), FName("ComboB2"), AttackMontage);
+	}
+	else if (ComboCntB == 2)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboB3"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		//AnimInstance->Montage_SetNextSection(FName("ComboB2"), FName("ComboB3"), AttackMontage);
+	}
+	else if (ComboCntB == 3)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("ComboB4"), AttackMontage);
+		setMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		//AnimInstance->Montage_SetNextSection(FName("ComboB3"), FName("ComboB4"), AttackMontage);
+		ComboCntB = -1;
 	}
 }
 
@@ -368,14 +430,39 @@ void ABlackWallCharacter::LMBDown()
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
 	bLMBDown = true;
+	
 	Attack();
+	ComboCntB = 0;
+	ComboCntA += 1;
 }
 
 void ABlackWallCharacter::LMBUp()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
-	ComboCnt += 1;
+	
 	bLMBDown = false;
+}
+
+void ABlackWallCharacter::RMBDown()
+{
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	if (bWeaponEquipped == false)
+	{
+		bWeaponEquipped = true;
+		EquipWeapon();
+		return;
+	}
+	bRMBDown = true;
+	
+	AttackB();
+	ComboCntA = 0;
+	ComboCntB += 1;
+}
+
+void ABlackWallCharacter::RMBUp()
+{
+	
+	bRMBDown = false;
 }
 
 void ABlackWallCharacter::PlayAttackSound()

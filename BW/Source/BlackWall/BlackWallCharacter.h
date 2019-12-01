@@ -188,6 +188,7 @@ public:
 	// Var
 
 	bool bLMBDown;
+	bool bRMBDown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	bool bWeaponEquipped;
@@ -198,8 +199,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
 	class UAnimMontage* AttackMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | ComboCount")
-	int ComboCnt;
+	int ComboCntA;
+	int ComboCntB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
 	float AttackMovementDistance;
@@ -211,7 +212,12 @@ public:
 
 	void LMBDown();
 	void LMBUp();
+
+	void RMBDown();
+	void RMBUp();
+
 	void Attack();
+	void AttackB();
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
