@@ -75,12 +75,19 @@ public: ///////////////////
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	class AWeapon* EquippedWeapon;
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+	UChildActorComponent* ChildActor;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
+	TSubclassOf<class AItemStorage> WeaponStorage;
 
 	UFUNCTION(Blueprintcallable)
 	void EquipWeapon();
 
 	UFUNCTION(Blueprintcallable)
 	void UnEquipWeapon();
+
 
 ///////////////////
 	// Player Stats
@@ -301,6 +308,15 @@ public:
 
 	void Die();
 
+/////////////////// 레벨이동
+
+	void SwitchLevel(FName LevelName);
+
+	UFUNCTION(BlueprintCallable)
+	void TestKey1();
+
+	UFUNCTION(BlueprintCallable)
+	void TestKey2();
 
 ///////////////////
 
@@ -324,6 +340,8 @@ public:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+
 
 public: // Pickup Item
 

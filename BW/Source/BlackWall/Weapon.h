@@ -85,6 +85,12 @@ public:
 	AController* WeaponInstigator;
 	
 
+///////////////////// 레벨이동
+
+	void SwitchLevel(FName LevelName);
+
+	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
+	FString mName;
 
 public: // FUNCTION
 

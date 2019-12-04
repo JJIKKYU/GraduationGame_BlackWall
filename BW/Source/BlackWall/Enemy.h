@@ -73,7 +73,7 @@ public:
 	class ABlackWallCharacter* mCombatTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class ABlackWallCharacter* mBWChracter;
+	class ABlackWallCharacter* mBWCharacter;
 	
 	
 	UFUNCTION()
@@ -170,6 +170,13 @@ public:
 	bool Alive();
 
 	void Disappear();
+
+	/**
+	* Particle
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class UParticleSystem* mHitParticle;
 
 	
 

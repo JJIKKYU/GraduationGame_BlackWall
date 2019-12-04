@@ -23,6 +23,9 @@
 #include "Weapon.h"
 #include "Enemy.h"
 #include "Engine/Engine.h"
+#include "Components/ChildActorComponent.h"
+#include "save/mySaveGame.h"
+#include "ItemStorage.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,6 +82,12 @@ ABlackWallCharacter::ABlackWallCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	/*
+	ChildActor = FObjectInitializer().CreateDefaultSubobject<UChildActorComponent>(this, TEXT("Weapon"));
+	ChildActor->SetChildActorClass(AWeapon::StaticClass());
+	ChildActor->CreateChildActor();
+	*/
 }
 
 
@@ -113,6 +122,9 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	mMP += DeltaMP;
 	mHP += DeltaHP;
 
+	/* 레벨업 관리 */
+	levelUp();
+
 	/**
 	if (bInterpToEnemy && CombatTarget)
 	{
@@ -132,8 +144,21 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	/* 레벨업 관리 */
-	levelUp();
+	if (!EquippedWeapon)
+	{
+		if (WeaponStorage)
+		{
+			AItemStorage* Weapons = GetWorld()->SpawnActor<AItemStorage>(WeaponStorage);
+			if (Weapons)
+			{
+				AWeapon* WeaponToEquip = GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap["Weapon"]);
+				// WeaponToEquip->Equip();
+				EquippedWeapon = WeaponToEquip;
+			}
+		}
+	}
+
+	
 }
 
 void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
@@ -632,4 +657,79 @@ void ABlackWallCharacter::levelUp()
 		mLevel++;
 		mExp = 0.f;
 	}
+}
+
+// 레벨이동
+void ABlackWallCharacter::SwitchLevel(FName LevelName)
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FString CurrentLevel = World->GetMapName();
+		FName CurrentLevelName(*CurrentLevel);
+		if (CurrentLevelName != LevelName)
+		{
+			UGameplayStatics::OpenLevel(this, LevelName);
+		}
+	}
+}
+
+void ABlackWallCharacter::TestKey1()
+{
+	UmySaveGame* SaveGameInstance = Cast<UmySaveGame>(UGameplayStatics::CreateSaveGameObject(UmySaveGame::StaticClass()));
+
+	if (SaveGameInstance)
+	{
+		if (EquippedWeapon)
+		{
+			SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->mName;
+		}
+
+		SaveGameInstance->CharacterStats.Rotation = GetActorRotation();
+		SaveGameInstance->CharacterStats.Location = GetActorLocation();
+	}
+
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
+}
+
+void ABlackWallCharacter::TestKey2()
+{
+	UmySaveGame* LoadGameInstance = Cast<UmySaveGame>(UGameplayStatics::CreateSaveGameObject(UmySaveGame::StaticClass()));
+	if (LoadGameInstance)
+	{
+		LoadGameInstance = Cast<UmySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->UserIndex));
+
+	}
+
+	UmySaveGame* SaveGameInstance = Cast<UmySaveGame>(UGameplayStatics::CreateSaveGameObject(UmySaveGame::StaticClass()));
+	if (SaveGameInstance)
+	{
+		if (EquippedWeapon)
+		{
+			SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->mName;
+		}
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
+
+		if (WeaponStorage)
+		{
+			AItemStorage* Weapons = GetWorld()->SpawnActor<AItemStorage>(WeaponStorage);
+			if (Weapons)
+			{
+				FString WeaponName = SaveGameInstance->CharacterStats.WeaponName;
+
+				if (WeaponName != TEXT(""))
+				{
+					AWeapon* WeaponToEquip = GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap[WeaponName]);
+					WeaponToEquip->Equip();
+				}
+			}
+		}
+
+		SetActorLocation(LoadGameInstance->CharacterStats.Location);
+		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
+
+
+	}
+
+	
 }

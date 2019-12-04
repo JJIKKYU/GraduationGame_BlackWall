@@ -111,6 +111,7 @@ void AEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 		if (BWCharacter && Alive())
 		{
+			mBWCharacter = BWCharacter;
 			MoveToTarget(BWCharacter);
 		}
 	}
@@ -123,7 +124,6 @@ void AEnemy::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 		if (BWCharacter)
-
 		{
 			bHasValidTarget = false;
 
@@ -201,6 +201,7 @@ void AEnemy::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 	if (OtherActor)
 	{
 		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
+		
 		if (BWCharacter)
 		{
 
@@ -345,10 +346,10 @@ void AEnemy::Die(AActor* Causer)
 		BWCharacter->UpdateCombatTarget();
 	}
 
-	if (mBWChracter)
+	if (mBWCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%f"), mBWChracter->getExp()));
-		mBWChracter->setExp(mBWChracter->getExp() + mEnemyExp);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%f"), mBWCharacter->getExp()));
+		mBWCharacter->setExp(mBWCharacter->getExp() + mEnemyExp);
 	}	
 }
 
