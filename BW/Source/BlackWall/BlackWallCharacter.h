@@ -13,6 +13,7 @@ enum class EMovementStatus : uint8
 	EMS_Moving UMETA(DisplayName = "Moving"),
 	EMS_Dash UMETA(DisplayName = "Dash"),
 	EMS_Attack UMETA(DisplayName = "Attack"),
+	EMS_Jump UMETA(DisplayName = "Jump"),
 	EMS_Dead UMETA(DisplayName = "Dead")
 };
 
@@ -223,6 +224,7 @@ public:
 	void RMBDown();
 	void RMBUp();
 
+
 	void Attack();
 	void AttackB();
 
@@ -253,6 +255,26 @@ public:
 		if (mHitSound[0]) return true;
 		return false;
 	}
+
+
+///////////////////
+
+	/**
+	/* Jump
+	*/
+
+	bool bSpaceDown;
+
+	void SpaceDown();
+	void SpaceUp();
+
+	void Jump();
+
+	UFUNCTION(BlueprintCallable)
+	void JumpEnd();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Jump")
+	class UAnimMontage* JumpMontage;
 
 
 ///////////////////

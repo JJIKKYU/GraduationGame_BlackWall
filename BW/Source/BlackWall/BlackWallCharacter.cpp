@@ -33,7 +33,7 @@
 
 ABlackWallCharacter::ABlackWallCharacter()
 	: BaseTurnRate(90.f), BaseLookUpRate(90.f)
-	, bShiftDown(false), bLMBDown(false), bRMBDown(false)
+	, bShiftDown(false), bLMBDown(false), bRMBDown(false), bSpaceDown(false)
 
 	// Movement and Status
 	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true), bIsCharacterRight(false)
@@ -213,6 +213,10 @@ void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// Dash, Left Shift Key & Game Pad A Button Binding
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABlackWallCharacter::ShiftDown);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &ABlackWallCharacter::ShiftUp);
+
+	// 점프 키를 스페이스로 바인딩
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlackWallCharacter::SpaceDown);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ABlackWallCharacter::SpaceUp);
 }
 
 void ABlackWallCharacter::TurnAtRate(float Rate)
@@ -490,6 +494,7 @@ void ABlackWallCharacter::RMBUp()
 	bRMBDown = false;
 }
 
+
 void ABlackWallCharacter::PlayAttackSound()
 {
 	if (mAttackSound[0])
@@ -527,6 +532,46 @@ void ABlackWallCharacter::IncrementMP(float Amount)
 	if (mMP + Amount >= mMaxMP) mMP = mMaxMP;
 	else mMP += Amount;
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Jump 점프기능
+
+void ABlackWallCharacter::SpaceDown()
+{
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	bSpaceDown = true;
+	Jump();
+}
+
+void ABlackWallCharacter::SpaceUp()
+{
+	bSpaceDown = false;
+}
+
+void ABlackWallCharacter::Jump()
+{
+	// If the character is alive and moving
+	if (!bCanDash ||
+		MovementStatus == EMovementStatus::EMS_Dead) return;
+	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
+	if (!Animation && !JumpMontage) return; // Define UtilityMontage in .h
+	// bJumping = true;
+	setMovementStatus(EMovementStatus::EMS_Jump);
+	Animation->Montage_Play(JumpMontage, 1.0f);
+	Animation->Montage_JumpToSection(FName("Jump"), JumpMontage);
+
+	// ComboCnt Initialization
+	// ComboCntA = 0; ComboCntB = 0;
+}
+
+void ABlackWallCharacter::JumpEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("JumpEND()"));
+	setMovementStatus(EMovementStatus::EMS_Normal);
+
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Combat
