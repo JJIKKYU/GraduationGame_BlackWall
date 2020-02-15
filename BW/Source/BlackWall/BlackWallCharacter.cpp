@@ -2,7 +2,6 @@
 #include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
 
-
 #include "BlackWallCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -33,23 +32,28 @@
 
 ABlackWallCharacter::ABlackWallCharacter()
 	: BaseTurnRate(90.f), BaseLookUpRate(90.f)
-	, bShiftDown(false), bLMBDown(false), bRMBDown(false), bSpaceDown(false)
+	, bShiftDown(false), bLMBDown(false), bRMBDown(false), bSpaceDown(false), bIsInAir(false)
 
 	// Movement and Status
-	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(true), bIsCharacterRight(false)
-	, mRunningSpeed(850.f)
-	, bCanDash(true), bDashing(false), bDashStop(0.15f), mDashDistance(6000.f), mDashCollDown(.5f), mDashUsingMP(15.f)
+	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(false), bIsCharacterRight(false)
+	, bMovingForward(false), bMovingRight(false)
+	, RunningSpeed(650.f)
+
+	// Dash
+	, bCanDash(true), bDashing(false), bDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f)
+	, mDashCollDown(.5f), mDashUsingMP(15.f), DashStop(0.1f)
+	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
 
 	// HP & MP
-	, mMaxHP(100.f), mHP(85.f), mHPrecoveryRate(.1f)
-	, mMaxMP(100.f), mMP(50.f), mMPrecoveryRate(.5f)
-	, mLevel(1), mExp(0.f)
+	, maxHP(100.f), hp(85.f), hpRecoveryRate(.1f)
+	, maxMP(100.f), mp(50.f), mpRecoveryRate(.5f)
+	, level(1), exp(0.f)
 
 	// temporary var
 	, bWeaponEquipped(false)
 
 	// Attack
-	, bAttacking(false), ComboCntA(0), ComboCntB(0), AttackMovementDistance(500.f)
+	, bAttacking(false), ComboCntA(0), ComboCntB(0), AttackMovementDistance(500.f), AirComboCntA(0)
 
 	// Combat
 	, bHasCombatTarget(false)
@@ -75,8 +79,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 750.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom->ProbeChannel = ECC_WorldStatic;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -117,13 +122,25 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
 
 	// Auto Recovery HP, MP
-	float DeltaMP = mMPrecoveryRate * DeltaTime;
-	float DeltaHP = mHPrecoveryRate * DeltaTime;
-	mMP += DeltaMP;
-	mHP += DeltaHP;
+	float DeltaMP = mpRecoveryRate * DeltaTime;
+	float DeltaHP = hpRecoveryRate * DeltaTime;
+	mp += DeltaMP;
+	hp += DeltaHP;
 
 	/* 레벨업 관리 */
 	levelUp();
+
+	bIsInAir = GetMovementComponent()->IsFalling();
+	if (bIsInAir)
+	{
+		SetMovementStatus(EMovementStatus::EMS_Jump);
+	}
+
+	// 스프린팅 키를 눌렀을경우 (빠르게 달리기)
+	if (bCtrlKeyDown)
+		SetMovementStatus(EMovementStatus::EMS_Sprinting);
+	else
+		SetMovementStatus(EMovementStatus::EMS_Normal);
 
 	/**
 	if (bInterpToEnemy && CombatTarget)
@@ -161,36 +178,33 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	
 }
 
-void ABlackWallCharacter::setMovementStatus(EMovementStatus status)
+void ABlackWallCharacter::SetMovementStatus(EMovementStatus status)
 {
 	MovementStatus = status;
+
+	if (MovementStatus == EMovementStatus::EMS_Sprinting)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = SprintingSpeed;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
+	}
 }
 
 
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-bool ABlackWallCharacter::CanMove(float Value)
-{
-	if (BWCharacterController)
-	{
-		return (Value != 0.0f) && (!bAttacking);
-	}
-	return false;
-	
-}
-
 void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 
-	/*
-	// Jump is not use this game
+	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	*/
-
+	
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABlackWallCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABlackWallCharacter::MoveRight);
 
@@ -214,9 +228,9 @@ void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABlackWallCharacter::ShiftDown);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &ABlackWallCharacter::ShiftUp);
 
-	// 점프 키를 스페이스로 바인딩
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlackWallCharacter::SpaceDown);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ABlackWallCharacter::SpaceUp);
+	// Sprinting, Left Ctrl Key & Game Pad 게임 패드는 아직 안 정함
+	PlayerInputComponent->BindAction("Sprinting", IE_Pressed, this, &ABlackWallCharacter::CtrlKeyDown);
+	PlayerInputComponent->BindAction("Sprinting", IE_Released, this, &ABlackWallCharacter::CtrlKeyUp);
 }
 
 void ABlackWallCharacter::TurnAtRate(float Rate)
@@ -231,8 +245,21 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
+bool ABlackWallCharacter::CanMove(float Value)
+{
+	if (BWCharacterController)
+	{
+		return (Value != 0.0f) && (!bAttacking);
+	}
+	return false;
+
+}
+
 void ABlackWallCharacter::MoveForward(float Value)
 {
+	// 움직이지 않으므로 false
+	bMovingForward = false;
+
 	if (CanMove(Value))
 	{
 		// find out which way is forward
@@ -244,12 +271,18 @@ void ABlackWallCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		setMovementStatus(EMovementStatus::EMS_Moving);
+		// SetMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
-		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
+		// GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
 
-		// set Character direction
+		// 움직이므로 true
+		bMovingForward = true;
+
+		/*
+		set Character direction
+		뒤로가면 0, 앞으로가면 1
+		*/
 		if (Value <= 0)
 			bIsCharacterForward = false;
 		else
@@ -259,6 +292,9 @@ void ABlackWallCharacter::MoveForward(float Value)
 
 void ABlackWallCharacter::MoveRight(float Value)
 {
+	// 움직이지 않으므로 false
+	bMovingRight = false;
+
 	if (CanMove(Value))
 	{
 		// find out which way is right
@@ -271,10 +307,13 @@ void ABlackWallCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 
 		// set Movement Status
-		setMovementStatus(EMovementStatus::EMS_Moving);
+		// SetMovementStatus(EMovementStatus::EMS_Moving);
 
 		// set runningSpeed
-		GetCharacterMovement()->MaxWalkSpeed = mRunningSpeed;
+		// GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
+
+		// 움직이므로 true
+		bMovingRight = true;
 
 		// set Character direction
 		if (Value <= 0)
@@ -288,24 +327,39 @@ void ABlackWallCharacter::MoveRight(float Value)
 // Dash Ability
 void ABlackWallCharacter::Dash()
 {
-	if (mMP < mDashUsingMP) return;
+	if (mp < mDashUsingMP) return;
 	// If the character is alive and moving
 	if (!bCanDash ||
 		MovementStatus == EMovementStatus::EMS_Dead) return;
 	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
 	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
 	bDashing = true;
-	setMovementStatus(EMovementStatus::EMS_Dash);
+
+	SetMovementStatus(EMovementStatus::EMS_Dash);
 	Animation->Montage_Play(UtilityMontage, 1.0f);
-	Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
 	UseMp(mDashUsingMP);
 
+	// 공중에 있을 경우
+	if (bIsInAir)
+	{
+		AirDash();
+		//Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
+		//LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mAirDashDistance, true, true);
+		// GetCharacterMovement()->GravityScale = 0.5;
+	}
+	// 지상에 있을 경우
+	else 
+	{
+		Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
+		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance, true, true);
+	}
+	
 	// ComboCnt Initialization
 	ComboCntA = 0; ComboCntB = 0;
 	
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = .5f;
-	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance,true, true);
+	
 	bCanDash = false;
 	
 	if (bAttacking)
@@ -315,6 +369,38 @@ void ABlackWallCharacter::Dash()
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
 }
 
+void ABlackWallCharacter::AirDash()
+{
+	if (mp < mDashUsingMP) return;
+	// If the character is alive and moving
+	if (!bCanDash ||
+		MovementStatus == EMovementStatus::EMS_Dead) return;
+	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
+	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
+	bDashing = true;
+
+	if (bIsInAir)
+	{
+		Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
+	}
+}
+
+void ABlackWallCharacter::AirDashStart()
+{
+	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mAirDashDistance, true, true);
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->BrakingFrictionFactor = .5f;
+
+	bCanDash = false;
+
+	if (bAttacking)
+	{
+		bAttacking = false; // if Attacking, Attack boolean initialize
+	}
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
+}
 
 
 void ABlackWallCharacter::ShiftDown()
@@ -326,11 +412,11 @@ void ABlackWallCharacter::ShiftDown()
 
 void ABlackWallCharacter::StopDashing()
 {
-//	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->StopMovementImmediately();
 	bDashing = false;
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, mDashCollDown, false);
-	setMovementStatus(EMovementStatus::EMS_Normal);
+	SetMovementStatus(EMovementStatus::EMS_Normal);
 }
 
 void ABlackWallCharacter::ResetDash()
@@ -362,35 +448,35 @@ void ABlackWallCharacter::Attack()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA1"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
 	else if (ComboCntA == 1)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA2"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
 	else if (ComboCntA == 2)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA3"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
 	else if (ComboCntA == 3)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA4"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
 	else if (ComboCntA == 4)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboA5"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 		ComboCntA = -1;
 	}
@@ -410,14 +496,14 @@ void ABlackWallCharacter::AttackB()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB1"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
 	}
 	else if (ComboCntB == 1)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB2"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB1"), FName("ComboB2"), AttackMontage);
 	}
@@ -425,7 +511,7 @@ void ABlackWallCharacter::AttackB()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB3"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB2"), FName("ComboB3"), AttackMontage);
 	}
@@ -433,17 +519,53 @@ void ABlackWallCharacter::AttackB()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB4"), AttackMontage);
-		setMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB3"), FName("ComboB4"), AttackMontage);
 		ComboCntB = -1;
 	}
 }
 
+void ABlackWallCharacter::AirAttack()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirAttack Function Called")));
+
+	if (!bWeaponEquipped) return;
+	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance || !AirAttackMontage) return;
+
+	bAttacking = true;
+	SetInterpToEnemy(true);
+
+	if (AirComboCntA == 0)
+	{
+		AnimInstance->Montage_Play(AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("AirComboA1"), AirAttackMontage);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
+	}
+	else if (AirComboCntA == 1)
+	{
+		AnimInstance->Montage_Play(AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("AirComboA2"), AirAttackMontage);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
+	}
+	else if (AirComboCntA == 2)
+	{
+		AnimInstance->Montage_Play(AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName("AirComboA3"), AirAttackMontage);
+		SetMovementStatus(EMovementStatus::EMS_Attack);
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
+		AirComboCntA = -1;
+	}
+}
+
 void ABlackWallCharacter::AttackEnd()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
-	setMovementStatus(EMovementStatus::EMS_Normal);
+	SetMovementStatus(EMovementStatus::EMS_Normal);
 	SetInterpToEnemy(false);
 	bAttacking = false;
 }
@@ -459,10 +581,20 @@ void ABlackWallCharacter::LMBDown()
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("LMB DOWN"));
 	bLMBDown = true;
-	
-	Attack();
-	ComboCntB = 0;
-	ComboCntA += 1;
+
+
+	// 공중에 있을 경우에는 AirAttack 함수 호출
+	if (bIsInAir)
+	{
+		AirAttack();
+	}
+	// 지상에 있을 경우에는 지상공격 Attack 함수 호출
+	else
+	{
+		Attack();
+		ComboCntB = 0;
+		ComboCntA += 1;
+	}
 }
 
 void ABlackWallCharacter::LMBUp()
@@ -523,15 +655,36 @@ void ABlackWallCharacter::ShowPickupLocations()
 */
 void ABlackWallCharacter::IncrementHP(float Amount)
 {
-	if (mHP + Amount >= mMaxHP) mHP = mMaxHP;
-	else mHP += Amount;
+	if (hp + Amount >= maxHP) hp = maxHP;
+	else hp += Amount;
 }
 
 void ABlackWallCharacter::IncrementMP(float Amount)
 {
-	if (mMP + Amount >= mMaxMP) mMP = mMaxMP;
-	else mMP += Amount;
+	if (mp + Amount >= maxMP) mp = maxMP;
+	else mp += Amount;
 }
+//////////////////////////////////////////////////////////////////////////
+// Sprinting 스프린팅/빠르게 달리기 기능
+
+void ABlackWallCharacter::CtrlKeyDown()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("CtrlKeyDown")));
+
+	// 캐릭터가 움직일 때만 스프린팅이 가능함
+	if (bMovingForward || bMovingRight)
+	{
+		bCtrlKeyDown = true;
+	}
+}
+
+void ABlackWallCharacter::CtrlKeyUp()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("CtrlKeyUp")));
+	bCtrlKeyDown = false;
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Jump 점프기능
@@ -550,6 +703,11 @@ void ABlackWallCharacter::SpaceUp()
 
 void ABlackWallCharacter::Jump()
 {
+	if (MovementStatus != EMovementStatus::EMS_Dead)
+	{
+		ACharacter::Jump();
+	}
+	/*
 	// If the character is alive and moving
 	if (!bCanDash ||
 		MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -562,12 +720,13 @@ void ABlackWallCharacter::Jump()
 
 	// ComboCnt Initialization
 	// ComboCntA = 0; ComboCntB = 0;
+	*/
 }
 
 void ABlackWallCharacter::JumpEnd()
-{
+{	
 	UE_LOG(LogTemp, Warning, TEXT("JumpEND()"));
-	setMovementStatus(EMovementStatus::EMS_Normal);
+	SetMovementStatus(EMovementStatus::EMS_Normal);
 
 }
 
@@ -665,9 +824,9 @@ FRotator ABlackWallCharacter::GetLookAtRotationYaw(FVector Target)
 
 float ABlackWallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	if (mHP - DamageAmount <= 0.f)
+	if (hp - DamageAmount <= 0.f)
 	{
-		mHP = 0.f;
+		hp = 0.f;
 		Die();
 
 		if (DamageCauser)
@@ -679,7 +838,7 @@ float ABlackWallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	}
 	else
 	{
-		mHP -= DamageAmount;
+		hp -= DamageAmount;
 	}
 
 	return DamageAmount;
@@ -695,12 +854,12 @@ void ABlackWallCharacter::Die()
 
 void ABlackWallCharacter::levelUp()
 {
-	if (mExp >= 100.f)
+	if (exp >= 100.f)
 	{
 		if (mlevelUpSound)
 			UGameplayStatics::PlaySound2D(this, mlevelUpSound);
-		mLevel++;
-		mExp = 0.f;
+		level++;
+		exp = 0.f;
 	}
 }
 

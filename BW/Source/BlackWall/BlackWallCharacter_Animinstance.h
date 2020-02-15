@@ -35,4 +35,6 @@ public: // var
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	class ABlackWallCharacter* BlackWallCharacter;
+
+	FORCEINLINE bool getIsInAir() { return bIsInAir; }
 };

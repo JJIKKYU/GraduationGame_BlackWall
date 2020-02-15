@@ -11,6 +11,7 @@ enum class EMovementStatus : uint8
 {
 	EMS_Normal UMETA(DisplayName = "Normal"),
 	EMS_Moving UMETA(DisplayName = "Moving"),
+	EMS_Sprinting UMETA(DisplayName = "Sprinting"),
 	EMS_Dash UMETA(DisplayName = "Dash"),
 	EMS_Attack UMETA(DisplayName = "Attack"),
 	EMS_Jump UMETA(DisplayName = "Jump"),
@@ -52,10 +53,10 @@ public:
 	EMovementStatus MovementStatus;
 
 	// Set Movement Status adn running speed
-	void setMovementStatus(EMovementStatus status);
+	void SetMovementStatus(EMovementStatus status);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
-	float mRunningSpeed;
+	float RunningSpeed;
 
 	bool CanMove(float Value);
 
@@ -94,42 +95,61 @@ public: ///////////////////
 	// Player Stats
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mExp;
+	float exp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	int mLevel;
+	int level;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mMaxHP;
+	float maxHP;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mHP;
+	float hp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mHPrecoveryRate;
+	float hpRecoveryRate;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mMaxMP;
+	float maxMP;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mMP;
+	float mp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
-	float mMPrecoveryRate;
+	float mpRecoveryRate;
 
 	void levelUp();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Stats")
 	class USoundBase* mlevelUpSound;
 
-	FORCEINLINE void UseMp(float mp) { mMP -= mp; }
+	FORCEINLINE void UseMp(float mp) { mp -= mp; }
 
-	FORCEINLINE int getLevel() { return mLevel; }
-	FORCEINLINE void setLevel(int level) { mLevel = level; }
+	FORCEINLINE int getLevel() { return level; }
+	FORCEINLINE void setLevel(int level) { level = level; }
 	
-	FORCEINLINE float getExp() { return mExp; }
-	FORCEINLINE void setExp(float exp) { mExp = exp; }
+	FORCEINLINE float getExp() { return exp; }
+	FORCEINLINE void setExp(float exp) { exp = exp; }
 
+
+///////////////////
+
+	/**
+	* Sprint
+	* 
+	* 
+	*/
+
+	bool bCtrlKeyDown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character | Sprint")
+	float SprintingSpeed;
+
+	/** Pressed down to enable sprinting */
+	void CtrlKeyDown();
+
+	/** Released to stop sprinting */
+	void CtrlKeyUp();
 
 
 protected: // Player Input Interface
@@ -147,6 +167,12 @@ protected: // Player Input Interface
 	FORCEINLINE void ShiftUp() { bShiftDown = false; }
 	
 	void Dash();
+
+	UFUNCTION(BlueprintCallable)
+	void AirDash();
+
+	UFUNCTION(BlueprintCallable)
+	void AirDashStart();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Utils")
 	class UAnimMontage* UtilityMontage;
@@ -159,6 +185,9 @@ protected: // Player Input Interface
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float mDashDistance;
+
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float mAirDashDistance;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float mDashCollDown;
@@ -171,6 +200,9 @@ protected: // Player Input Interface
 	
 	UPROPERTY()
 	bool bCanDash;
+
+	UPROPERTY()
+	float DashStop;
 
 	bool bDashing;
 	
@@ -207,8 +239,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
 	class UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
+	class UAnimMontage* AirAttackMontage;
+
 	int ComboCntA;
 	int ComboCntB;
+	int AirComboCntA;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
 	float AttackMovementDistance;
@@ -227,6 +263,8 @@ public:
 
 	void Attack();
 	void AttackB();
+
+	void AirAttack();
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
@@ -264,11 +302,12 @@ public:
 	*/
 
 	bool bSpaceDown;
+	bool bIsInAir;
 
 	void SpaceDown();
 	void SpaceUp();
 
-	void Jump();
+	virtual void Jump();
 
 	UFUNCTION(BlueprintCallable)
 	void JumpEnd();
@@ -343,13 +382,21 @@ public:
 ///////////////////
 
 
-	/** Called for forwards/backward input */
+	/**
+	Called for forwards/backward input
+	*/
 	void MoveForward(float Value);
+	// bIsCharacterForward = Forward Move : true, Backward move : false
 	bool bIsCharacterForward;
+	// bMovingForward = Forward Moving : true, Not Moving : false
+	bool bMovingForward;
 
-	/** Called for side to side input */
+	/**
+	Called for side to side input
+	*/
 	void MoveRight(float Value);
 	bool bIsCharacterRight;
+	bool bMovingRight;
 
 	/** 
 	 * Called via input to turn at a given rate. 
