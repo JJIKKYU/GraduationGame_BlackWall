@@ -162,6 +162,7 @@ protected: // Player Input Interface
 	* Xbox Game Pad A Button
 	*/
 	bool bShiftDown;
+
 	void ShiftDown();
 	
 	FORCEINLINE void ShiftUp() { bShiftDown = false; }
@@ -265,6 +266,8 @@ public:
 	void AttackB();
 
 	void AirAttack();
+
+	void AirDashAttack();
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();

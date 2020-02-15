@@ -341,12 +341,7 @@ void ABlackWallCharacter::Dash()
 
 	// 공중에 있을 경우
 	if (bIsInAir)
-	{
 		AirDash();
-		//Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
-		//LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mAirDashDistance, true, true);
-		// GetCharacterMovement()->GravityScale = 0.5;
-	}
 	// 지상에 있을 경우
 	else 
 	{
@@ -376,13 +371,11 @@ void ABlackWallCharacter::AirDash()
 	if (!bCanDash ||
 		MovementStatus == EMovementStatus::EMS_Dead) return;
 	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
-	if (!Animation && !UtilityMontage) return; // Define UtilityMontage in .h
+	if (!Animation || !UtilityMontage || !AirAttackMontage) return; // Define UtilityMontage in .h
 	bDashing = true;
 
-	if (bIsInAir)
-	{
-		Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
-	}
+	Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
+
 }
 
 void ABlackWallCharacter::AirDashStart()
@@ -562,6 +555,19 @@ void ABlackWallCharacter::AirAttack()
 	}
 }
 
+void ABlackWallCharacter::AirDashAttack()
+{
+	if (!bWeaponEquipped) return;
+	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance || !AirAttackMontage) return;
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirDashAttack Function Called")));
+
+	AnimInstance->Montage_Play(AirAttackMontage);
+	AnimInstance->Montage_JumpToSection(FName("AirDashAttack"), AirAttackMontage);
+}
+
 void ABlackWallCharacter::AttackEnd()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("ATTACKEND"));
@@ -614,10 +620,17 @@ void ABlackWallCharacter::RMBDown()
 		return;
 	}
 	bRMBDown = true;
-	
-	AttackB();
-	ComboCntA = 0;
-	ComboCntB += 1;
+
+	if (bIsInAir)
+	{
+		AirDashAttack();
+	}
+	else
+	{
+		AttackB();
+		ComboCntA = 0;
+		ComboCntB += 1;
+	}
 }
 
 void ABlackWallCharacter::RMBUp()
