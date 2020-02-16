@@ -14,6 +14,7 @@ enum class EMovementStatus : uint8
 	EMS_Sprinting UMETA(DisplayName = "Sprinting"),
 	EMS_Dash UMETA(DisplayName = "Dash"),
 	EMS_Attack UMETA(DisplayName = "Attack"),
+	EMS_AirAttack UMETA(DisplayName = "AirAttack"),
 	EMS_Jump UMETA(DisplayName = "Jump"),
 	EMS_Dead UMETA(DisplayName = "Dead")
 };
@@ -131,6 +132,21 @@ public: ///////////////////
 	FORCEINLINE float getExp() { return exp; }
 	FORCEINLINE void setExp(float exp) { exp = exp; }
 
+///////////////////
+
+	/**
+	* CameraArmControl
+	* 대쉬 및 스프린팅 할 때 카메라 거리 조절
+	*
+	*/
+	
+	// 현재 armLength
+	float armLength;
+	float springArmLength;
+	float defaultArmLength;
+
+	/** 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤 */
+	void armLengthControl(const float DeltaTime);
 
 ///////////////////
 
@@ -142,6 +158,8 @@ public: ///////////////////
 
 	bool bCtrlKeyDown;
 
+	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character | Sprint")
 	float SprintingSpeed;
 
@@ -150,6 +168,8 @@ public: ///////////////////
 
 	/** Released to stop sprinting */
 	void CtrlKeyUp();
+
+	
 
 
 protected: // Player Input Interface
@@ -191,19 +211,16 @@ protected: // Player Input Interface
 	float mAirDashDistance;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float mDashCollDown;
+	float DashCoolDown;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float bDashStop;
+	float DashStop;
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float mDashUsingMP;
 	
 	UPROPERTY()
 	bool bCanDash;
-
-	UPROPERTY()
-	float DashStop;
 
 	bool bDashing;
 	
@@ -256,10 +273,10 @@ public:
 	// Function
 
 	void LMBDown();
-	void LMBUp();
+	FORCEINLINE void LMBUp() { bLMBDown = false; }
 
 	void RMBDown();
-	void RMBUp();
+	FORCEINLINE void RMBUp() { bRMBDown = false; }
 
 
 	void Attack();
@@ -267,7 +284,20 @@ public:
 
 	void AirAttack();
 
+	float bAirDashAttackStop;
+
+	// Air Dash Attack
+	bool bCanAirDashAttack;
+
+	float AirDashStop;
+	float AirDashAttackCoolDown;
+
 	void AirDashAttack();
+	void StopAirDashAttacking();
+	void AirDashAttackReset();
+
+	UPROPERTY()
+	FTimerHandle AirDashAttackUnusedHandle;
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
@@ -308,7 +338,7 @@ public:
 	bool bIsInAir;
 
 	void SpaceDown();
-	void SpaceUp();
+	FORCEINLINE void SpaceUp() { bSpaceDown = false; }
 
 	virtual void Jump();
 

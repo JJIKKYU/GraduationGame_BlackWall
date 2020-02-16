@@ -40,9 +40,9 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, RunningSpeed(650.f)
 
 	// Dash
-	, bCanDash(true), bDashing(false), bDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f)
-	, mDashCollDown(.5f), mDashUsingMP(15.f), DashStop(0.1f)
-	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
+	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f)
+	, DashCoolDown(.5f), AirDashAttackCoolDown(.5f), mDashUsingMP(15.f)
+	, SprintingSpeed(1150.f), bCtrlKeyDown(false), springArmLength(950.f), defaultArmLength(650.f)
 
 	// HP & MP
 	, maxHP(100.f), hp(85.f), hpRecoveryRate(.1f)
@@ -79,7 +79,8 @@ ABlackWallCharacter::ABlackWallCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 750.0f; // The camera follows at this distance behind the character	
+	armLength = defaultArmLength; // armLength는 defaultArmLengt로 초기화
+	CameraBoom->TargetArmLength = armLength; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->ProbeChannel = ECC_WorldStatic;
 
@@ -136,11 +137,10 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 		SetMovementStatus(EMovementStatus::EMS_Jump);
 	}
 
-	// 스프린팅 키를 눌렀을경우 (빠르게 달리기)
-	if (bCtrlKeyDown)
-		SetMovementStatus(EMovementStatus::EMS_Sprinting);
-	else
-		SetMovementStatus(EMovementStatus::EMS_Normal);
+	// 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤하는 함수
+	armLengthControl(DeltaTime);
+
+		
 
 	/**
 	if (bInterpToEnemy && CombatTarget)
@@ -176,6 +176,31 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	}
 
 	
+}
+// 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤
+void ABlackWallCharacter::armLengthControl(const float DeltaTime)
+{
+	float sprintingValue = 750.f;
+	float defaultvalue = 650.f;
+
+	// 스프린팅 키를 눌렀을경우 (빠르게 달리기)
+	if (bCtrlKeyDown) 
+	{
+		// 스프린팅할 때 카메라가 약간 멀어짐
+		if (armLength < springArmLength)
+			armLength += (DeltaTime * sprintingValue);
+
+		CameraBoom->TargetArmLength = armLength;
+		SetMovementStatus(EMovementStatus::EMS_Sprinting);
+	}
+	else // 스프린팅이 끝나면 카메라가 다시 가까워짐
+	{
+		if (armLength > defaultArmLength)
+			armLength -= (DeltaTime * defaultvalue);
+
+		CameraBoom->TargetArmLength = armLength;
+		// SetMovementStatus(EMovementStatus::EMS_Normal);
+	}
 }
 
 void ABlackWallCharacter::SetMovementStatus(EMovementStatus status)
@@ -295,6 +320,9 @@ void ABlackWallCharacter::MoveRight(float Value)
 	// 움직이지 않으므로 false
 	bMovingRight = false;
 
+	// 공중 공격하고 있을 경우에는 이동 불가능
+	if (MovementStatus == EMovementStatus::EMS_AirAttack) return;
+
 	if (CanMove(Value))
 	{
 		// find out which way is right
@@ -361,7 +389,21 @@ void ABlackWallCharacter::Dash()
 	{
 		bAttacking = false; // if Attacking, Attack boolean initialize
 	}
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, DashStop, false);
+}
+
+void ABlackWallCharacter::StopDashing()
+{
+	GetCharacterMovement()->StopMovementImmediately();
+	bDashing = false;
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, DashCoolDown, false);
+	SetMovementStatus(EMovementStatus::EMS_Normal);
+}
+
+void ABlackWallCharacter::ResetDash()
+{
+	bCanDash = true;
 }
 
 void ABlackWallCharacter::AirDash()
@@ -375,7 +417,7 @@ void ABlackWallCharacter::AirDash()
 	bDashing = true;
 
 	Animation->Montage_JumpToSection(FName("airDash"), UtilityMontage);
-
+	
 }
 
 void ABlackWallCharacter::AirDashStart()
@@ -392,7 +434,7 @@ void ABlackWallCharacter::AirDashStart()
 	{
 		bAttacking = false; // if Attacking, Attack boolean initialize
 	}
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, bDashStop, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, DashStop, false);
 }
 
 
@@ -403,19 +445,7 @@ void ABlackWallCharacter::ShiftDown()
 	Dash();
 }
 
-void ABlackWallCharacter::StopDashing()
-{
-	GetCharacterMovement()->StopMovementImmediately();
-	bDashing = false;
-	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, mDashCollDown, false);
-	SetMovementStatus(EMovementStatus::EMS_Normal);
-}
 
-void ABlackWallCharacter::ResetDash()
-{
-	bCanDash = true;
-}
 
 void ABlackWallCharacter::PlayDashSound()
 {
@@ -535,21 +565,21 @@ void ABlackWallCharacter::AirAttack()
 	{
 		AnimInstance->Montage_Play(AirAttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("AirComboA1"), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_AirAttack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
 	}
 	else if (AirComboCntA == 1)
 	{
 		AnimInstance->Montage_Play(AirAttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("AirComboA2"), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_AirAttack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
 	}
 	else if (AirComboCntA == 2)
 	{
 		AnimInstance->Montage_Play(AirAttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("AirComboA3"), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
+		SetMovementStatus(EMovementStatus::EMS_AirAttack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
 		AirComboCntA = -1;
 	}
@@ -557,15 +587,38 @@ void ABlackWallCharacter::AirAttack()
 
 void ABlackWallCharacter::AirDashAttack()
 {
-	if (!bWeaponEquipped) return;
-	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (!AnimInstance || !AirAttackMontage) return;
+	if (!bCanAirDashAttack ||
+		MovementStatus == EMovementStatus::EMS_Dead) return;
+	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
+	if (!Animation && !AirAttackMontage) return; // Define UtilityMontage in .h
+	bDashing = true;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirDashAttack Function Called")));
+	UE_LOG(LogTemp, Warning, TEXT("AirDashAttack Function Called"));
 
-	AnimInstance->Montage_Play(AirAttackMontage);
-	AnimInstance->Montage_JumpToSection(FName("AirDashAttack"), AirAttackMontage);
+	Animation->Montage_Play(AirAttackMontage);
+	Animation->Montage_JumpToSection(FName("AirDashAttack"), AirAttackMontage);
+
+	bDashing = true;
+	bCanAirDashAttack = false;
+
+	GetWorldTimerManager().SetTimer(AirDashAttackUnusedHandle, this, &ABlackWallCharacter::StopAirDashAttacking, AirDashStop, false);
+}
+
+void ABlackWallCharacter::StopAirDashAttacking()
+{
+	UE_LOG(LogTemp, Warning, TEXT("StopAirDashAttacking Function Called"));
+	GetCharacterMovement()->StopMovementImmediately();
+	bDashing = false;
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	GetWorldTimerManager().SetTimer(AirDashAttackUnusedHandle, this, &ABlackWallCharacter::AirDashAttackReset, AirDashAttackCoolDown, false);
+	SetMovementStatus(EMovementStatus::EMS_Normal);
+}
+
+
+void ABlackWallCharacter::AirDashAttackReset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AirDashAttackReset Function Called"));
+	bCanAirDashAttack = true;
 }
 
 void ABlackWallCharacter::AttackEnd()
@@ -603,13 +656,6 @@ void ABlackWallCharacter::LMBDown()
 	}
 }
 
-void ABlackWallCharacter::LMBUp()
-{
-	//UE_LOG(LogTemp, Warning, TEXT("LMB UP"));
-	
-	bLMBDown = false;
-}
-
 void ABlackWallCharacter::RMBDown()
 {
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -624,6 +670,7 @@ void ABlackWallCharacter::RMBDown()
 	if (bIsInAir)
 	{
 		AirDashAttack();
+		AirComboCntA += 1;
 	}
 	else
 	{
@@ -632,13 +679,6 @@ void ABlackWallCharacter::RMBDown()
 		ComboCntB += 1;
 	}
 }
-
-void ABlackWallCharacter::RMBUp()
-{
-	
-	bRMBDown = false;
-}
-
 
 void ABlackWallCharacter::PlayAttackSound()
 {
@@ -709,10 +749,6 @@ void ABlackWallCharacter::SpaceDown()
 	Jump();
 }
 
-void ABlackWallCharacter::SpaceUp()
-{
-	bSpaceDown = false;
-}
 
 void ABlackWallCharacter::Jump()
 {
