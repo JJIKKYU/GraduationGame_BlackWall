@@ -570,10 +570,13 @@ void ABlackWallCharacter::AirAttack()
 	// 왼쪽 마우스 버튼을 눌렀을 경우
 	if (!(AnimInstance->Montage_IsPlaying(AirAttackMontage)))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AirAttackMontage."));
 		AnimInstance->Montage_Play(AirAttackMontage);
 	}
 	else if (AnimInstance->Montage_IsPlaying(AirAttackMontage))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to AirComboCntA : %d"), AirComboCntA);
+		AnimInstance->Montage_Play(AirAttackMontage);
 		AnimInstance->Montage_JumpToSection(FName(AirComboAList[AirComboCntA]), AirAttackMontage);
 	}
 	
