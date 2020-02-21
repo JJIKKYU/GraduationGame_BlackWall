@@ -42,7 +42,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	// Dash
 	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f)
 	, DashCoolDown(.5f), AirDashAttackCoolDown(.5f), mDashUsingMP(15.f)
-	, SprintingSpeed(1150.f), bCtrlKeyDown(false), springArmLength(950.f), defaultArmLength(650.f)
+	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
 
 	// HP & MP
 	, maxHP(100.f), hp(85.f), hpRecoveryRate(.1f)
@@ -54,6 +54,10 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 	// Attack
 	, bAttacking(false), ComboCntA(0), ComboCntB(0), AttackMovementDistance(500.f), AirComboCntA(0)
+
+	// AirAttack
+	, bAirAttacking(false), velocityValue(FVector(0.f, 0.f, 0.f)), gravityScaleValue(0.2f)
+	, gravityScaleDefaultValue(1.0f)
 
 	// Combat
 	, bHasCombatTarget(false)
@@ -79,10 +83,11 @@ ABlackWallCharacter::ABlackWallCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	armLength = defaultArmLength; // armLength는 defaultArmLengt로 초기화
-	CameraBoom->TargetArmLength = armLength; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 650.f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->ProbeChannel = ECC_WorldStatic;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->bEnableCameraRotationLag = true;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -127,6 +132,8 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	float DeltaHP = hpRecoveryRate * DeltaTime;
 	mp += DeltaMP;
 	hp += DeltaHP;
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), bAttacking);
 
 	/* 레벨업 관리 */
 	levelUp();
@@ -186,20 +193,13 @@ void ABlackWallCharacter::armLengthControl(const float DeltaTime)
 	// 스프린팅 키를 눌렀을경우 (빠르게 달리기)
 	if (bCtrlKeyDown) 
 	{
-		// 스프린팅할 때 카메라가 약간 멀어짐
-		if (armLength < springArmLength)
-			armLength += (DeltaTime * sprintingValue);
-
-		CameraBoom->TargetArmLength = armLength;
+		CameraBoom->CameraLagSpeed = 2.f;
 		SetMovementStatus(EMovementStatus::EMS_Sprinting);
 	}
 	else // 스프린팅이 끝나면 카메라가 다시 가까워짐
 	{
-		if (armLength > defaultArmLength)
-			armLength -= (DeltaTime * defaultvalue);
-
-		CameraBoom->TargetArmLength = armLength;
-		// SetMovementStatus(EMovementStatus::EMS_Normal);
+		CameraBoom->CameraLagSpeed = 10.f;
+		SetMovementStatus(EMovementStatus::EMS_Normal);
 	}
 }
 
@@ -274,7 +274,8 @@ bool ABlackWallCharacter::CanMove(float Value)
 {
 	if (BWCharacterController)
 	{
-		return (Value != 0.0f) && (!bAttacking);
+		if (Value != 0.0f && !bAttacking)
+			return true;
 	}
 	return false;
 
@@ -559,7 +560,11 @@ void ABlackWallCharacter::AirAttack()
 	if (!AnimInstance || !AirAttackMontage) return;
 
 	bAttacking = true;
+	bAirAttacking = true;
 	SetInterpToEnemy(true);
+
+
+	
 
 	if (AirComboCntA == 0)
 	{
@@ -567,6 +572,7 @@ void ABlackWallCharacter::AirAttack()
 		AnimInstance->Montage_JumpToSection(FName("AirComboA1"), AirAttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_AirAttack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
+		
 	}
 	else if (AirComboCntA == 1)
 	{
@@ -582,6 +588,21 @@ void ABlackWallCharacter::AirAttack()
 		SetMovementStatus(EMovementStatus::EMS_AirAttack);
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
 		AirComboCntA = -1;
+	}
+}
+
+void ABlackWallCharacter::airAttackManager()
+{
+	// Air Attack
+	if (!bAttacking && !bAirAttacking)
+	{
+		// GetCharacterMovement()->Velocity;
+		GetCharacterMovement()->GravityScale = gravityScaleDefaultValue;
+	}
+	else if (bAttacking && bAirAttacking)
+	{
+		GetCharacterMovement()->Velocity = FVector(0.f, 0.f, 0.f);
+		GetCharacterMovement()->GravityScale = gravityScaleValue;
 	}
 }
 
@@ -627,6 +648,7 @@ void ABlackWallCharacter::AttackEnd()
 	SetMovementStatus(EMovementStatus::EMS_Normal);
 	SetInterpToEnemy(false);
 	bAttacking = false;
+	bAirAttacking = false;
 }
 
 void ABlackWallCharacter::LMBDown()
@@ -741,6 +763,8 @@ void ABlackWallCharacter::CtrlKeyUp()
 
 //////////////////////////////////////////////////////////////////////////
 // Jump 점프기능
+
+
 
 void ABlackWallCharacter::SpaceDown()
 {

@@ -139,11 +139,6 @@ public: ///////////////////
 	* 대쉬 및 스프린팅 할 때 카메라 거리 조절
 	*
 	*/
-	
-	// 현재 armLength
-	float armLength;
-	float springArmLength;
-	float defaultArmLength;
 
 	/** 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤 */
 	void armLengthControl(const float DeltaTime);
@@ -251,24 +246,47 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	bool bWeaponEquipped;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims | Attack")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack | Attack")
 	bool bAttacking;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack | AirAttack")
+	bool bAirAttacking;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | Attack")
 	class UAnimMontage* AttackMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims | Attack")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | AirAttack")
 	class UAnimMontage* AirAttackMontage;
 
 	int ComboCntA;
-	int ComboCntB;
+	int ComboCntB;	
 	int AirComboCntA;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Attack")
 	float AttackMovementDistance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Effects")
 	class UParticleSystem* mHitParticle;
+
+	/**
+	* Air Dash Attack
+	*/
+	bool bCanAirDashAttack;
+	float AirDashStop;
+	float AirDashAttackCoolDown;
+
+	// 점프공격시 잠깐 떠있도록 velocityValue값을 조절
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
+	FVector velocityValue;
+
+	// 점프공격시 잠깐 떠있도록 gravityScaleValue값을 조절
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
+	float gravityScaleValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
+	float gravityScaleDefaultValue;
+
+	
 
 	// Function
 
@@ -278,19 +296,12 @@ public:
 	void RMBDown();
 	FORCEINLINE void RMBUp() { bRMBDown = false; }
 
-
 	void Attack();
 	void AttackB();
 
 	void AirAttack();
 
 	float bAirDashAttackStop;
-
-	// Air Dash Attack
-	bool bCanAirDashAttack;
-
-	float AirDashStop;
-	float AirDashAttackCoolDown;
 
 	void AirDashAttack();
 	void StopAirDashAttacking();
@@ -326,6 +337,13 @@ public:
 		if (mHitSound[0]) return true;
 		return false;
 	}
+
+	/**
+	* Air Attack Function
+	*/
+
+	// Velocity 및 Gravity 등 AirAttack 관리
+	void airAttackManager();
 
 
 ///////////////////
