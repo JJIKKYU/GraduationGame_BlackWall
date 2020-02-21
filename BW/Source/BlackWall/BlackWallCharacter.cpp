@@ -133,7 +133,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	mp += DeltaMP;
 	hp += DeltaHP;
 
-	UE_LOG(LogTemp, Warning, TEXT("%d"), bAttacking);
+	// UE_LOG(LogTemp, Warning, TEXT("%d"), bAttacking);
 
 	/* 레벨업 관리 */
 	levelUp();
@@ -147,7 +147,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	// 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤하는 함수
 	armLengthControl(DeltaTime);
 
-		
+	airAttackManager();
 
 	/**
 	if (bInterpToEnemy && CombatTarget)
@@ -550,12 +550,12 @@ void ABlackWallCharacter::AttackB()
 	}
 }
 
-void ABlackWallCharacter::AirAttack(EButtonType pressedButtonType, int comboCnt)
+void ABlackWallCharacter::AirAttack()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirAttack Function Called")));
 
 	if (!bWeaponEquipped) return;
-	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	if (bDashing  || MovementStatus == EMovementStatus::EMS_Dash) return;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AirAttackMontage) return;
 
@@ -564,21 +564,41 @@ void ABlackWallCharacter::AirAttack(EButtonType pressedButtonType, int comboCnt)
 	bAttacking = true;
 	bAirAttacking = true;
 	SetInterpToEnemy(true);
-	const char* AirComboAList[] = {"AirComboA1"};
+	const char* AirComboAList[] = {"AirComboA1", "AirComboA2", "AirComboA3"};
+
 
 	// 왼쪽 마우스 버튼을 눌렀을 경우
-	if (pressedButtonType == EButtonType::EBT_LMB)
+	if (!(AnimInstance->Montage_IsPlaying(AirAttackMontage)))
 	{
 		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName(AirComboAList[comboCnt]), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_AirAttack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirComboCnt : %d"), comboCnt));
 	}
+	else if (AnimInstance->Montage_IsPlaying(AirAttackMontage))
+	{
+		AnimInstance->Montage_JumpToSection(FName(AirComboAList[AirComboCntA]), AirAttackMontage);
+	}
+	
+	
+	SetMovementStatus(EMovementStatus::EMS_AirAttack);
+	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), AirComboAList[AirComboCntA]);
 }
 
 void ABlackWallCharacter::airComboInputChecking()
 {
-	bPressedAttackButtonWhenAirAttack = true;
+	if (AirComboCntA >= 2)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("airComboInputChecking Function call return, because AirComboCntA >= 2, So AirComboCntA initialize 0"));
+		AirComboCntA = 0;
+		return;
+	}
+	
+	if (bPressedAttackButtonWhenAirAttack)
+	{
+		
+		AirComboCntA += 1;
+		bPressedAttackButtonWhenAirAttack = false;
+		UE_LOG(LogTemp, Warning, TEXT("airComboInputchecking() function called : AirComboCntA : %d"), AirComboCntA);
+		AirAttack();
+	}
 }
 
 void ABlackWallCharacter::airAttackManager()
@@ -639,6 +659,16 @@ void ABlackWallCharacter::AttackEnd()
 	SetInterpToEnemy(false);
 	bAttacking = false;
 	bAirAttacking = false;
+	bPressedAttackButtonWhenAirAttack = false;
+
+	/*
+	if (AirComboCntA > 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AttackEnd Function Called : If AirComboCntA > 0, AirComboCntA initialize 0"));
+		AirComboCntA = 0;
+	}
+	*/
+	
 }
 
 void ABlackWallCharacter::LMBDown()
@@ -658,13 +688,15 @@ void ABlackWallCharacter::LMBDown()
 	if (bIsInAir)
 	{
 		// 공중에서 처음 공격할 때
-		if (AirComboCntA == 0)
+		if (bAirAttacking == false)
 		{
-			AirAttack(EButtonType::EBT_LMB, AirComboCntA);
+			AirAttack();
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAirAttacking == false) => AirAttack()"));
 		}
-		else if (AirComboCntA > 0)
+		else if (bAirAttacking == true)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("LMBDOWN() -> bIsInAir() FunctionCalled")));
+			bPressedAttackButtonWhenAirAttack = true;
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAirAttacking == true) => AirAttack()"));
 		}
 		
 	}

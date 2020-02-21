@@ -329,7 +329,7 @@ public:
 	void Attack();
 	void AttackB();
 
-	void AirAttack(EButtonType pressedButtonType, int comboCnt);
+	void AirAttack();
 
 	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
 	UFUNCTION(BlueprintCallable)
