@@ -57,7 +57,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 
 	// AirAttack
 	, bAirAttacking(false), velocityValue(FVector(0.f, 0.f, 0.f)), gravityScaleValue(0.2f)
-	, gravityScaleDefaultValue(1.0f)
+	, gravityScaleDefaultValue(1.0f), bPressedAttackButtonWhenAirAttack(false)
 
 	// Combat
 	, bHasCombatTarget(false)
@@ -550,7 +550,7 @@ void ABlackWallCharacter::AttackB()
 	}
 }
 
-void ABlackWallCharacter::AirAttack()
+void ABlackWallCharacter::AirAttack(EButtonType pressedButtonType, int comboCnt)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirAttack Function Called")));
 
@@ -559,36 +559,26 @@ void ABlackWallCharacter::AirAttack()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AirAttackMontage) return;
 
+	////////////////// Return 검사 끝
+
 	bAttacking = true;
 	bAirAttacking = true;
 	SetInterpToEnemy(true);
+	const char* AirComboAList[] = {"AirComboA1"};
 
-
-	
-
-	if (AirComboCntA == 0)
+	// 왼쪽 마우스 버튼을 눌렀을 경우
+	if (pressedButtonType == EButtonType::EBT_LMB)
 	{
 		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("AirComboA1"), AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName(AirComboAList[comboCnt]), AirAttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_AirAttack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
-		
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirComboCnt : %d"), comboCnt));
 	}
-	else if (AirComboCntA == 1)
-	{
-		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("AirComboA2"), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_AirAttack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
-	}
-	else if (AirComboCntA == 2)
-	{
-		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("AirComboA3"), AirAttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_AirAttack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), AirComboCntA));
-		AirComboCntA = -1;
-	}
+}
+
+void ABlackWallCharacter::airComboInputChecking()
+{
+	bPressedAttackButtonWhenAirAttack = true;
 }
 
 void ABlackWallCharacter::airAttackManager()
@@ -667,7 +657,16 @@ void ABlackWallCharacter::LMBDown()
 	// 공중에 있을 경우에는 AirAttack 함수 호출
 	if (bIsInAir)
 	{
-		AirAttack();
+		// 공중에서 처음 공격할 때
+		if (AirComboCntA == 0)
+		{
+			AirAttack(EButtonType::EBT_LMB, AirComboCntA);
+		}
+		else if (AirComboCntA > 0)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("LMBDOWN() -> bIsInAir() FunctionCalled")));
+		}
+		
 	}
 	// 지상에 있을 경우에는 지상공격 Attack 함수 호출
 	else
@@ -692,7 +691,6 @@ void ABlackWallCharacter::RMBDown()
 	if (bIsInAir)
 	{
 		AirDashAttack();
-		AirComboCntA += 1;
 	}
 	else
 	{

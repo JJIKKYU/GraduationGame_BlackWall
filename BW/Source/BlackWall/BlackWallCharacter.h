@@ -19,6 +19,14 @@ enum class EMovementStatus : uint8
 	EMS_Dead UMETA(DisplayName = "Dead")
 };
 
+UENUM(BlueprintType)
+enum class EButtonType : uint8
+{
+	EBT_RMB UMETA(DisplayName = "RMB"),
+	EBT_LMB UMETA(DisplayName = "LMB")
+};
+
+
 UCLASS(config=Game)
 class ABlackWallCharacter : public ACharacter
 {
@@ -252,6 +260,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack | AirAttack")
 	bool bAirAttacking;
 
+	// 공중공격시 공격 버튼 클릭 유무
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
+	bool bPressedAttackButtonWhenAirAttack;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | Attack")
 	class UAnimMontage* AttackMontage;
 
@@ -286,6 +298,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
 	float gravityScaleDefaultValue;
 
+	// AirDashAttack 쿨타임 조절 Handled
+	UPROPERTY()
+	FTimerHandle AirDashAttackUnusedHandle;
+
+
+	/**
+	* Attack Sound
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	TArray<class USoundCue*> mAttackSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	TArray<class USoundCue*> mHitSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
+	class USoundBase* mHitSoundd;
+
 	
 
 	// Function
@@ -299,28 +329,18 @@ public:
 	void Attack();
 	void AttackB();
 
-	void AirAttack();
+	void AirAttack(EButtonType pressedButtonType, int comboCnt);
 
-	float bAirDashAttackStop;
+	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
+	UFUNCTION(BlueprintCallable)
+	void airComboInputChecking();
 
 	void AirDashAttack();
 	void StopAirDashAttacking();
 	void AirDashAttackReset();
 
-	UPROPERTY()
-	FTimerHandle AirDashAttackUnusedHandle;
-
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
-	TArray<class USoundCue*> mAttackSound;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
-	TArray<class USoundCue*> mHitSound;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | AttackSound")
-	class USoundBase* mHitSoundd;
 
 	UFUNCTION(BlueprintCallable)
 	void PlayAttackSound();
