@@ -40,7 +40,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, RunningSpeed(650.f)
 
 	// Dash
-	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f)
+	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f), mAirBoneAttackJumpDistance(1000.f)
 	, DashCoolDown(.5f), AirDashAttackCoolDown(.5f), mDashUsingMP(15.f)
 	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
 
@@ -253,9 +253,13 @@ void ABlackWallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABlackWallCharacter::ShiftDown);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &ABlackWallCharacter::ShiftUp);
 
-	// Sprinting, Left Ctrl Key & Game Pad 게임 패드는 아직 안 정함
+	// Sprinting, Left Ctrl Key & Game Pad 왼쪽 숄더
 	PlayerInputComponent->BindAction("Sprinting", IE_Pressed, this, &ABlackWallCharacter::CtrlKeyDown);
 	PlayerInputComponent->BindAction("Sprinting", IE_Released, this, &ABlackWallCharacter::CtrlKeyUp);
+
+	// 추가버튼, Left Alt Key & Game Pad 오른쪽 트리거
+	PlayerInputComponent->BindAction("Alt", IE_Pressed, this, &ABlackWallCharacter::altDown);
+	PlayerInputComponent->BindAction("Alt", IE_Released, this, &ABlackWallCharacter::altUp);
 }
 
 void ABlackWallCharacter::TurnAtRate(float Rate)
@@ -447,7 +451,6 @@ void ABlackWallCharacter::ShiftDown()
 }
 
 
-
 void ABlackWallCharacter::PlayDashSound()
 {
 	if (DashSound)
@@ -585,6 +588,7 @@ void ABlackWallCharacter::AirAttack()
 	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), AirComboAList[AirComboCntA]);
 }
 
+
 void ABlackWallCharacter::airComboInputChecking()
 {
 	if (AirComboCntA >= 2)
@@ -618,6 +622,7 @@ void ABlackWallCharacter::airAttackManager()
 		GetCharacterMovement()->GravityScale = gravityScaleValue;
 	}
 }
+
 
 void ABlackWallCharacter::AirDashAttack()
 {
@@ -674,6 +679,7 @@ void ABlackWallCharacter::AttackEnd()
 	
 }
 
+// XBOX Y
 void ABlackWallCharacter::LMBDown()
 {
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -712,6 +718,7 @@ void ABlackWallCharacter::LMBDown()
 	}
 }
 
+// XBOX B
 void ABlackWallCharacter::RMBDown()
 {
 	if (MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -723,15 +730,25 @@ void ABlackWallCharacter::RMBDown()
 	}
 	bRMBDown = true;
 
+	// 공중에 있을 경우에
 	if (bIsInAir)
 	{
 		AirDashAttack();
 	}
+	// 지상에 있을 경우에
 	else
-	{
-		AttackB();
-		ComboCntA = 0;
-		ComboCntB += 1;
+	{		
+		// Ctrl키 또는 XBOX RB 버튼을 눌렀을 경우
+		if (bAltDown)
+		{
+			AirBoneAttack();
+		}
+		else
+		{
+			AttackB();
+			ComboCntA = 0;
+			ComboCntB += 1;
+		}	
 	}
 }
 
@@ -746,6 +763,37 @@ void ABlackWallCharacter::PlayAttackSound()
 void ABlackWallCharacter::AttackMovement(float Amount)
 {
 	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * Amount, true, true);
+}
+
+// 추가 버튼
+void ABlackWallCharacter::altDown()
+{
+	if (MovementStatus == EMovementStatus::EMS_Dead) return;
+	if (bWeaponEquipped == false)
+	{
+		bWeaponEquipped = true;
+		EquipWeapon();
+		return;
+	}
+	bAltDown = true;
+}
+
+void ABlackWallCharacter::AirBoneAttack()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirBoneAttack Function Called")));
+
+	if (!bWeaponEquipped) return;
+	if (bDashing || MovementStatus == EMovementStatus::EMS_Dead) return;
+	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
+	if (!Animation || !AirBoneAttackMontage) return;
+
+	////////////////// Return 검사 끝
+
+	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * mAirBoneAttackJumpDistance, true, true);
+	Animation->Montage_Play(AirBoneAttackMontage);
+	Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);
+
+
 }
 
 //////////////////////////////////////////////////////////////////////////

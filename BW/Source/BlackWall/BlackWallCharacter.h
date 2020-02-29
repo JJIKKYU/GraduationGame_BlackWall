@@ -212,6 +212,9 @@ protected: // Player Input Interface
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float mAirDashDistance;
+
+	UPROPERTY(EditAnywhere, Category = "Character | Movement")
+	float mAirBoneAttackJumpDistance;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
 	float DashCoolDown;
@@ -250,6 +253,7 @@ public:
 
 	bool bLMBDown;
 	bool bRMBDown;
+	bool bAltDown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Weapon")
 	bool bWeaponEquipped;
@@ -269,6 +273,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | AirAttack")
 	class UAnimMontage* AirAttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | AirAttack")
+	class UAnimMontage* AirBoneAttackMontage;
 
 	int ComboCntA;
 	int ComboCntB;	
@@ -304,6 +311,13 @@ public:
 
 
 	/**
+	* Air Bone Attack
+	*/
+
+
+
+
+	/**
 	* Attack Sound
 	*/
 
@@ -326,10 +340,14 @@ public:
 	void RMBDown();
 	FORCEINLINE void RMBUp() { bRMBDown = false; }
 
+	void altDown();
+	FORCEINLINE void altUp() { bAltDown = false; }
+
 	void Attack();
 	void AttackB();
 
 	void AirAttack();
+	void AirBoneAttack();
 
 	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
 	UFUNCTION(BlueprintCallable)
