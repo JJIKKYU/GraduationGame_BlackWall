@@ -40,16 +40,16 @@ public:
 	*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	float mHP;
+	float hp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	float mMaxHP;
+	float maxHp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	float mDamage;
+	float damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	float mEnemyExp;
+	float enemyExp;
 
 	/**
 	* AI
@@ -58,22 +58,22 @@ public:
 	bool bHasValidTarget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class USphereComponent* mAgroSphere;
+	class USphereComponent* agroSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class USphereComponent* mCombatSphere;
+	class USphereComponent* combatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class AAIController* mAIController;
+	class AAIController* aiController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	bool bOverlappingCombatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class ABlackWallCharacter* mCombatTarget;
+	class ABlackWallCharacter* combatTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class ABlackWallCharacter* mBWCharacter;
+	class ABlackWallCharacter* BWCharacter;
 	
 	
 	UFUNCTION()
@@ -108,13 +108,13 @@ public:
 	*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	class USoundCue* mHitSound;
+	class USoundCue* hitSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	class USoundBase* mDeathSound;
+	class USoundBase* deathSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	class USoundBase* mSwingSound;
+	class USoundBase* swingSound;
 
 
 
@@ -123,21 +123,21 @@ public:
 	*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	class UBoxComponent* mCombatCollision;
+	class UBoxComponent* combatCollision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	class UAnimMontage* mCombatMontage;
+	class UAnimMontage* combatMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bAttacking;
 
-	FTimerHandle mAttackTimer;
+	FTimerHandle attackTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float mAttackMinTime;
+	float attackMinTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float mAttackMaxTime;
+	float attackMaxTime;
 
 	UFUNCTION(BlueprintCallable)
 	void MoveToTarget(class ABlackWallCharacter* Target);
@@ -148,16 +148,24 @@ public:
 	void AttackEnd();
 
 	/**
+	* Hit
+	* Enemy가 맞았을경우
+	*/
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hit")
+	class UAnimMontage* hitMontage;
+
+	/**
 	* Death
 	*/
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	TSubclassOf<UDamageType> mDamageTypeClass;
+	TSubclassOf<UDamageType> damageTypeClass;
 
-	FTimerHandle mDeathTimer;
+	FTimerHandle deathTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float mDeathDelay;
+	float deathDelay;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -176,7 +184,7 @@ public:
 	*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	class UParticleSystem* mHitParticle;
+	class UParticleSystem* hitParticle;
 
 	
 

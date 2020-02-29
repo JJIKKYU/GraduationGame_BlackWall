@@ -101,19 +101,19 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 		if (Enemy)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));
-
-			if (Enemy->mHitParticle)
+			
+			if (Enemy->hitParticle)
 			{
 				const USkeletalMeshSocket* WeaponSocket = SkeletalMesh->GetSocketByName("WeaponSocket");
 				if (WeaponSocket)
 				{
 					FVector SocketLocation = WeaponSocket->GetSocketLocation(SkeletalMesh);
-					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Enemy->mHitParticle, SocketLocation, FRotator(FMath::Rand()%180), false);
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Enemy->hitParticle, SocketLocation, FRotator(FMath::Rand()%180), false);
 				}
 			}
-			if (Enemy->mHitSound)
+			if (Enemy->hitSound)
 			{
-				UGameplayStatics::PlaySound2D(this, Enemy->mHitSound);
+				UGameplayStatics::PlaySound2D(this, Enemy->hitSound);
 			}
 			
 			//death

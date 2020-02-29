@@ -11,7 +11,6 @@ enum class EWeaponState : uint8
 {
 	EMS_Idle		UMETA(DisplayName = "Idle"),
 	EMS_Equipped	UMETA(DisplayName = "Equipeed"),
-
 	EMS_MAX			UMETA(DisplayName = "DefaultMax")
 };
 

@@ -40,7 +40,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, RunningSpeed(650.f)
 
 	// Dash
-	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f), mAirBoneAttackJumpDistance(1000.f)
+	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f), mAirBoneAttackJumpDistance(850.f)
 	, DashCoolDown(.5f), AirDashAttackCoolDown(.5f), mDashUsingMP(15.f)
 	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
 
@@ -789,12 +789,16 @@ void ABlackWallCharacter::AirBoneAttack()
 
 	////////////////// Return °Ë»ç ³¡
 
-	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * mAirBoneAttackJumpDistance, true, true);
 	Animation->Montage_Play(AirBoneAttackMontage);
 	Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);
-
-
 }
+
+void ABlackWallCharacter::airBoneAttackJumping()
+{
+	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * mAirBoneAttackJumpDistance, true, true);
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Pickup Item

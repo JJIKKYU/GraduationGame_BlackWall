@@ -309,14 +309,6 @@ public:
 	UPROPERTY()
 	FTimerHandle AirDashAttackUnusedHandle;
 
-
-	/**
-	* Air Bone Attack
-	*/
-
-
-
-
 	/**
 	* Attack Sound
 	*/
@@ -336,22 +328,13 @@ public:
 
 	void LMBDown();
 	FORCEINLINE void LMBUp() { bLMBDown = false; }
-
 	void RMBDown();
 	FORCEINLINE void RMBUp() { bRMBDown = false; }
-
 	void altDown();
 	FORCEINLINE void altUp() { bAltDown = false; }
 
 	void Attack();
 	void AttackB();
-
-	void AirAttack();
-	void AirBoneAttack();
-
-	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
-	UFUNCTION(BlueprintCallable)
-	void airComboInputChecking();
 
 	void AirDashAttack();
 	void StopAirDashAttacking();
@@ -382,6 +365,22 @@ public:
 
 	// Velocity 및 Gravity 등 AirAttack 관리
 	void airAttackManager();
+	void AirAttack();
+	void AirBoneAttack();
+
+	// AirBoneAttack 애니메이션 진행 중, Jump 타이밍 조절을 위한 함수 (엔진에서 Notify로 호출)
+	UFUNCTION(BlueprintCallable)
+	void airBoneAttackJumping();
+
+	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
+	UFUNCTION(BlueprintCallable)
+	void airComboInputChecking();
+
+	/**
+	* 공격이 어떤 유형인지
+	*/
+	EMovementStatus getMovementStatus();
+	
 
 
 ///////////////////
