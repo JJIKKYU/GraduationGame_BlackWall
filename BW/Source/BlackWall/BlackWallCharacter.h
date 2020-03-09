@@ -127,7 +127,7 @@ public: ///////////////////
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float mpRecoveryRate;
 
-	void levelUp();
+	void LevelUp();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Stats")
 	class USoundBase* mlevelUpSound;
@@ -149,7 +149,7 @@ public: ///////////////////
 	*/
 
 	/** 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤 */
-	void armLengthControl(const float DeltaTime);
+	void ArmLengthControl(const float DeltaTime);
 
 ///////////////////
 
@@ -208,22 +208,22 @@ protected: // Player Input Interface
 	void PlayDashSound();
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float mDashDistance;
+	float dashDistance;
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float mAirDashDistance;
+	float airDashDistance;
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float mAirBoneAttackJumpDistance;
+	float airBoneAttackJumpDistance;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float DashCoolDown;
+	float dashCoolDown;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float DashStop;
+	float dashStop;
 
 	UPROPERTY(EditAnywhere, Category = "Character | Movement")
-	float mDashUsingMP;
+	float dashUsingMP;
 	
 	UPROPERTY()
 	bool bCanDash;
@@ -268,6 +268,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
 	bool bPressedAttackButtonWhenAirAttack;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Attack")
+	bool bPressedAttackButtonWhenAttack;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | Attack")
 	class UAnimMontage* AttackMontage;
 
@@ -277,18 +280,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack | AirAttack")
 	class UAnimMontage* AirBoneAttackMontage;
 
-	int ComboCntA;
-	int ComboCntB;	
-	int AirComboCntA;
+	int comboCntA;
+	int comboCntB;	
+	int airComboCntA;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Attack")
-	float AttackMovementDistance;
+	float attackMovementDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Effects")
 	class UParticleSystem* mHitParticle;
 
 	/**
-	* Air Dash Attack
+	* Air Dash Attack Var
 	*/
 	bool bCanAirDashAttack;
 	float AirDashStop;
@@ -305,7 +308,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | AirAttack")
 	float gravityScaleDefaultValue;
 
-	// AirDashAttack 쿨타임 조절 Handled
+	// AirDashAttack 쿨타임 조절 Handle
 	UPROPERTY()
 	FTimerHandle AirDashAttackUnusedHandle;
 
@@ -333,21 +336,35 @@ public:
 	void altDown();
 	FORCEINLINE void altUp() { bAltDown = false; }
 
+	/**
+	* Attack Function
+	*/
+
 	void Attack();
 	void AttackB();
 
-	void AirDashAttack();
-	void StopAirDashAttacking();
-	void AirDashAttackReset();
+	// 지상 공격시 LMBDown할 경우, bPressedAttackButtonWhenAttack change true or false
+	UFUNCTION(BlueprintCallable)
+	void ComboInputChecking();
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
-	void PlayAttackSound();
+	void AttackMovement(float Amount);
+
+	/**
+	* Air Dash Attack Function
+	*/
+
+	void AirDashAttack();
+	void StopAirDashAttacking();
+	void AirDashAttackReset();
+
+	//
 
 	UFUNCTION(BlueprintCallable)
-	void AttackMovement(float Amount);
+	void PlayAttackSound();
 
 	FORCEINLINE UParticleSystem* GetHitParticle() { return mHitParticle; }
 
@@ -364,17 +381,18 @@ public:
 	*/
 
 	// Velocity 및 Gravity 등 AirAttack 관리
-	void airAttackManager();
+	void AirAttackManager();
 	void AirAttack();
-	void AirBoneAttack();
+	void AirBoneAttack(bool bIsInAir);
 
 	// AirBoneAttack 애니메이션 진행 중, Jump 타이밍 조절을 위한 함수 (엔진에서 Notify로 호출)
 	UFUNCTION(BlueprintCallable)
-	void airBoneAttackJumping();
+	void AirBoneAttackJumping();
+	void StopAirBoneAttackJumping();
 
 	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
 	UFUNCTION(BlueprintCallable)
-	void airComboInputChecking();
+	void AirComboInputChecking();
 
 	/**
 	* 공격이 어떤 유형인지

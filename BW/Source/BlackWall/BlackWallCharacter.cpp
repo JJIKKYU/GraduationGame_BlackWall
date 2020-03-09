@@ -40,8 +40,8 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, RunningSpeed(650.f)
 
 	// Dash
-	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), DashStop(0.3f), AirDashStop(0.3f), mDashDistance(6000.f), mAirDashDistance(6000.f), mAirBoneAttackJumpDistance(850.f)
-	, DashCoolDown(.5f), AirDashAttackCoolDown(.5f), mDashUsingMP(15.f)
+	, bCanDash(true), bCanAirDashAttack(true), bDashing(false), dashStop(0.3f), AirDashStop(0.3f), dashDistance(6000.f), airDashDistance(6000.f), airBoneAttackJumpDistance(850.f)
+	, dashCoolDown(.5f), AirDashAttackCoolDown(.5f), dashUsingMP(15.f)
 	, SprintingSpeed(1150.f), bCtrlKeyDown(false)
 
 	// HP & MP
@@ -53,7 +53,8 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bWeaponEquipped(false)
 
 	// Attack
-	, bAttacking(false), ComboCntA(0), ComboCntB(0), AttackMovementDistance(500.f), AirComboCntA(0)
+	, bAttacking(false), comboCntA(0), comboCntB(0), attackMovementDistance(500.f), airComboCntA(0)
+	, bPressedAttackButtonWhenAttack(false)
 
 	// AirAttack
 	, bAirAttacking(false), velocityValue(FVector(0.f, 0.f, 0.f)), gravityScaleValue(0.2f)
@@ -136,7 +137,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	// UE_LOG(LogTemp, Warning, TEXT("%d"), bAttacking);
 
 	/* 레벨업 관리 */
-	levelUp();
+	LevelUp();
 
 	bIsInAir = GetMovementComponent()->IsFalling();
 	if (bIsInAir)
@@ -145,9 +146,9 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	}
 
 	// 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤하는 함수
-	armLengthControl(DeltaTime);
+	ArmLengthControl(DeltaTime);
 
-	airAttackManager();
+	AirAttackManager();
 
 	/**
 	if (bInterpToEnemy && CombatTarget)
@@ -185,7 +186,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	
 }
 // 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤
-void ABlackWallCharacter::armLengthControl(const float DeltaTime)
+void ABlackWallCharacter::ArmLengthControl(const float DeltaTime)
 {
 	float sprintingValue = 750.f;
 	float defaultvalue = 650.f;
@@ -360,7 +361,7 @@ void ABlackWallCharacter::MoveRight(float Value)
 // Dash Ability
 void ABlackWallCharacter::Dash()
 {
-	if (mp < mDashUsingMP) return;
+	if (mp < dashUsingMP) return;
 	// If the character is alive and moving
 	if (!bCanDash ||
 		MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -370,7 +371,7 @@ void ABlackWallCharacter::Dash()
 
 	SetMovementStatus(EMovementStatus::EMS_Dash);
 	Animation->Montage_Play(UtilityMontage, 1.0f);
-	UseMp(mDashUsingMP);
+	UseMp(dashUsingMP);
 
 	// 공중에 있을 경우
 	if (bIsInAir)
@@ -379,11 +380,11 @@ void ABlackWallCharacter::Dash()
 	else 
 	{
 		Animation->Montage_JumpToSection(FName("Dash"), UtilityMontage);
-		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mDashDistance, true, true);
+		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * dashDistance, true, true);
 	}
 	
 	// ComboCnt Initialization
-	ComboCntA = 0; ComboCntB = 0;
+	comboCntA = 0; comboCntB = 0;
 	
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = .5f;
@@ -394,7 +395,7 @@ void ABlackWallCharacter::Dash()
 	{
 		bAttacking = false; // if Attacking, Attack boolean initialize
 	}
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, DashStop, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, dashStop, false);
 }
 
 void ABlackWallCharacter::StopDashing()
@@ -402,7 +403,7 @@ void ABlackWallCharacter::StopDashing()
 	GetCharacterMovement()->StopMovementImmediately();
 	bDashing = false;
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, DashCoolDown, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::ResetDash, dashCoolDown, false);
 	SetMovementStatus(EMovementStatus::EMS_Normal);
 }
 
@@ -413,7 +414,7 @@ void ABlackWallCharacter::ResetDash()
 
 void ABlackWallCharacter::AirDash()
 {
-	if (mp < mDashUsingMP) return;
+	if (mp < dashUsingMP) return;
 	// If the character is alive and moving
 	if (!bCanDash ||
 		MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -428,7 +429,7 @@ void ABlackWallCharacter::AirDash()
 void ABlackWallCharacter::AirDashStart()
 {
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
-	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * mAirDashDistance, true, true);
+	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * airDashDistance, true, true);
 
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->BrakingFrictionFactor = .5f;
@@ -439,7 +440,7 @@ void ABlackWallCharacter::AirDashStart()
 	{
 		bAttacking = false; // if Attacking, Attack boolean initialize
 	}
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, DashStop, false);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopDashing, dashStop, false);
 }
 
 
@@ -463,49 +464,49 @@ void ABlackWallCharacter::PlayDashSound()
 void ABlackWallCharacter::Attack()
 {
 	if (!bWeaponEquipped) return;
-	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	if (bDashing || MovementStatus == EMovementStatus::EMS_Dash) return;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AttackMontage) return;
 
 	bAttacking = true;
 	SetInterpToEnemy(true);
-//	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
-	
-	if (ComboCntA == 0)
+	////////////////// Return 검사 끝
+	const char* comboAList[] = { "ComboA1", "ComboA2", "ComboA3", "ComboA4", "ComboA5" };
+
+
+	// 왼쪽 마우스 버튼을 눌렀을 경우
+	if (!(AnimInstance->Montage_IsPlaying(AttackMontage)))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AirAttackMontage."));
 		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboA1"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
 	}
-	else if (ComboCntA == 1)
+	else if (AnimInstance->Montage_IsPlaying(AttackMontage))
 	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboA2"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to comboCntA : %d"), comboCntA);
+		AnimInstance->Montage_Play(AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName(comboAList[comboCntA]), AttackMontage);
 	}
-	else if (ComboCntA == 2)
+
+
+	SetMovementStatus(EMovementStatus::EMS_Attack);
+	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), comboAList[comboCntA]);
+}
+
+void ABlackWallCharacter::ComboInputChecking()
+{
+	if (comboCntA >= 4)
 	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboA3"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
+		UE_LOG(LogTemp, Warning, TEXT("airComboInputChecking Function call return, because AirComboCntA >= 4, So AirComboCntA initialize 0"));
+		comboCntA = 0;
+		return;
 	}
-	else if (ComboCntA == 3)
+
+	if (bPressedAttackButtonWhenAttack)
 	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboA4"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
-	}
-	else if (ComboCntA == 4)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboA5"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntA));
-		ComboCntA = -1;
+		comboCntA += 1;
+		bPressedAttackButtonWhenAttack = false;
+		UE_LOG(LogTemp, Warning, TEXT("ComboInputchecking() function called : ComboCntA : %d"), comboCntA);
+		Attack();
 	}
 }
 
@@ -519,37 +520,37 @@ void ABlackWallCharacter::AttackB()
 	bAttacking = true;
 	SetInterpToEnemy(true);
 
-	if (ComboCntB == 0)
+	if (comboCntB == 0)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB1"), AttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
 	}
-	else if (ComboCntB == 1)
+	else if (comboCntB == 1)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB2"), AttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB1"), FName("ComboB2"), AttackMontage);
 	}
-	else if (ComboCntB == 2)
+	else if (comboCntB == 2)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB3"), AttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB2"), FName("ComboB3"), AttackMontage);
 	}
-	else if (ComboCntB == 3)
+	else if (comboCntB == 3)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName("ComboB4"), AttackMontage);
 		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), ComboCntB));
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
 		//AnimInstance->Montage_SetNextSection(FName("ComboB3"), FName("ComboB4"), AttackMontage);
-		ComboCntB = -1;
+		comboCntB = -1;
 	}
 }
 
@@ -578,37 +579,37 @@ void ABlackWallCharacter::AirAttack()
 	}
 	else if (AnimInstance->Montage_IsPlaying(AirAttackMontage))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to AirComboCntA : %d"), AirComboCntA);
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to AirComboCntA : %d"), airComboCntA);
 		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName(AirComboAList[AirComboCntA]), AirAttackMontage);
+		AnimInstance->Montage_JumpToSection(FName(AirComboAList[airComboCntA]), AirAttackMontage);
 	}
 	
 	
 	SetMovementStatus(EMovementStatus::EMS_AirAttack);
-	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), AirComboAList[AirComboCntA]);
+	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), AirComboAList[airComboCntA]);
 }
 
 
-void ABlackWallCharacter::airComboInputChecking()
+void ABlackWallCharacter::AirComboInputChecking()
 {
-	if (AirComboCntA >= 2)
+	if (airComboCntA >= 2)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("airComboInputChecking Function call return, because AirComboCntA >= 2, So AirComboCntA initialize 0"));
-		AirComboCntA = 0;
+		airComboCntA = 0;
 		return;
 	}
 	
 	if (bPressedAttackButtonWhenAirAttack)
 	{
 		
-		AirComboCntA += 1;
+		airComboCntA += 1;
 		bPressedAttackButtonWhenAirAttack = false;
-		UE_LOG(LogTemp, Warning, TEXT("airComboInputchecking() function called : AirComboCntA : %d"), AirComboCntA);
+		UE_LOG(LogTemp, Warning, TEXT("airComboInputchecking() function called : AirComboCntA : %d"), airComboCntA);
 		AirAttack();
 	}
 }
 
-void ABlackWallCharacter::airAttackManager()
+void ABlackWallCharacter::AirAttackManager()
 {
 	// Air Attack
 	if (!bAttacking && !bAirAttacking)
@@ -700,21 +701,26 @@ void ABlackWallCharacter::LMBDown()
 		if (bAirAttacking == false)
 		{
 			AirAttack();
-			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAirAttacking == false) => AirAttack()"));
 		}
 		else if (bAirAttacking == true)
 		{
 			bPressedAttackButtonWhenAirAttack = true;
-			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAirAttacking == true) => AirAttack()"));
 		}
 		
 	}
 	// 지상에 있을 경우에는 지상공격 Attack 함수 호출
 	else
 	{
-		Attack();
-		ComboCntB = 0;
-		ComboCntA += 1;
+		if (bAttacking == false)
+		{
+			Attack();
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAttacking == false) => Attack()"));
+		}
+		else if (bAttacking == true)
+		{
+			bPressedAttackButtonWhenAttack = true;
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAttacking == true) => Attack()"));
+		}
 	}
 }
 
@@ -733,7 +739,14 @@ void ABlackWallCharacter::RMBDown()
 	// 공중에 있을 경우에
 	if (bIsInAir)
 	{
-		AirDashAttack();
+		if (bAltDown)
+		{
+			AirBoneAttack(true);
+		}
+		else
+		{
+			AirDashAttack();
+		}
 	}
 	// 지상에 있을 경우에
 	else
@@ -741,13 +754,13 @@ void ABlackWallCharacter::RMBDown()
 		// Ctrl키 또는 XBOX RB 버튼을 눌렀을 경우
 		if (bAltDown)
 		{
-			AirBoneAttack();
+			AirBoneAttack(false);
 		}
 		else
 		{
 			AttackB();
-			ComboCntA = 0;
-			ComboCntB += 1;
+			comboCntA = 0;
+			comboCntB += 1;
 		}	
 	}
 }
@@ -778,7 +791,7 @@ void ABlackWallCharacter::altDown()
 	bAltDown = true;
 }
 
-void ABlackWallCharacter::AirBoneAttack()
+void ABlackWallCharacter::AirBoneAttack(bool bIsInAir)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirBoneAttack Function Called")));
 
@@ -788,15 +801,35 @@ void ABlackWallCharacter::AirBoneAttack()
 	if (!Animation || !AirBoneAttackMontage) return;
 
 	////////////////// Return 검사 끝
+	if (bIsInAir)
+	{
+		Animation->Montage_Play(AirBoneAttackMontage);
+		Animation->Montage_JumpToSection(FName("JumpAirBoneAttack"), AirBoneAttackMontage);
 
-	Animation->Montage_Play(AirBoneAttackMontage);
-	Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);
+		GetCharacterMovement()->StopMovementImmediately();
+		GetCharacterMovement()->BrakingFrictionFactor = .5f;
+	}
+	else
+	{
+		Animation->Montage_Play(AirBoneAttackMontage);
+		Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);
+	}	
 }
 
-void ABlackWallCharacter::airBoneAttackJumping()
+void ABlackWallCharacter::AirBoneAttackJumping()
 {
-	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * mAirBoneAttackJumpDistance, true, true);
+	// 머리방향(Z축)으로 Launch
+	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * airBoneAttackJumpDistance, true, true);
+
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopAirBoneAttackJumping, 0.4f, false);
 }
+
+void ABlackWallCharacter::StopAirBoneAttackJumping()
+{
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	SetMovementStatus(EMovementStatus::EMS_Normal);
+}
+
 
 
 
@@ -1010,7 +1043,7 @@ void ABlackWallCharacter::Die()
 //////////////////////////////////////////////////////////////////////////
 // 레벨
 
-void ABlackWallCharacter::levelUp()
+void ABlackWallCharacter::LevelUp()
 {
 	if (exp >= 100.f)
 	{
