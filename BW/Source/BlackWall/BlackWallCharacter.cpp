@@ -471,32 +471,31 @@ void ABlackWallCharacter::Attack()
 	bAttacking = true;
 	SetInterpToEnemy(true);
 	////////////////// Return 검사 끝
-	const char* comboAList[] = { "ComboA1", "ComboA2", "ComboA3", "ComboA4", "ComboA5" };
 
+	const char* ComboAList[] = { "ComboA1", "ComboA2", "ComboA3", "ComboA4", "ComboA5" };
 
 	// 왼쪽 마우스 버튼을 눌렀을 경우
 	if (!(AnimInstance->Montage_IsPlaying(AttackMontage)))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AirAttackMontage."));
+		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AttackMontage."));
 		AnimInstance->Montage_Play(AttackMontage);
 	}
 	else if (AnimInstance->Montage_IsPlaying(AttackMontage))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to comboCntA : %d"), comboCntA);
-		AnimInstance->Montage_Play(AirAttackMontage);
-		AnimInstance->Montage_JumpToSection(FName(comboAList[comboCntA]), AttackMontage);
+		AnimInstance->Montage_Play(AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName(ComboAList[comboCntA]), AttackMontage);
 	}
 
-
 	SetMovementStatus(EMovementStatus::EMS_Attack);
-	UE_LOG(LogTemp, Warning, TEXT("AirAttack function called : AirComboAList : %s"), comboAList[comboCntA]);
+	UE_LOG(LogTemp, Warning, TEXT("Attack function called : ComboAList : %s"), ComboAList[comboCntA]);
 }
 
 void ABlackWallCharacter::ComboInputChecking()
 {
 	if (comboCntA >= 4)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("airComboInputChecking Function call return, because AirComboCntA >= 4, So AirComboCntA initialize 0"));
+		UE_LOG(LogTemp, Warning, TEXT("ComboInputChecking Function call return, because ComboCntA >= 4, So ComboCntA initialize 0"));
 		comboCntA = 0;
 		return;
 	}
@@ -669,16 +668,14 @@ void ABlackWallCharacter::AttackEnd()
 	bAttacking = false;
 	bAirAttacking = false;
 	bPressedAttackButtonWhenAirAttack = false;
-
-	/*
-	if (AirComboCntA > 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AttackEnd Function Called : If AirComboCntA > 0, AirComboCntA initialize 0"));
-		AirComboCntA = 0;
-	}
-	*/
-	
+	bPressedAttackButtonWhenAttack = false;
 }
+
+void ABlackWallCharacter::LastAttackChecking()
+{
+	comboCntA = 0;
+}
+
 
 // XBOX Y
 void ABlackWallCharacter::LMBDown()
@@ -775,7 +772,7 @@ void ABlackWallCharacter::PlayAttackSound()
 
 void ABlackWallCharacter::AttackMovement(float Amount)
 {
-	LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * Amount, true, true);
+	// LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * Amount, true, true);
 }
 
 // 추가 버튼

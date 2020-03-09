@@ -351,6 +351,9 @@ public:
 	void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
+	void LastAttackChecking();
+
+	UFUNCTION(BlueprintCallable)
 	void AttackMovement(float Amount);
 
 	/**
