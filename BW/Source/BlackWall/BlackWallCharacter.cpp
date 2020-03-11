@@ -796,21 +796,29 @@ void ABlackWallCharacter::AirBoneAttack(bool bIsInAir)
 	if (bDashing || MovementStatus == EMovementStatus::EMS_Dead) return;
 	UAnimInstance* Animation = GetMesh()->GetAnimInstance();
 	if (!Animation || !AirBoneAttackMontage) return;
+	if (bAttacking || bAirAttacking) return;
 
 	////////////////// Return 검사 끝
+
+	// 공중에서 공격했을 때
 	if (bIsInAir)
 	{
+		bAirAttacking = true;
 		Animation->Montage_Play(AirBoneAttackMontage);
 		Animation->Montage_JumpToSection(FName("JumpAirBoneAttack"), AirBoneAttackMontage);
 
 		GetCharacterMovement()->StopMovementImmediately();
 		GetCharacterMovement()->BrakingFrictionFactor = .5f;
 	}
+	// 지상에서 공격했을 때
 	else
 	{
+		bAttacking = true;
 		Animation->Montage_Play(AirBoneAttackMontage);
 		Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);
 	}	
+
+	SetMovementStatus(EMovementStatus::EMS_AirAttack);
 }
 
 void ABlackWallCharacter::AirBoneAttackJumping()
@@ -823,6 +831,9 @@ void ABlackWallCharacter::AirBoneAttackJumping()
 
 void ABlackWallCharacter::StopAirBoneAttackJumping()
 {
+	bAttacking = false;
+	bAirAttacking = false;
+
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
 	SetMovementStatus(EMovementStatus::EMS_Normal);
 }
