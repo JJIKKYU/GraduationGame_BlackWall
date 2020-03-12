@@ -64,7 +64,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bHasCombatTarget(false)
 
 	// 보간
-	, mInterpSpeed(15.f), bInterpToEnemy(false)
+	, interpSpeed(15.f), bInterpToEnemy(false)
 	
 {
 	// Set size for collision capsule
@@ -150,15 +150,18 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 
 	AirAttackManager();
 
-	/**
+	
 	if (bInterpToEnemy && CombatTarget)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("bInterpToEnemy and CombatTarget"));
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
-		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, mInterpSpeed);
-
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, interpSpeed);
+		
+		
+		FollowCamera->AddLocalRotation(LookAtYaw);
 		SetActorRotation(InterpRotation);
 	}
-	*/
+	
 
 	if (CombatTarget)
 	{
@@ -477,18 +480,18 @@ void ABlackWallCharacter::Attack()
 	// 왼쪽 마우스 버튼을 눌렀을 경우
 	if (!(AnimInstance->Montage_IsPlaying(AttackMontage)))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AttackMontage."));
+		// UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AttackMontage."));
 		AnimInstance->Montage_Play(AttackMontage);
 	}
 	else if (AnimInstance->Montage_IsPlaying(AttackMontage))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to comboCntA : %d"), comboCntA);
+		// UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to comboCntA : %d"), comboCntA);
 		AnimInstance->Montage_Play(AttackMontage);
 		AnimInstance->Montage_JumpToSection(FName(ComboAList[comboCntA]), AttackMontage);
 	}
 
 	SetMovementStatus(EMovementStatus::EMS_Attack);
-	UE_LOG(LogTemp, Warning, TEXT("Attack function called : ComboAList : %s"), ComboAList[comboCntA]);
+	// UE_LOG(LogTemp, Warning, TEXT("Attack function called : ComboAList : %s"), ComboAList[comboCntA]);
 }
 
 void ABlackWallCharacter::ComboInputChecking()

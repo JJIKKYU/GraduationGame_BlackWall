@@ -17,7 +17,7 @@ AWeapon::AWeapon()
 	: WeaponState(EWeaponState::EMS_Idle)
 
  	// Damage
-	, mDamage(25.f)
+	, mDamage(10.f)
 
 	// Material
 	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)

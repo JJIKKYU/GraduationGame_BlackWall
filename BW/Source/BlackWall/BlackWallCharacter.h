@@ -461,7 +461,7 @@ public:
 	* º¸°£
 	*/
 
-	float mInterpSpeed;
+	float interpSpeed;
 	bool bInterpToEnemy;
 	void SetInterpToEnemy(bool Interp);
 
