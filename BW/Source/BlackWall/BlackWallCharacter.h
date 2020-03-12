@@ -19,12 +19,16 @@ enum class EMovementStatus : uint8
 	EMS_Dead UMETA(DisplayName = "Dead")
 };
 
+
+
 UENUM(BlueprintType)
 enum class EButtonType : uint8
 {
 	EBT_RMB UMETA(DisplayName = "RMB"),
 	EBT_LMB UMETA(DisplayName = "LMB")
 };
+
+
 
 
 UCLASS(config=Game)

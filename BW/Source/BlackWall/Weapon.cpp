@@ -17,10 +17,12 @@ AWeapon::AWeapon()
 	: WeaponState(EWeaponState::EMS_Idle)
 
  	// Damage
-	, mDamage(10.f)
+	, damage(10.f)
 
 	// Material
 	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)
+
+	, airBoneAttackJumpDistance(850.f)
 {
 	// Skeletal mesh component initialize
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -98,8 +100,22 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherActor)
 	{
 		AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+
 		if (Enemy)
 		{
+			if (EAttackType::EAT_Normal == AttackType)
+			{
+
+			}
+			else if (EAttackType::EAT_Upper == AttackType)
+			{
+				Enemy->LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * airBoneAttackJumpDistance, true, true);
+			}
+			else
+			{
+
+			}
+			
 			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));
 			
 			if (Enemy->hitParticle)
@@ -119,7 +135,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 			//death
 			if (DamageTypeClass)
 			{
-				UGameplayStatics::ApplyDamage(Enemy, mDamage, WeaponInstigator, this, DamageTypeClass);
+				UGameplayStatics::ApplyDamage(Enemy, damage, WeaponInstigator, this, DamageTypeClass);
 			}
 		}
 	}

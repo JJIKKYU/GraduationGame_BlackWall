@@ -157,8 +157,7 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
 		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, interpSpeed);
 		
-		
-		FollowCamera->AddLocalRotation(LookAtYaw);
+
 		SetActorRotation(InterpRotation);
 	}
 	
@@ -476,6 +475,7 @@ void ABlackWallCharacter::Attack()
 	////////////////// Return 검사 끝
 
 	const char* ComboAList[] = { "ComboA1", "ComboA2", "ComboA3", "ComboA4", "ComboA5" };
+	EquippedWeapon->setAttackType(EAttackType::EAT_Normal);
 
 	// 왼쪽 마우스 버튼을 눌렀을 경우
 	if (!(AnimInstance->Montage_IsPlaying(AttackMontage)))
@@ -571,6 +571,7 @@ void ABlackWallCharacter::AirAttack()
 	bAirAttacking = true;
 	SetInterpToEnemy(true);
 	const char* AirComboAList[] = {"AirComboA1", "AirComboA2", "AirComboA3"};
+	EquippedWeapon-> setAttackType(EAttackType::EAT_Air);
 
 
 	// 왼쪽 마우스 버튼을 눌렀을 경우
@@ -806,6 +807,7 @@ void ABlackWallCharacter::AirBoneAttack(bool bIsInAir)
 	// 공중에서 공격했을 때
 	if (bIsInAir)
 	{
+		EquippedWeapon->setAttackType(EAttackType::EAT_Normal);
 		bAirAttacking = true;
 		Animation->Montage_Play(AirBoneAttackMontage);
 		Animation->Montage_JumpToSection(FName("JumpAirBoneAttack"), AirBoneAttackMontage);
@@ -816,6 +818,7 @@ void ABlackWallCharacter::AirBoneAttack(bool bIsInAir)
 	// 지상에서 공격했을 때
 	else
 	{
+		EquippedWeapon->setAttackType(EAttackType::EAT_Upper);
 		bAttacking = true;
 		Animation->Montage_Play(AirBoneAttackMontage);
 		Animation->Montage_JumpToSection(FName("AirBoneAttack"), AirBoneAttackMontage);

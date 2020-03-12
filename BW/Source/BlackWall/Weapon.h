@@ -14,6 +14,14 @@ enum class EWeaponState : uint8
 	EMS_MAX			UMETA(DisplayName = "DefaultMax")
 };
 
+UENUM(BlueprintType)
+enum class EAttackType : uint8
+{
+	EAT_Normal UMETA(DisplayName = "Normal"),
+	EAT_Upper UMETA(DisplayName = "Upper"),
+	EAT_Air UMETA(DisplayName = "Air")
+};
+
 /**
  * 
  */
@@ -50,7 +58,7 @@ public:
 	class UBoxComponent* CombatCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
-	float mDamage;
+	float damage;
 
 ///////////////////// Mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
@@ -105,9 +113,21 @@ public: // FUNCTION
 	void Equip();
 	void UnEquip();
 	
-
-
 	FORCEINLINE void SetWeaponState(EWeaponState State) { WeaponState = State; }
 	FORCEINLINE EWeaponState GetWeaponState() { return WeaponState; }
+
+	/**
+	* Attack Type
+	* 공격 타입
+	* Upper Attack = Airebone Attack
+	* Normal Attack
+	*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enums")
+	EAttackType AttackType;
+
+	FORCEINLINE void setAttackType(EAttackType type) { AttackType = type; }
+	FORCEINLINE EAttackType getAttackType() { return AttackType; }
+
+	float airBoneAttackJumpDistance;
 
 };
