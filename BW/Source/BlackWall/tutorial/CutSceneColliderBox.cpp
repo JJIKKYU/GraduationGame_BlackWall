@@ -11,10 +11,11 @@
 #include "Components/BoxComponent.h"
 
 #include "../BWCharacter/header/BlackWallCharacter.h"
+#include "../BWCharacter/header/BWCharacterController.h"
 
 // Sets default values
 ACutSceneColliderBox::ACutSceneColliderBox()
-	: bIsPlay(false)
+	: bIsPlay(false), bIsCollision(false)
 {
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -37,6 +38,10 @@ void ACutSceneColliderBox::BeginPlay()
 	
 	triggerBox->OnComponentBeginOverlap.AddDynamic(this, &ACutSceneColliderBox::OnOverlapBegin);
 	triggerBox->OnComponentEndOverlap.AddDynamic(this, &ACutSceneColliderBox::OnOverlapEnd);
+
+	// 시퀀스 플레이어 세팅
+	FMovieSceneSequencePlaybackSettings playbackSettings;
+	levelSequncePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), sequence, playbackSettings, levelSequenceActor);
 }
 
 // Called every frame
@@ -44,30 +49,36 @@ void ACutSceneColliderBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (levelSequncePlayer->IsPlaying() && BWCharacter)
+	{
+		BWCharacter->setCanMove(false);
+	}
+	else if (!levelSequncePlayer->IsPlaying() && BWCharacter)
+	{
+		BWCharacter->setCanMove(true);
+	}
 }
 
 void ACutSceneColliderBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!OtherActor) return;
 
-	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
-	FMovieSceneSequencePlaybackSettings playbackSettings;
+	BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 	if (BWCharacter)
 	{
+		bIsCollision = true;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("LEVEL SEQUENCE CHECK")));
 		if (sequence && !bIsPlay)
 		{
-			ULevelSequencePlayer* LevelSequncePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), sequence, playbackSettings, levelSequenceActor);
-			LevelSequncePlayer->Play();
+			levelSequncePlayer->Play();
 			bIsPlay = true;
 		}
-
 	}
 }
 
 void ACutSceneColliderBox::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("LEVEL SEQUENCE UNCHECK")));
-
+	bIsCollision = false;
 }
 

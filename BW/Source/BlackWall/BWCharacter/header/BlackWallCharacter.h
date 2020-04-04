@@ -65,6 +65,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enums")
 	EMovementStatus MovementStatus;
 
+	// true일 경우 움직일 수 있고, false일때 움직일 수 없음.
+	bool bCanMove;
+
+	void setCanMove(bool flag) { bCanMove = flag; }
+
 	// Set Movement Status adn running speed
 	void SetMovementStatus(EMovementStatus status);
 

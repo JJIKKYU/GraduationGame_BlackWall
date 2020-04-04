@@ -34,7 +34,7 @@ ABlackWallCharacter::ABlackWallCharacter()
 	, bShiftDown(false), bLMBDown(false), bRMBDown(false), bSpaceDown(false), bIsInAir(false)
 
 	// Movement and Status
-	, MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(false), bIsCharacterRight(false)
+	, bCanMove(true), MovementStatus(EMovementStatus::EMS_Normal), bIsCharacterForward(false), bIsCharacterRight(false)
 	, bMovingForward(false), bMovingRight(false)
 	, RunningSpeed(650.f)
 
@@ -278,6 +278,8 @@ void ABlackWallCharacter::LookUpAtRate(float Rate)
 
 bool ABlackWallCharacter::CanMove(float Value)
 {
+	if (!bCanMove) return false;
+
 	if (BWCharacterController)
 	{
 		if (Value != 0.0f && !bAttacking)
