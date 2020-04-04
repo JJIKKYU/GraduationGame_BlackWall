@@ -3,36 +3,39 @@
 
 #include "EnemyAnimInstance.h"
 #include "Enemy.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UEnemyAnimInstance::NativeInitializeAnimation()
 {
-	if (!mPawn)
+	if (!pawn)
 	{
-		mPawn = TryGetPawnOwner();
+		pawn = TryGetPawnOwner();
 
-		if (mPawn)
+		if (pawn)
 		{
-			mEnemy = Cast <AEnemy>(mPawn);
+			enemy = Cast <AEnemy>(pawn);
 		}
 	}
 }
 
 void UEnemyAnimInstance::UpdateAnimationProperties()
 {
-	if (!mPawn)
+	if (!pawn)
 	{
-		mPawn = TryGetPawnOwner();
+		pawn = TryGetPawnOwner();
 
-		if (mPawn)
+		if (pawn)
 		{
-			mEnemy = Cast<AEnemy>(mPawn);
+			enemy = Cast<AEnemy>(pawn);
 		}
 	}
 
-	if (mPawn)
+	if (pawn)
 	{
-		FVector Speed = mPawn->GetVelocity();
+		bIsInAir = pawn->GetMovementComponent()->IsFalling();
+
+		FVector Speed = pawn->GetVelocity();
 		FVector LateralSpeed = FVector(Speed.X, Speed.Y, 0.f);
-		mMovementSpeed = LateralSpeed.Size();
+		movementSpeed = LateralSpeed.Size();
 	}
 }

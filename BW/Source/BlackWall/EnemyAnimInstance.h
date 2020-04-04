@@ -16,14 +16,17 @@ class BLACKWALL_API UEnemyAnimInstance : public UAnimInstance
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movment")
-	float mMovementSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float movementSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movment")
-	class APawn* mPawn;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	bool bIsInAir;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movment")
-	class AEnemy* mEnemy;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	class APawn* pawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	class AEnemy* enemy;
 
 	virtual void NativeInitializeAnimation() override;
 

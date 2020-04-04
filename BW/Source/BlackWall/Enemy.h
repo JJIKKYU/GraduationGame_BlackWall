@@ -13,7 +13,6 @@ enum class EEnemyMovementStatus : uint8
 	EMS_MoveToTarget	UMETA(DisplayName = "MoveToTarget"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
 	EMS_Death			UMETA(DisplayName = "Death"),
-
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
 };
 
@@ -50,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float enemyExp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Status")
+	bool bIsInAir;
 
 	/**
 	* AI

@@ -11,6 +11,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Enemy.h"
 #include "Engine/Engine.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AWeapon::AWeapon()
 	// WeeponState
@@ -111,9 +112,12 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 			{
 				Enemy->LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * airBoneAttackJumpDistance, true, true);
 			}
-			else
+			else if (EAttackType::EAT_Air == AttackType)
 			{
+				Enemy->GetCharacterMovement()->StopMovementImmediately();
+				Enemy->LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * 250, true, true);
 
+// 				Enemy->GetCharacterMovement()->GravityScale = 0.2f;
 			}
 			
 			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));

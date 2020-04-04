@@ -13,13 +13,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h" // UAnimInstance
 #include "Engine/Engine.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AEnemy::AEnemy()
 	:
 	// Status
 	hp(75.f), maxHp(100.f), damage(15.f), EnemyMovementStatus(EEnemyMovementStatus::EMS_Idle)
-	, enemyExp(50.f)
+	, enemyExp(50.f), bIsInAir(false)
 
 	// AI
 	, bHasValidTarget(false), bOverlappingCombatSphere(false)
@@ -94,6 +95,22 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	bIsInAir = GetMovementComponent()->IsFalling();
+
+	// 죽었을 때 변경되었던 상태 초기화
+	if (EnemyMovementStatus == EEnemyMovementStatus::EMS_Death)
+	{
+		GetCharacterMovement()->GravityScale = 1.f;
+	}
+
+	/*
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (bIsInAir)
+	{
+		AnimInstance->Montage_Play(hitMontage, 1.0f);
+		AnimInstance->Montage_JumpToSection(FName("AirHit01"), hitMontage);
+	}
+	*/
 }
 
 // Called to bind functionality to input
@@ -274,6 +291,8 @@ void AEnemy::MoveToTarget(ABlackWallCharacter* Target)
 
 void AEnemy::Attack()
 {
+	if (bIsInAir) return;
+
 	if (Alive() && bHasValidTarget)
 	{
 		if (aiController)
