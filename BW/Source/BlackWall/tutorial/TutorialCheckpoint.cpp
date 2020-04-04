@@ -4,7 +4,7 @@
 
 #include "TutorialCheckpoint.h"
 #include "Components/BoxComponent.h"
-#include "BlackWallCharacter.h"
+#include "../BWCharacter/header/BlackWallCharacter.h"
 #include "Blueprint/UserWidget.h"
 
 // Sets default values

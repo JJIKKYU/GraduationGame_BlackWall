@@ -23,4 +23,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// 플레이하고자 하는 레벨 시퀀스 포인터
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence")
+	class ULevelSequence* sequence;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Checkpoint | Collider")
+	class UBoxComponent* triggerBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence")
+	class ALevelSequenceActor* levelSequenceActor;
+
+	bool bIsPlay;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

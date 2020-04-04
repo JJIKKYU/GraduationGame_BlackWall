@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "FloorSwitch.h"
 #include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-
-#include "FloorSwitch.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"

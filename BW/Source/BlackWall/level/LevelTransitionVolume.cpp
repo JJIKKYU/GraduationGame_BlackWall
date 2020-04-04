@@ -4,8 +4,8 @@
 #include "LevelTransitionVolume.h"
 #include "Components/BoxComponent.h"
 #include "Components/BillboardComponent.h"
-#include "BlackWallCharacter.h"
-#include "Weapon.h"
+#include "../BWCharacter/header/BlackWallCharacter.h"
+#include "../Item/Weapon/header/Weapon.h"
 
 
 // Sets default values
