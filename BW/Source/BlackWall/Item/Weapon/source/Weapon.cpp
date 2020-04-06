@@ -24,6 +24,8 @@ AWeapon::AWeapon()
 	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)
 
 	, airBoneAttackJumpDistance(850.f)
+
+	, comboCnt(0)
 {
 	// Skeletal mesh component initialize
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -104,6 +106,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 
 		if (Enemy)
 		{
+			comboCnt += 1;
 			if (EAttackType::EAT_Normal == AttackType)
 			{
 

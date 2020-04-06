@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmeml version="4">
+	<project>
+		<name>SequenceMasterProject</name>
+		<children>
+			<clip id="masterclip-1">
+				<masterclipid>masterclip-1</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>117</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>1</in>
+				<out>117</out>
+				<name>S_1</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-1">
+								<masterclipid>masterclip-1</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>S_1</name>
+								<enabled>TRUE</enabled>
+								<duration>117</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>1</in>
+								<out>117</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-1">
+									<name>S_1.avi</name>
+									<pathurl>file://localhost/C%3a/Users/JJiKKYU/Desktop/ue4/BW/S_1.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>117</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/Cinematics/Sequences/Sequence/SequenceMaster.SequenceMaster:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_0][UE4ShotStartOffset=18][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-2">
+				<masterclipid>masterclip-2</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>42</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>1</in>
+				<out>42</out>
+				<name>S_2</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-2">
+								<masterclipid>masterclip-2</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>S_2</name>
+								<enabled>TRUE</enabled>
+								<duration>42</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>1</in>
+								<out>42</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-2">
+									<name>S_2.avi</name>
+									<pathurl>file://localhost/C%3a/Users/JJiKKYU/Desktop/ue4/BW/S_2.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>42</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/Cinematics/Sequences/Sequence/SequenceMaster.SequenceMaster:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_1][UE4ShotStartOffset=13][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-3">
+				<masterclipid>masterclip-3</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>82</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>1</in>
+				<out>82</out>
+				<name>S_3</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-3">
+								<masterclipid>masterclip-3</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>S_3</name>
+								<enabled>TRUE</enabled>
+								<duration>82</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>1</in>
+								<out>82</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-3">
+									<name>S_3.avi</name>
+									<pathurl>file://localhost/C%3a/Users/JJiKKYU/Desktop/ue4/BW/S_3.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>82</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/Cinematics/Sequences/Sequence/SequenceMaster.SequenceMaster:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_2][UE4ShotStartOffset=55][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-4">
+				<masterclipid>masterclip-4</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>85</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>1</in>
+				<out>85</out>
+				<name>S_4</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-4">
+								<masterclipid>masterclip-4</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>S_4</name>
+								<enabled>TRUE</enabled>
+								<duration>85</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>1</in>
+								<out>85</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-4">
+									<name>S_4.avi</name>
+									<pathurl>file://localhost/C%3a/Users/JJiKKYU/Desktop/ue4/BW/S_4.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>85</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/Cinematics/Sequences/Sequence/SequenceMaster.SequenceMaster:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_3][UE4ShotStartOffset=41][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-5" explodedTracks="true">
+				<masterclipid>masterclip-5</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>282</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>0</in>
+				<out>282</out>
+				<name>Magical_Fantasy</name>
+				<media>
+					<audio>
+						<track>
+							<clipitem id="clipitem-5">
+								<masterclipid>masterclip-5</masterclipid>
+								<name>Magical_Fantasy</name>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<file id="file-5">
+									<name>Magical Fantasy.wav</name>
+									<pathurl>file://localhost/F%3a/Commercial%20Music/Unity%20Music%20packs/Fantasy%20Music%20Pack/Magical%20Fantasy.wav</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<duration>282</duration>
+									<media>
+										<audio>
+											<samplecharacteristics>
+												<depth>16</depth>
+												<samplerate>44100</samplerate>
+											</samplecharacteristics>
+											<channelcount>1</channelcount>
+											<layout>stereo</layout>
+											<audiochannel>
+												<sourcechannel>1</sourcechannel>
+												<channellabel>left</channellabel>
+											</audiochannel>
+										</audio>
+										<audio>
+											<samplecharacteristics>
+												<depth>16</depth>
+												<samplerate>44100</samplerate>
+											</samplecharacteristics>
+											<channelcount>1</channelcount>
+											<layout>stereo</layout>
+											<audiochannel>
+												<sourcechannel>2</sourcechannel>
+												<channellabel>right</channellabel>
+											</audiochannel>
+										</audio>
+									</media>
+								</file>
+								<sourcetrack>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+								</sourcetrack>
+								<link>
+									<linkclipref>clipitem-5</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+								<link>
+									<linkclipref>clipitem-6</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+							</clipitem>
+						</track>
+						<track>
+							<clipitem id="clipitem-6">
+								<masterclipid>masterclip-5</masterclipid>
+								<name>Magical_Fantasy</name>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<file id="file-5" />
+								<sourcetrack>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+								</sourcetrack>
+								<link>
+									<linkclipref>clipitem-5</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+								<link>
+									<linkclipref>clipitem-6</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+							</clipitem>
+						</track>
+					</audio>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4SoundWave=/Game/FantasyOrchestral/audio/Magical_Fantasy.Magical_Fantasy][UE4AudioSectionTopLevel=/Game/Cinematics/Sequences/Sequence/SequenceMaster][UE4AudioSection=SequenceMaster:MovieScene_0.MovieSceneAudioTrack_0.MovieSceneAudioSection_0]</lognote>
+				</logginginfo>
+			</clip>
+			<sequence id="sequence-1">
+				<duration>750</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<name>SequenceMaster</name>
+				<media>
+					<video>
+						<format>
+							<samplecharacteristics>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<width>1920</width>
+								<height>1080</height>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+							</samplecharacteristics>
+						</format>
+						<track>
+							<clipitem id="clipitem-7">
+								<masterclipid>masterclip-1</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>S_1</name>
+								<enabled>TRUE</enabled>
+								<duration>117</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>0</start>
+								<end>117</end>
+								<in>1</in>
+								<out>117</out>
+								<file id="file-1" />
+							</clipitem>
+							<clipitem id="clipitem-8">
+								<masterclipid>masterclip-4</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>S_4</name>
+								<enabled>TRUE</enabled>
+								<duration>85</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>192</start>
+								<end>277</end>
+								<in>1</in>
+								<out>85</out>
+								<file id="file-4" />
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+						<track>
+							<clipitem id="clipitem-9">
+								<masterclipid>masterclip-2</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>S_2</name>
+								<enabled>TRUE</enabled>
+								<duration>42</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>166</start>
+								<end>208</end>
+								<in>1</in>
+								<out>42</out>
+								<file id="file-2" />
+							</clipitem>
+							<clipitem id="clipitem-10">
+								<masterclipid>masterclip-3</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>S_3</name>
+								<enabled>TRUE</enabled>
+								<duration>82</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>84</start>
+								<end>166</end>
+								<in>1</in>
+								<out>82</out>
+								<file id="file-3" />
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+					</video>
+					<audio>
+						<numOutputChannels>2</numOutputChannels>
+						<format>
+							<samplecharacteristics>
+								<depth>16</depth>
+								<samplerate>44100</samplerate>
+							</samplecharacteristics>
+						</format>
+						<outputs>
+							<group>
+								<index>1</index>
+								<numchannels>1</numchannels>
+								<downmix>0</downmix>
+								<channel>
+									<index>1</index>
+								</channel>
+							</group>
+							<group>
+								<index>2</index>
+								<numchannels>1</numchannels>
+								<downmix>0</downmix>
+								<channel>
+									<index>2</index>
+								</channel>
+							</group>
+						</outputs>
+						<track currentExplodedTrackIndex="0" totalExplodedTrackCount="2" premiereTrackType="Stereo">
+							<clipitem id="clipitem-11" premiereChannelType="stereo">
+								<masterclipid>masterclip-5</masterclipid>
+								<name>Magical_Fantasy</name>
+								<enabled>TRUE</enabled>
+								<duration>282</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>-6</start>
+								<end>276</end>
+								<in>0</in>
+								<out>282</out>
+								<file id="file-5" />
+								<sourcetrack>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+								</sourcetrack>
+								<link>
+									<linkclipref>clipitem-11</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+								<link>
+									<linkclipref>clipitem-12</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+						<track currentExplodedTrackIndex="1" totalExplodedTrackCount="2" premiereTrackType="Stereo">
+							<clipitem id="clipitem-12" premiereChannelType="stereo">
+								<masterclipid>masterclip-5</masterclipid>
+								<name>Magical_Fantasy</name>
+								<enabled>TRUE</enabled>
+								<duration>282</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>-6</start>
+								<end>276</end>
+								<in>0</in>
+								<out>282</out>
+								<file id="file-5" />
+								<sourcetrack>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+								</sourcetrack>
+								<link>
+									<linkclipref>clipitem-11</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>1</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+								<link>
+									<linkclipref>clipitem-12</linkclipref>
+									<mediatype>audio</mediatype>
+									<trackindex>2</trackindex>
+									<clipindex>1</clipindex>
+									<groupindex>1</groupindex>
+								</link>
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+					</audio>
+				</media>
+				<timecode>
+					<rate>
+						<timebase>30</timebase>
+						<ntsc>FALSE</ntsc>
+					</rate>
+					<string>00:00:00:00</string>
+					<frame>0</frame>
+				</timecode>
+			</sequence>
+		</children>
+	</project>
+</xmeml>

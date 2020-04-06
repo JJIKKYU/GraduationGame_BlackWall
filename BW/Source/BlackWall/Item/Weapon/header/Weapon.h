@@ -130,4 +130,16 @@ public: // FUNCTION
 
 	float airBoneAttackJumpDistance;
 
+
+	/*
+	* Combo Cnt
+	* 콤보카운트
+	*/
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combo")
+	int comboCnt;
+
+
+
+
 };
