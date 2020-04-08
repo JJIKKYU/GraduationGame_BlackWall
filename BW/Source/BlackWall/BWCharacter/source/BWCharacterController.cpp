@@ -111,3 +111,39 @@ void ABWCharacterController::GameModeOnly()
 	FInputModeGameOnly InputModeGameOnly;
 	SetInputMode(InputModeGameOnly);
 }
+
+
+//////// ComboCnt
+
+void ABWCharacterController::ComboCntManager()
+{
+
+}
+
+int ABWCharacterController::GetComboCnt()
+{
+	return comboCnt;
+}
+
+void ABWCharacterController::SetComboCnt(int comboCnt)
+{
+	this->comboCnt = comboCnt;
+}
+
+
+//////// Score
+
+void ABWCharacterController::ScoreManager()
+{
+
+}
+
+void ABWCharacterController::SetScore(int score)
+{
+	this->score = score;
+}
+
+int ABWCharacterController::GetScore()
+{
+	return score;
+}

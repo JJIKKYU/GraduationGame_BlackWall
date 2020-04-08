@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "TutorialCheckpoint.h"
+
 #include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-
-#include "TutorialCheckpoint.h"
 #include "Components/BoxComponent.h"
 #include "../BWCharacter/header/BlackWallCharacter.h"
 #include "Blueprint/UserWidget.h"
