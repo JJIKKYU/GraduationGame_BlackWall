@@ -54,31 +54,6 @@ public:
 
 	void GameModeOnly();
 
-	/**
-	* ComboCnt
-	*/
-	int comboCnt;
-
-	void ComboCntManager();
-	int GetComboCnt();
-	void SetComboCnt(int comboCnt);
-
-
-	/**
-	* Tutorial
-	*/
-
-	/**
-	* Score
-	* 콤보 점수를 스코어로 환산해서 저장
-	*/
-	int score;
-
-	void ScoreManager();
-	void SetScore(int score);
-	int GetScore();
-
-
 
 protected:
 

@@ -388,10 +388,14 @@
     <ClInclude Include="..\..\Source\BlackWall\Enemy\header\EnemyAnimInstance.h" />
     <ClCompile Include="..\..\Source\BlackWall\Enemy\source\Enemy.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Enemy\source\EnemyAnimInstance.cpp" />
+    <ClInclude Include="..\..\Source\BlackWall\GameInstnace\MainGameInstance.h" />
+    <ClInclude Include="..\..\Source\BlackWall\HUD\MainHUD.h" />
     <ClInclude Include="..\..\Source\BlackWall\Item\header\Item.h" />
     <ClInclude Include="..\..\Source\BlackWall\Item\header\ItemStorage.h" />
     <ClInclude Include="..\..\Source\BlackWall\Item\header\Pickup.h" />
     <ClInclude Include="..\..\Source\BlackWall\Item\Pickup\header\Pickup.h" />
+    <ClCompile Include="..\..\Source\BlackWall\GameInstnace\MainGameInstance.cpp" />
+    <ClCompile Include="..\..\Source\BlackWall\HUD\MainHUD.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Item\Pickup\source\Pickup.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Item\source\Item.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Item\source\ItemStorage.cpp" />
@@ -401,12 +405,8 @@
     <ClInclude Include="..\..\Source\BlackWall\level\FloorSwitch.h" />
     <ClCompile Include="..\..\Source\BlackWall\level\LevelTransitionVolume.cpp" />
     <ClInclude Include="..\..\Source\BlackWall\level\LevelTransitionVolume.h" />
-    <ClInclude Include="..\..\Source\BlackWall\MainGameInstance.h" />
-    <ClInclude Include="..\..\Source\BlackWall\MainHUD.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC\header\NPC.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC\header\NPCAniminstance.h" />
-    <ClCompile Include="..\..\Source\BlackWall\MainGameInstance.cpp" />
-    <ClCompile Include="..\..\Source\BlackWall\MainHUD.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\NPC\source\NPC.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\NPC\source\NPCAniminstance.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\save\mySaveGame.cpp" />
