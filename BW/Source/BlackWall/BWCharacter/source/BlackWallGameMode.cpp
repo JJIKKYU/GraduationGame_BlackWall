@@ -12,4 +12,6 @@ ABlackWallGameMode::ABlackWallGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	questTitle = "1234";
 }
