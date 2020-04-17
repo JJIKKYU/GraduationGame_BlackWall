@@ -1,0 +1,3 @@
+Number,bIsClear,Title,Description,TargetMonsterTag,TargetMonsterCount
+1,FALSE,Test,this is yesi,null,null
+2,FALSE,Test,null,null,null

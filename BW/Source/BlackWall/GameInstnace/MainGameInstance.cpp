@@ -6,14 +6,19 @@
 #include "Engine/Engine.h"
 #include "../Quest/QuestSystem.h"
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "UObject/ConstructorHelpers.h"
 
-
-UMainGameInstance::UMainGameInstance()
+UMainGameInstance* UMainGameInstance::GetInstance()
 {
-    FQuestSystem TutorialSystem1 = { 0, false, TEXT("-[ ] 콘솔을 이용해 앞으로 이동하세요."), "empty", "tutorialMonster", 1 };
+    UMainGameInstance* instance = nullptr;
 
-    questSystem.Add(TutorialSystem1);
-    
+    if (GEngine)
+    {
+        FWorldContext* context = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
+        instance = Cast<UMainGameInstance>(context->OwningGameInstance);
+    }
+    return instance;
 }
 
 int UMainGameInstance::GetLevel()
@@ -27,12 +32,14 @@ void UMainGameInstance::QuestInit()
     
 }
 
-
 void UMainGameInstance::Init()
 {
     Super::Init();
-
-    
+    /*
+    FString QuestTableDataPath = TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'");
+    static ConstructorHelpers::FObjectFinder<UDataTable> DT_QUESTTABLE(*QuestTableDataPath);
+    QuestTable = DT_QUESTTABLE.Object;
+    */
 
     UE_LOG(LogTemp, Warning, TEXT("Init, path = %s"), *GetPathName());
 }
@@ -42,6 +49,7 @@ void UMainGameInstance::StartGameInstance()
     Super::StartGameInstance();
 
     UE_LOG(LogTemp, Warning, TEXT("StartGameInstance, path = %s"), *GetPathName());
+    // UE_LOG(LogTemp, Warning, TEXT("StartGameInstance, path = %s"), GetQuestTitle(1));
 }
 
 void UMainGameInstance::OnStart()
@@ -70,6 +78,14 @@ void UMainGameInstance::OnStart()
     }
 
     GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::FromInt(numActors));
+
+    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test");
+    auto Row = QuestTable->FindRow<FQuestTable>(FName("1"), FString(""));
+    if (Row)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test2");
+        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, *Row->Description);
+    }
 
     // UE_LOG(LogTemp, Warning, TEXT("QuestSystem = %c"), questSystemTest.questTitle);
 }
@@ -137,11 +153,22 @@ UWorld* UTimerManager::GetWorld() const
 UQuestManager::UQuestManager()
 {
     UE_LOG(LogTemp, Warning, TEXT("QuestManager Init"));
+
+    tutorialQuest_1.questTitle = TEXT("Test입니다.");
+
+    
+    
+
+    FQuestSystem TutorialSystem1 = { 0, false, TEXT("-[ ] 콘솔을 이용해 앞으로 이동하세요."), "empty", "tutorialMonster", 1 };
 }
 
 void UQuestManager::Tick(float DeltaTime)
 {
-
+    if (!mainGameInstance)
+    {
+        mainGameInstance = UMainGameInstance::GetInstance();
+    }   
+    
 }
 
 void UQuestManager::QuestClear(FQuestSystem* quest)

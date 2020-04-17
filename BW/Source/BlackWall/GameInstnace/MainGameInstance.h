@@ -4,6 +4,7 @@
 
 #include "Tickable.h"
 #include "../Quest/QuestSystem.h"
+#include "../Data/DataTables.h"
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MainGameInstance.generated.h"
@@ -15,10 +16,18 @@ UCLASS()
 class BLACKWALL_API UMainGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
+	UMainGameInstance(){ };
+	UQuestManager* QuestManager;
 	
 public:
 
-	UMainGameInstance();
+	static UMainGameInstance* GetInstance();
+
+	void stringTest()
+	{
+		UE_LOG(LogTemp, Warning, TEXT("stringTestClear!"));
+	}
 
 	virtual void Init() override;
 
@@ -55,6 +64,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	FQuestSystem tutorialQuest1;
+
+	FQuestTable* GetQuestTitle(int32 number)
+	{
+		return QuestTable->FindRow<FQuestTable>(*FString::FromInt(number), false);
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
+	class UDataTable* QuestTable;
 };
 
 
@@ -87,6 +104,8 @@ class BLACKWALL_API UQuestManager : public UObject, public FTickableGameObject
 	GENERATED_BODY()
 
 public:
+	UMainGameInstance* mainGameInstance;
+
 	UQuestManager();
 
 	void Tick(float DeltaTime) override;
@@ -100,4 +119,12 @@ public:
 
 	TStatId GetStatId() const override;
 	UWorld* GetWorld() const override;
+
+
+	/**
+	* Äù½ºÆ® ¸ñ·Ï
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
+	FQuestSystem tutorialQuest_1;
 };

@@ -384,8 +384,10 @@
     <ClCompile Include="..\..\Source\BlackWall\BWCharacter\source\BlackWallCharacter_Animinstance.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\BWCharacter\source\BlackWallGameMode.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\BWCharacter\source\BWCharacterController.cpp" />
+    <ClInclude Include="..\..\Source\BlackWall\Data\DataTables.h" />
     <ClInclude Include="..\..\Source\BlackWall\Enemy\header\Enemy.h" />
     <ClInclude Include="..\..\Source\BlackWall\Enemy\header\EnemyAnimInstance.h" />
+    <ClCompile Include="..\..\Source\BlackWall\Data\DataTables.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Enemy\source\Enemy.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\Enemy\source\EnemyAnimInstance.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\GameInstnace\MainGameInstance.cpp" />
