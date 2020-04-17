@@ -35,11 +35,9 @@ void UMainGameInstance::QuestInit()
 void UMainGameInstance::Init()
 {
     Super::Init();
-    /*
-    FString QuestTableDataPath = TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'");
-    static ConstructorHelpers::FObjectFinder<UDataTable> DT_QUESTTABLE(*QuestTableDataPath);
-    QuestTable = DT_QUESTTABLE.Object;
-    */
+    
+
+    
 
     UE_LOG(LogTemp, Warning, TEXT("Init, path = %s"), *GetPathName());
 }
@@ -78,6 +76,29 @@ void UMainGameInstance::OnStart()
     }
 
     GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::FromInt(numActors));
+    QuestTablesasdasd = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'"), nullptr, LOAD_None, nullptr);
+    if (QuestTablesasdasd)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("제발"));
+        
+        auto Row = QuestTablesasdasd->FindRow<FQuestTable>(FName("1"), FString(""));
+        if (Row)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test99999");
+            GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, *Row->Description);
+        }
+
+    }
+    /*
+    FString QuestTableDataPath = TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'");
+    ConstructorHelpers::FObjectFinder<UDataTable> DT_QUESTTABLE(TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'"));
+    
+    if (DT_QUESTTABLE.Succeeded())
+    {
+        QuestTable = DT_QUESTTABLE.Object;
+    }
+    */
+    
 
     GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test");
     auto Row = QuestTable->FindRow<FQuestTable>(FName("1"), FString(""));

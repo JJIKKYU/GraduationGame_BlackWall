@@ -72,6 +72,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
 	class UDataTable* QuestTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
+	class UDataTable* QuestTablesasdasd;
 };
 
 
