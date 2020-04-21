@@ -8,6 +8,10 @@
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Containers/Ticker.h"
+#include "TimerManager.h"
+
+
 
 UMainGameInstance* UMainGameInstance::GetInstance()
 {
@@ -36,52 +40,31 @@ void UMainGameInstance::Init()
 {
     Super::Init();
     
-
-    
+    totalScore = 0;
+    TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UMainGameInstance::Tick));
 
     UE_LOG(LogTemp, Warning, TEXT("Init, path = %s"), *GetPathName());
-}
-
-void UMainGameInstance::StartGameInstance()
-{
-    Super::StartGameInstance();
-
-    UE_LOG(LogTemp, Warning, TEXT("StartGameInstance, path = %s"), *GetPathName());
-    // UE_LOG(LogTemp, Warning, TEXT("StartGameInstance, path = %s"), GetQuestTitle(1));
 }
 
 void UMainGameInstance::OnStart()
 {
     Super::OnStart();
 
+    QuestManager = LoadObject<UQuestSystemManager>(nullptr, TEXT("Class'/Script/BlackWall.QuestSystemManager'"), nullptr, LOAD_None, nullptr);
+    QuestManager->Test();
+    QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
+  
+    // MonsterSearch(TEXT("Monster1"));
 
     UE_LOG(LogTemp, Warning, TEXT("OnStart, path = %s"), *GetPathName());
 
-    // FQuestSystem a{ 1, true, "abc", "abc","bac", "b" };
-
-    int numActors = 0;
-    for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-    {
-        if (ActorItr->ActorHasTag(TEXT("Monster1")))
-            GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, ActorItr->GetName());
-        /*
-        if (GEngine)
-            GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, ActorItr->GetName());
-            */
-
-        // 출력 로그에 로그를 기록합니다.
-        // UE_LOG(LogTemp, Log, TEXT("%s"), *(ActorItr->GetName()));
-
-        ++numActors;
-    }
-
-    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::FromInt(numActors));
-    QuestTablesasdasd = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'"), nullptr, LOAD_None, nullptr);
-    if (QuestTablesasdasd)
+    /*
+    QuestTable = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'"), nullptr, LOAD_None, nullptr);
+    if (QuestTable)
     {
         UE_LOG(LogTemp, Warning, TEXT("제발"));
         
-        auto Row = QuestTablesasdasd->FindRow<FQuestTable>(FName("1"), FString(""));
+        auto Row = QuestTable->FindRow<FQuestTable>(FName("1"), FString(""));
         if (Row)
         {
             GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test99999");
@@ -89,28 +72,15 @@ void UMainGameInstance::OnStart()
         }
 
     }
-    /*
-    FString QuestTableDataPath = TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'");
-    ConstructorHelpers::FObjectFinder<UDataTable> DT_QUESTTABLE(TEXT("DataTable'/Game/9b_DataTable/TutorialQuestTable.TutorialQuestTable'"));
-    
-    if (DT_QUESTTABLE.Succeeded())
-    {
-        QuestTable = DT_QUESTTABLE.Object;
-    }
     */
-    
-
-    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test");
-    auto Row = QuestTable->FindRow<FQuestTable>(FName("1"), FString(""));
-    if (Row)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "test2");
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, *Row->Description);
-    }
-
-    // UE_LOG(LogTemp, Warning, TEXT("QuestSystem = %c"), questSystemTest.questTitle);
 }
 
+bool UMainGameInstance::Tick(float DeltaSeconds)
+{
+    QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
+
+    return true;
+}
 
 
 
@@ -120,19 +90,6 @@ void UMainGameInstance::OnStart()
 
 UTimerManager::UTimerManager()
 {
-    
-}
-
-void UTimerManager::CallTimer()
-{
-    FTimerHandle tHandle;
-    const float Delay = 1.0f;
-    GetWorld()->GetTimerManager().SetTimer(tHandle, this, &UTimerManager::TestTimer, Delay, false);
-}
-
-void UTimerManager::TestTimer()
-{
-    GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "Hello World");
 }
 
 void UTimerManager::Tick(float DeltaTime)
@@ -164,46 +121,6 @@ TStatId UTimerManager::GetStatId() const
 }
 
 UWorld* UTimerManager::GetWorld() const
-{
-    return GetOuter()->GetWorld();
-}
-
-
-///////////////////////////////////////////////// QuestManager
-
-UQuestManager::UQuestManager()
-{
-    UE_LOG(LogTemp, Warning, TEXT("QuestManager Init"));
-
-    tutorialQuest_1.questTitle = TEXT("Test입니다.");
-
-    
-    
-
-    FQuestSystem TutorialSystem1 = { 0, false, TEXT("-[ ] 콘솔을 이용해 앞으로 이동하세요."), "empty", "tutorialMonster", 1 };
-}
-
-void UQuestManager::Tick(float DeltaTime)
-{
-    if (!mainGameInstance)
-    {
-        mainGameInstance = UMainGameInstance::GetInstance();
-    }   
-    
-}
-
-void UQuestManager::QuestClear(FQuestSystem* quest)
-{
-    quest->bIsClear = true;
-}
-
-TStatId UQuestManager::GetStatId() const
-{
-    return TStatId();
-}
-
-
-UWorld* UQuestManager::GetWorld() const
 {
     return GetOuter()->GetWorld();
 }

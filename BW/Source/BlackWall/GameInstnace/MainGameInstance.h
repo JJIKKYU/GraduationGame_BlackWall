@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../Manager/QuestSystemManager.h"
 #include "Tickable.h"
 #include "../Quest/QuestSystem.h"
 #include "../Data/DataTables.h"
@@ -18,7 +19,7 @@ class BLACKWALL_API UMainGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 	UMainGameInstance(){ };
-	UQuestManager* QuestManager;
+	UQuestSystemManager* QuestManager;
 	
 public:
 
@@ -31,9 +32,12 @@ public:
 
 	virtual void Init() override;
 
-	virtual void StartGameInstance() override;
-
 	virtual void OnStart() override;
+
+	bool Tick(float DeltaSeconds);
+
+	FDelegateHandle TickDelegateHandle;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BWCharacter")
 	class ABlackWallCharacter* BWCharacter;
@@ -57,6 +61,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	int aSystem;
 
+	/*
+	* Score 
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int totalScore;
+
 	/**
 	* Äù½ºÆ® ¸ñ·Ï
 	*/
@@ -73,8 +83,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
 	class UDataTable* QuestTable;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
-	class UDataTable* QuestTablesasdasd;
 };
 
 
@@ -85,10 +93,13 @@ class BLACKWALL_API UTimerManager : public UObject, public FTickableGameObject
 
 public:
 	UTimerManager();
+
+	/*
 	UFUNCTION(BlueprintCallable, Category = Test)
 		void CallTimer();
 
 	void TestTimer();
+	*/
 
 	void Tick(float DeltaTime) override;
 	bool IsTickable() const override;
@@ -99,35 +110,4 @@ public:
 	UWorld* GetWorld() const override;
 
 	float TestCounter;
-};
-
-UCLASS()
-class BLACKWALL_API UQuestManager : public UObject, public FTickableGameObject
-{
-	GENERATED_BODY()
-
-public:
-	UMainGameInstance* mainGameInstance;
-
-	UQuestManager();
-
-	void Tick(float DeltaTime) override;
-	/*
-	bool IsTickable() const override;
-	bool IsTickableInEditor() const override;
-	bool IsTickableWhenPaused() const override;
-	*/
-
-	void QuestClear(FQuestSystem* quest);
-
-	TStatId GetStatId() const override;
-	UWorld* GetWorld() const override;
-
-
-	/**
-	* Äù½ºÆ® ¸ñ·Ï
-	*/
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
-	FQuestSystem tutorialQuest_1;
 };

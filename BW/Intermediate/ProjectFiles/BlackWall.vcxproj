@@ -407,9 +407,11 @@
     <ClInclude Include="..\..\Source\BlackWall\level\FloorSwitch.h" />
     <ClCompile Include="..\..\Source\BlackWall\level\LevelTransitionVolume.cpp" />
     <ClInclude Include="..\..\Source\BlackWall\level\LevelTransitionVolume.h" />
+    <ClInclude Include="..\..\Source\BlackWall\Manager\QuestSystemManager.h" />
     <ClInclude Include="..\..\Source\BlackWall\MyInfo.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC\header\NPC.h" />
     <ClInclude Include="..\..\Source\BlackWall\NPC\header\NPCAniminstance.h" />
+    <ClCompile Include="..\..\Source\BlackWall\Manager\QuestSystemManager.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\MyInfo.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\NPC\source\NPC.cpp" />
     <ClCompile Include="..\..\Source\BlackWall\NPC\source\NPCAniminstance.cpp" />
