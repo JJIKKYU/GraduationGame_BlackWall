@@ -83,6 +83,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quset")
 	class UDataTable* QuestTable;
 
+	/*
+	* Sound
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* bgm;
+
+	/*
+	* Stage 클리어 여부
+	*/
+
+	// 스테이지 클리어 횟수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Clear")
+	int stageClearCounts;
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int GetStageClearCounts() { return stageClearCounts; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetStageClearCounts(int value) { stageClearCounts = value; }
 };
 
 

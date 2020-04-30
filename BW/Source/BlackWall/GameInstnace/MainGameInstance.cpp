@@ -41,6 +41,11 @@ void UMainGameInstance::Init()
     Super::Init();
     
     totalScore = 0;
+
+    // Stage 클리어 카운터
+    stageClearCounts = 0;
+
+
     TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UMainGameInstance::Tick));
 
     UE_LOG(LogTemp, Warning, TEXT("Init, path = %s"), *GetPathName());
@@ -73,6 +78,7 @@ void UMainGameInstance::OnStart()
 
     }
     */
+   
 }
 
 bool UMainGameInstance::Tick(float DeltaSeconds)

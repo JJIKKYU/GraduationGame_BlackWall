@@ -379,6 +379,8 @@ void AEnemy::DeathEnd()
 	GetMesh()->bNoSkeletonUpdate = true;
 
 
+
+
 	GetWorldTimerManager().SetTimer(deathTimer, this, &AEnemy::Disappear, deathDelay);
 }
 
