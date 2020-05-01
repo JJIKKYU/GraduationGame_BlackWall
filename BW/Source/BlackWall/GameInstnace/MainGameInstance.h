@@ -64,8 +64,10 @@ public:
 	/*
 	* Score 
 	*/
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int totalScore;
+
 
 	/**
 	* 퀘스트 목록
