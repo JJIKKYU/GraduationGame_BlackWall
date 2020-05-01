@@ -10,6 +10,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Containers/Ticker.h"
 #include "TimerManager.h"
+#include "../Item/Weapon/header/Weapon.h"
 
 
 
@@ -30,11 +31,6 @@ int UMainGameInstance::GetLevel()
 	return level;
 }
 
-void UMainGameInstance::QuestInit()
-{
-    // Tutorial Quest
-    
-}
 
 void UMainGameInstance::Init()
 {
@@ -88,6 +84,16 @@ bool UMainGameInstance::Tick(float DeltaSeconds)
     return true;
 }
 
+int UMainGameInstance::ScoreCalculation()
+{
+    return 1000;
+}
+
+void UMainGameInstance::QuestInit()
+{
+    // Tutorial Quest
+
+}
 
 
 

@@ -68,6 +68,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int totalScore;
 
+	UFUNCTION(BlueprintCallable)
+	int ScoreCalculation();
+
 
 	/**
 	* 퀘스트 목록
