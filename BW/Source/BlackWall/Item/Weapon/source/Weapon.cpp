@@ -83,7 +83,7 @@ void AWeapon::ActivateCollision()
 {
 	CombatCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	bActivateCollision = true;
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = true;")));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = true;")));
 }
 
 void AWeapon::DeActivateCollision()
@@ -91,7 +91,7 @@ void AWeapon::DeActivateCollision()
 	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bActivateCollision = false;
 	collisionEnemy = nullptr;
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = false;")));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = false;")));
 }
 
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -121,7 +121,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 			if (mainGameInstance)
 			{
 				mainGameInstance->SetComboCnt(mainGameInstance->GetComboCnt() + 1);
-				GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("ComboCnt = %d"), mainGameInstance->GetComboCnt()));
+				// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("ComboCnt = %d"), mainGameInstance->GetComboCnt()));
 			}
 			
 
@@ -168,7 +168,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 
 void AWeapon::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapEnd_Weapon")));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapEnd_Weapon")));
 }
 
 void AWeapon::Equip()

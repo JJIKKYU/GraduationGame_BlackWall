@@ -27,7 +27,13 @@ public:
 	FText monsterName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Level")
-	FText resultLevelName;
+	FName resultLevelName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clear")
+	int clearScore;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clear")
+	int stageNumber;
 
 	void CheckStageMonster(FText monsterTag);
 

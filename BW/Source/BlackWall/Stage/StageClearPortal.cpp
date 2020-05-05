@@ -10,6 +10,7 @@
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
 #include "../BWCharacter/header/BlackWallCharacter.h"
+#include "../GameInstnace/MainGameInstance.h"
 
 // Sets default values
 AStageClearPortal::AStageClearPortal()
@@ -96,6 +97,15 @@ void AStageClearPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Nothing Monster! Clear Stage")));
 			UGameplayStatics::OpenLevel(this, resultLevelName);
+
+			auto gameInstance = Cast<UMainGameInstance>(GetGameInstance());
+			if (gameInstance)
+			{
+				if (gameInstance->totalScore >= clearScore)
+				{
+					gameInstance->SetStageClearCounts(stageNumber);
+				}
+			}
 		}
 	}
 }

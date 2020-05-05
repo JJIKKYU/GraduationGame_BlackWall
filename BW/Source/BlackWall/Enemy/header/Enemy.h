@@ -53,6 +53,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Status")
 	bool bIsInAir;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Status")
+	bool bIsDeath;
+
 	/**
 	* AI
 	*/

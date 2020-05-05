@@ -20,7 +20,7 @@ AEnemy::AEnemy()
 	:
 	// Status
 	hp(75.f), maxHp(100.f), damage(15.f), EnemyMovementStatus(EEnemyMovementStatus::EMS_Idle)
-	, enemyExp(50.f), bIsInAir(false)
+	, enemyExp(50.f), bIsInAir(false), bIsDeath(false)
 
 	// AI
 	, bHasValidTarget(false), bOverlappingCombatSphere(false)
@@ -349,6 +349,7 @@ void AEnemy::Die(AActor* Causer)
 		AnimInstance->Montage_JumpToSection(FName("Death"), combatMontage);
 	}
 	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_Death);
+	bIsDeath = true;
 	if (deathSound) UGameplayStatics::PlaySound2D(this, deathSound);
 
 	combatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
