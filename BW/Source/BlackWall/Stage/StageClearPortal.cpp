@@ -95,6 +95,7 @@ void AStageClearPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Nothing Monster! Clear Stage")));
+			UGameplayStatics::OpenLevel(this, resultLevelName);
 		}
 	}
 }

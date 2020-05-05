@@ -37,6 +37,9 @@ void UMainGameInstance::Init()
     Super::Init();
     
     totalScore = 0;
+    comboCounter = 10.f;
+    bComboCount = false;
+    bActiveCounterHandle = false;
 
     // Stage 클리어 카운터
     stageClearCounts = 0;
@@ -81,12 +84,46 @@ bool UMainGameInstance::Tick(float DeltaSeconds)
 {
     QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
 
+    GEngine->AddOnScreenDebugMessage(0, 0, FColor::White, FString::Printf(TEXT("comboCounter = %f"), GetWorld()->GetTimerManager().GetTimerRemaining(ComboTimerHandle)));
+
+    if (!bActiveCounterHandle)
+    {
+        bActiveCounterHandle = true;
+        GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &UMainGameInstance::testString, 5.f, false);
+       
+    }
+    
+    if (bComboCount)
+    {
+        if (comboCounter > 0.f)
+        {
+            
+        }
+        else if (comboCounter <= 0.f)
+        {
+            totalScore = comboCnt * 10;
+            GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("totalScore = %d"), totalScore));
+            bComboCount = false;
+        }
+    }
+    
+
     return true;
 }
 
 int UMainGameInstance::ScoreCalculation()
 {
     return 1000;
+}
+
+void UMainGameInstance::SetComboCnt(int value)
+{
+    bComboCount = true;
+    GetWorld()->GetTimerManager().ClearTimer(ComboTimerHandle);
+    bActiveCounterHandle = false;
+    comboCounter = 10.f;
+
+    comboCnt = value;
 }
 
 void UMainGameInstance::QuestInit()
@@ -99,7 +136,6 @@ void UMainGameInstance::QuestInit()
 
 ///////////////////////////////////////////////// TimerManager
 
-
 UTimerManager::UTimerManager()
 {
 }
@@ -108,7 +144,7 @@ void UTimerManager::Tick(float DeltaTime)
 {
     TestCounter += DeltaTime;
 
-    GEngine->AddOnScreenDebugMessage(0, 0, FColor::Green, FString::SanitizeFloat(TestCounter));
+    // GEngine->AddOnScreenDebugMessage(0, 0, FColor::Green, FString::SanitizeFloat(TestCounter));
 
 }
 

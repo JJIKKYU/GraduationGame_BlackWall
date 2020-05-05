@@ -66,10 +66,35 @@ public:
 	*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int comboCnt;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int totalScore;
 
 	UFUNCTION(BlueprintCallable)
 	int ScoreCalculation();
+
+	void SetComboCnt(int value);
+	FORCEINLINE int GetComboCnt() { return comboCnt; }
+
+	float comboCounter;
+	bool bComboCount;
+	bool bActiveCounterHandle;
+	FTimerHandle ComboTimerHandle;
+	FTimerHandle ComboDownTimerHandle;
+	void testString()
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bomb")));
+		totalScore += comboCnt * 10;
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("totalScore = %d"), totalScore));
+		comboCnt = 0;
+	}
+
+	void down()
+	{
+		// if (comboCnt == 0) return;
+		SetComboCnt(comboCnt--);
+	}
 
 
 	/**

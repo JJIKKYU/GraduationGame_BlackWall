@@ -12,6 +12,7 @@
 #include "../../../Enemy/header/Enemy.h"
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "../../../GameInstnace/MainGameInstance.h"
 
 AWeapon::AWeapon()
 	// WeeponState
@@ -25,7 +26,7 @@ AWeapon::AWeapon()
 
 	, airBoneAttackJumpDistance(850.f)
 
-	, comboCnt(0)
+	, comboCnt(0), bActivateCollision(false)
 {
 	// Skeletal mesh component initialize
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -81,11 +82,16 @@ void AWeapon::Tick(float DeltaTime)
 void AWeapon::ActivateCollision()
 {
 	CombatCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	bActivateCollision = true;
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = true;")));
 }
 
 void AWeapon::DeActivateCollision()
 {
 	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	bActivateCollision = false;
+	collisionEnemy = nullptr;
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("bActivateCollision = false;")));
 }
 
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -100,13 +106,25 @@ void AWeapon::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// if (bActivateCollision == false) return;
+	// if (collisionEnemy == Cast<AEnemy>(OtherActor)) return;
+
 	if (OtherActor)
 	{
 		AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+		// collisionEnemy = Enemy;
+		
 
 		if (Enemy)
 		{
-			comboCnt += 1;
+			UMainGameInstance* mainGameInstance = Cast<UMainGameInstance>(GetGameInstance());
+			if (mainGameInstance)
+			{
+				mainGameInstance->SetComboCnt(mainGameInstance->GetComboCnt() + 1);
+				GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("ComboCnt = %d"), mainGameInstance->GetComboCnt()));
+			}
+			
+
 			if (EAttackType::EAT_Normal == AttackType)
 			{
 
@@ -123,7 +141,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 // 				Enemy->GetCharacterMovement()->GravityScale = 0.2f;
 			}
 			
-			GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));
+			// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));
 			
 			if (Enemy->hitParticle)
 			{
@@ -150,7 +168,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 
 void AWeapon::CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapBegin_Weapon")));
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("OverlapEnd_Weapon")));
 }
 
 void AWeapon::Equip()

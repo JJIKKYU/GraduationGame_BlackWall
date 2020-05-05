@@ -26,6 +26,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monster")
 	FText monsterName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Level")
+	FText resultLevelName;
+
 	void CheckStageMonster(FText monsterTag);
 
 	int monsterCount;

@@ -99,8 +99,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
 	FString mName;
 
-public: // FUNCTION
-
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
@@ -138,6 +136,14 @@ public: // FUNCTION
 
 	UPROPERTY(BlueprintReadWrite, Category = "Combo")
 	int comboCnt;
+
+	/*
+	* Collision °ü¸®
+	*/
+
+	bool bActivateCollision;
+
+	class AEnemy* collisionEnemy;
 
 
 
