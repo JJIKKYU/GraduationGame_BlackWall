@@ -19,7 +19,7 @@ AWeapon::AWeapon()
 	: WeaponState(EWeaponState::EMS_Idle)
 
  	// Damage
-	, damage(10.f)
+	, damage(10.f), damageRef(damage)
 
 	// Material
 	, bMaterialChange(false), appearenceValue(0.f), bEquipped(false)
@@ -77,6 +77,8 @@ void AWeapon::Tick(float DeltaTime)
 			return;
 		}
 	}
+
+	damage = rand() % int(damageRef) + 5;
 }
 
 void AWeapon::ActivateCollision()
