@@ -7,7 +7,7 @@
 ABlackWallGameMode::ABlackWallGameMode()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/3_Character/BlackWallCharacter_BP"));
+	ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/3_Character/BlackWallCharacter_BP"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;

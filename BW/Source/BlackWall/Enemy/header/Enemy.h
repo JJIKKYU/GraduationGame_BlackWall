@@ -191,6 +191,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	class UParticleSystem* hitParticle;
 
+	/*
+	* Pickups 
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickups")
+	TSubclassOf<class APickup> hpPickup;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickups")
+	TSubclassOf<class APickup> mpPickup;
+
 	
 
 protected:

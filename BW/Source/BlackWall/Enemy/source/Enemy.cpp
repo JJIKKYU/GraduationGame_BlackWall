@@ -14,6 +14,7 @@
 #include "Animation/AnimInstance.h" // UAnimInstance
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "../../Item/Pickup/header/Pickup.h"
 
 
 AEnemy::AEnemy()
@@ -342,6 +343,16 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void AEnemy::Die(AActor* Causer)
 {
+	if (hpPickup)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("make pickup")));
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		FRotator rotator;
+		FVector SpawnLocation = GetActorLocation();
+		GetWorld()->SpawnActor<APickup>(hpPickup, SpawnLocation, rotator, SpawnParams);
+	}
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && combatMontage)
 	{
@@ -371,6 +382,8 @@ void AEnemy::Die(AActor* Causer)
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%f"), BWCharacter->getExp()));
 		BWCharacter->setExp(BWCharacter->getExp() + enemyExp);
 	}	
+
+
 }
 
 void AEnemy::DeathEnd()
@@ -378,6 +391,8 @@ void AEnemy::DeathEnd()
 	UE_LOG(LogTemp, Warning, TEXT("DEATHEND()"));
 	GetMesh()->bPauseAnims = true;
 	GetMesh()->bNoSkeletonUpdate = true;
+
+	
 
 	Disappear();
 
