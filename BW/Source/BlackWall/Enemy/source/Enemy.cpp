@@ -126,10 +126,10 @@ void AEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (OtherActor)
 	{
-		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
-		if (BWCharacter && Alive())
+		ABlackWallCharacter* mBWCharacter = Cast<ABlackWallCharacter>(OtherActor);
+		if (mBWCharacter && Alive())
 		{
-			BWCharacter = BWCharacter;
+			BWCharacter = mBWCharacter;
 			MoveToTarget(BWCharacter);
 		}
 	}
@@ -343,14 +343,24 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void AEnemy::Die(AActor* Causer)
 {
-	if (hpPickup)
+	if (hpPickup && mpPickup)
 	{
+		int randomIdx = rand() % 2;
 		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("make pickup")));
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		FRotator rotator;
 		FVector SpawnLocation = GetActorLocation();
-		GetWorld()->SpawnActor<APickup>(hpPickup, SpawnLocation, rotator, SpawnParams);
+		if (randomIdx == 0)
+		{
+			GetWorld()->SpawnActor<APickup>(hpPickup, SpawnLocation, rotator, SpawnParams);
+		}
+		else if (randomIdx == 1)
+		{
+			GetWorld()->SpawnActor<APickup>(mpPickup, SpawnLocation, rotator, SpawnParams);
+		}
+		
+		
 	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -370,11 +380,11 @@ void AEnemy::Die(AActor* Causer)
 
 	bAttacking = false;
 	
-	ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(Causer);
-	if (BWCharacter)
+	ABlackWallCharacter* mBWCharacter = Cast<ABlackWallCharacter>(Causer);
+	if (mBWCharacter)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CAST"));
-		BWCharacter->UpdateCombatTarget();
+		mBWCharacter->UpdateCombatTarget();
 	}
 
 	if (BWCharacter)

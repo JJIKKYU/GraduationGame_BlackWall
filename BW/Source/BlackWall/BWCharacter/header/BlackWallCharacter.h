@@ -141,13 +141,19 @@ public: ///////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Stats")
 	class USoundBase* mlevelUpSound;
 
-	FORCEINLINE void UseMp(float mp) { mp -= mp; }
+	FORCEINLINE void UseMp(float mp)
+	{
+		if (this->mp - mp <= 0)
+			this->mp = 0;
+		else
+			this->mp -= mp;
+	}
 
 	FORCEINLINE int getLevel() { return level; }
-	FORCEINLINE void setLevel(int level) { level = level; }
+	FORCEINLINE void setLevel(int level) { this->level = level; }
 	
 	FORCEINLINE float getExp() { return exp; }
-	FORCEINLINE void setExp(float exp) { exp = exp; }
+	FORCEINLINE void setExp(float exp) { this->exp = exp; }
 
 ///////////////////
 
