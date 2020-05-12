@@ -1052,7 +1052,7 @@ float ABlackWallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 
 void ABlackWallCharacter::Die()
 {
-
+	UGameplayStatics::OpenLevel(this, "Result");
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -424,6 +424,8 @@
     <ClInclude Include="..\..\Source\BlackWall\Stage\StageClearPortal.h"/>
     <ClCompile Include="..\..\Source\BlackWall\Stage\StageWall.cpp"/>
     <ClInclude Include="..\..\Source\BlackWall\Stage\StageWall.h"/>
+    <ClCompile Include="..\..\Source\BlackWall\Timer\Timer.cpp"/>
+    <ClInclude Include="..\..\Source\BlackWall\Timer\Timer.h"/>
     <ClCompile Include="..\..\Source\BlackWall\tutorial\CutSceneColliderBox.cpp"/>
     <ClInclude Include="..\..\Source\BlackWall\tutorial\CutSceneColliderBox.h"/>
     <ClCompile Include="..\..\Source\BlackWall\tutorial\TutorialCheckpoint.cpp"/>
