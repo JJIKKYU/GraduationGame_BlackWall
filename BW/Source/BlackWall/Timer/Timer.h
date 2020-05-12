@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
 	bool bIsStart;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
+	bool bIsClear;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

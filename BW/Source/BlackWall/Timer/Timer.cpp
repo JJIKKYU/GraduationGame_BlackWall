@@ -13,6 +13,7 @@ ATimer::ATimer()
 
 	bEndOfTimer = false;
 	bIsStart = false;
+	bIsClear = false;
 	timerCount = 0.f;
 }
 
@@ -27,6 +28,8 @@ void ATimer::BeginPlay()
 void ATimer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bIsClear == true) return;
 
 	if (timerCount > 0 && bIsStart)
 	{
