@@ -1064,6 +1064,10 @@ void ABlackWallCharacter::LevelUp()
 	{
 		if (mlevelUpSound)
 			UGameplayStatics::PlaySound2D(this, mlevelUpSound);
+		if (levelUpParticle)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), levelUpParticle, GetActorLocation());
+		}
 		level++;
 		exp = 0.f;
 	}

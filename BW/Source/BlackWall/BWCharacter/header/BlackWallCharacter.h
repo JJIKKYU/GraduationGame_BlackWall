@@ -138,6 +138,9 @@ public: ///////////////////
 
 	void LevelUp();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Effects")
+	class UParticleSystem* levelUpParticle;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds | Stats")
 	class USoundBase* mlevelUpSound;
 
@@ -304,6 +307,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack | Effects")
 	class UParticleSystem* mHitParticle;
+
 
 	/**
 	* Air Dash Attack Var
