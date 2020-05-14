@@ -21,7 +21,7 @@ AEnemy::AEnemy()
 	:
 	// Status
 	hp(75.f), maxHp(100.f), damage(15.f), EnemyMovementStatus(EEnemyMovementStatus::EMS_Idle)
-	, enemyExp(50.f), bIsInAir(false), bIsDeath(false)
+	, enemyExp(50.f), bIsInAir(false), bIsDeath(false), bIsAgroSphereOnOverlap(false), bIsBoss(false)
 
 	// AI
 	, bHasValidTarget(false), bOverlappingCombatSphere(false)
@@ -112,6 +112,16 @@ void AEnemy::Tick(float DeltaTime)
 		AnimInstance->Montage_JumpToSection(FName("AirHit01"), hitMontage);
 	}
 	*/
+
+	if (bIsAgroSphereOnOverlap)
+	{
+		if (BWCharacter)
+			MoveToTarget(BWCharacter);
+	}
+	else
+	{
+
+	}
 }
 
 // Called to bind functionality to input
@@ -124,26 +134,28 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+
 	if (OtherActor)
 	{
 		ABlackWallCharacter* mBWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 		if (mBWCharacter && Alive())
 		{
+			bIsAgroSphereOnOverlap = true;
 			BWCharacter = mBWCharacter;
-			MoveToTarget(BWCharacter);
 		}
 	}
-	
 }
 
 void AEnemy::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
 	if (OtherActor)
 	{
 		ABlackWallCharacter* BWCharacter = Cast<ABlackWallCharacter>(OtherActor);
 		if (BWCharacter)
 		{
 			bHasValidTarget = false;
+			bIsAgroSphereOnOverlap = false;
 
 			if (BWCharacter->GetCombatTarget() == this)
 			{
@@ -274,6 +286,7 @@ void AEnemy::DeactivateCollision()
 void AEnemy::MoveToTarget(ABlackWallCharacter* Target)
 {
 	SetEnemyMovementStatus(EEnemyMovementStatus::EMS_MoveToTarget);
+	if (bAttacking) return;
 
 	if (aiController)
 	{
@@ -306,11 +319,28 @@ void AEnemy::Attack()
 		{
 			bAttacking = true;
 			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-			if (AnimInstance && combatMontage)
+			if (!AnimInstance && !combatMontage) return;
+
+			if (bIsBoss)
+			{
+				int randomAttack = rand() % 2;
+				if (randomAttack == 0)
+				{
+					AnimInstance->Montage_Play(combatMontage, 1.0f);
+					AnimInstance->Montage_JumpToSection(FName("Attack_1"), combatMontage);
+				}
+				else if (randomAttack == 1)
+				{
+					AnimInstance->Montage_Play(combatMontage, 1.0f);
+					AnimInstance->Montage_JumpToSection(FName("Attack_2"), combatMontage);
+				}
+			}
+			else
 			{
 				AnimInstance->Montage_Play(combatMontage, 1.0f);
 				AnimInstance->Montage_JumpToSection(FName("Attack_1"), combatMontage);
 			}
+			
 		}
 	}
 	
