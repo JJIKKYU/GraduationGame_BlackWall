@@ -24,6 +24,7 @@
 #include "Components/ChildActorComponent.h"
 #include "save/mySaveGame.h"
 #include "../../Item/header/ItemStorage.h"
+#include "../../GameInstnace/MainGameInstance.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -1068,7 +1069,7 @@ void ABlackWallCharacter::LevelUp()
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), levelUpParticle, GetActorLocation());
 		}
-		level++;
+		Cast<UMainGameInstance>(GetGameInstance())->level++;
 		exp = 0.f;
 	}
 }

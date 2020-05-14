@@ -46,11 +46,8 @@ public:
 	* BWCharacter Level System
 	*/
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
-	int level;
-
-	UFUNCTION(BlueprintCallable)
-	int GetLevel();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	int32 level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	TArray<FQuestSystem> questSystem;

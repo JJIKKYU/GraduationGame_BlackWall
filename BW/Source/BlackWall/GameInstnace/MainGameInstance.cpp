@@ -26,12 +26,6 @@ UMainGameInstance* UMainGameInstance::GetInstance()
     return instance;
 }
 
-int UMainGameInstance::GetLevel()
-{
-	return level;
-}
-
-
 void UMainGameInstance::Init()
 {
     Super::Init();
@@ -40,6 +34,7 @@ void UMainGameInstance::Init()
     comboCounter = 10.f;
     bComboCount = false;
     bActiveCounterHandle = false;
+    level = 1;
 
     // Stage 클리어 카운터
     stageClearCounts = 0;
