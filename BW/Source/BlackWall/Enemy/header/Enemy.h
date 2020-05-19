@@ -189,11 +189,17 @@ public:
 	void Disappear();
 
 	/**
-	* Particle
+	* Particle / Target
 	*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	class UParticleSystem* hitParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class UParticleSystemComponent* targetEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	bool bIsTarget;
 
 	/*
 	* Pickups 

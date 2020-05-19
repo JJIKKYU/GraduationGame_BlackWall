@@ -15,6 +15,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../../Item/Pickup/header/Pickup.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 AEnemy::AEnemy()
@@ -45,6 +46,10 @@ AEnemy::AEnemy()
 	combatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("mCombatSphere"));
 	combatSphere->SetupAttachment(GetRootComponent());
 	combatSphere->InitSphereRadius(75.f);
+
+	// TargetEffect Initialized
+	targetEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TargetEffect"));
+	targetEffect->SetupAttachment(GetRootComponent());
 
 	combatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("mCombatCollision"));
 	combatCollision->SetupAttachment(GetMesh(), FName("weaponSocket"));
