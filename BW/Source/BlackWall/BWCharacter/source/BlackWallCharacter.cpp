@@ -25,6 +25,8 @@
 #include "save/mySaveGame.h"
 #include "../../Item/header/ItemStorage.h"
 #include "../../GameInstnace/MainGameInstance.h"
+#include "DrawDebugHelpers.h"
+#include "Camera/PlayerCameraManager.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,6 +187,17 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 		}
 	}
 
+	// 타게팅
+	if (TargetingEnemy)
+	{
+		APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+		TargetingEnemyRotator = UKismetMathLibrary::FindLookAtRotation(camManager->GetCameraLocation(), TargetingEnemy->GetActorLocation());
+		auto rotator = FMath::RInterpTo(GetController()->GetControlRotation(), TargetingEnemyRotator, DeltaTime, 0.f);
+
+		GetController()->SetControlRotation(rotator);
+		bIsLock = true;
+	}
+	
 	
 }
 // 스프린팅 및 대쉬, 공격할 때 armLength를 유동적으로 컨트롤
@@ -796,7 +809,7 @@ void ABlackWallCharacter::altDown()
 
 void ABlackWallCharacter::AirBoneAttack(bool bIsInAir)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirBoneAttack Function Called")));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("AirBoneAttack Function Called")));
 
 	if (!bWeaponEquipped) return;
 	if (bDashing || MovementStatus == EMovementStatus::EMS_Dead) return;
@@ -986,6 +999,41 @@ void ABlackWallCharacter::UpdateCombatTarget()
 	}
 	
 }
+
+void ABlackWallCharacter::TargetingCameraLockOn()
+{
+	if (bIsLock)
+	{
+		bIsLock = false;
+		return;
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("TargetingCameraLockOn")));
+
+	FVector Loc;
+	FRotator Rot;
+	FHitResult Hit;
+
+	GetController()->GetPlayerViewPoint(Loc, Rot);
+
+	FVector Start = Loc;
+	FVector End = Start + (Rot.Vector() * 2000);
+
+	FCollisionQueryParams TraceParams;
+	TraceParams.bTraceComplex = true;
+
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, TraceParams);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 2.0f);
+
+	auto enemy = Cast<AEnemy>(Hit.Actor.Get());
+
+	if (enemy)
+	{
+		// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("hi")));
+		TargetingEnemy = enemy;
+		enemy->bIsTarget = true;
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Weapon

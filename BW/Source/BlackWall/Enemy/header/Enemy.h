@@ -196,7 +196,10 @@ public:
 	class UParticleSystem* hitParticle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	class UParticleSystemComponent* targetEffect;
+	class UParticleSystem* targetEffectParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	class UParticleSystemComponent* targetingComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	bool bIsTarget;

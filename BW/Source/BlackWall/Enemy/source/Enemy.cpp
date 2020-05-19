@@ -48,8 +48,10 @@ AEnemy::AEnemy()
 	combatSphere->InitSphereRadius(75.f);
 
 	// TargetEffect Initialized
-	targetEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TargetEffect"));
-	targetEffect->SetupAttachment(GetRootComponent());
+	targetingComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TargetEffect"));
+	targetingComponent->SetupAttachment(GetRootComponent());
+	if (targetEffectParticle) targetingComponent->SetTemplate(targetEffectParticle);
+	
 
 	combatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("mCombatCollision"));
 	combatCollision->SetupAttachment(GetMesh(), FName("weaponSocket"));
@@ -125,6 +127,17 @@ void AEnemy::Tick(float DeltaTime)
 	}
 	else
 	{
+
+	}
+
+	// 타게팅 설정이 되었을 경우
+	if (bIsTarget)
+	{
+		targetingComponent->bVisible = true;
+	}
+	else
+	{
+		targetingComponent->bVisible = false;
 
 	}
 }

@@ -459,11 +459,19 @@ public:
 	class AEnemy* CombatTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class AEnemy* TargetingEnemy;
+
+	FRotator TargetingEnemyRotator;
+	bool bIsLock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<AActor> EnemyFilter;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
 	FVector CombatTargetLocation;
 
+	UFUNCTION(BlueprintCallable)
+	void TargetingCameraLockOn();
 
 	void UpdateCombatTarget();
 
