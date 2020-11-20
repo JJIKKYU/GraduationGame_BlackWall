@@ -38,6 +38,7 @@ void UMainGameInstance::Init()
 
     // Stage 클리어 카운터
     stageClearCounts = 0;
+    stageClearCounts_FNAME = FName("1");
 
 
     TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UMainGameInstance::Tick));
@@ -49,9 +50,9 @@ void UMainGameInstance::OnStart()
 {
     Super::OnStart();
 
-    QuestManager = LoadObject<UQuestSystemManager>(nullptr, TEXT("Class'/Script/BlackWall.QuestSystemManager'"), nullptr, LOAD_None, nullptr);
-    QuestManager->Test();
-    QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
+    //QuestManager = LoadObject<UQuestSystemManager>(nullptr, TEXT("Class'/Script/BlackWall.QuestSystemManager'"), nullptr, LOAD_None, nullptr);
+    //QuestManager->Test();
+    //QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
   
     // MonsterSearch(TEXT("Monster1"));
 
@@ -77,9 +78,16 @@ void UMainGameInstance::OnStart()
 
 bool UMainGameInstance::Tick(float DeltaSeconds)
 {
-    QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
+    // QuestManager->MonsterCountByTag(GetWorld(), TEXT("Monster1"));
 
     GEngine->AddOnScreenDebugMessage(0, 0, FColor::White, FString::Printf(TEXT("comboCounter = %f"), GetWorld()->GetTimerManager().GetTimerRemaining(ComboTimerHandle)));
+
+    if (stageClearCounts == 0)
+        stageClearCounts_FNAME = FName("1");
+    else if (stageClearCounts == 1)
+        stageClearCounts_FNAME = FName("2");
+    else if (stageClearCounts >= 2)
+        stageClearCounts_FNAME = FName("3");
 
     if (!bActiveCounterHandle)
     {

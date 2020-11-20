@@ -133,11 +133,11 @@ void AEnemy::Tick(float DeltaTime)
 	// 타게팅 설정이 되었을 경우
 	if (bIsTarget)
 	{
-		targetingComponent->bVisible = true;
+		targetingComponent->bHiddenInGame = false;
 	}
 	else
 	{
-		targetingComponent->bVisible = false;
+		targetingComponent->bHiddenInGame = true;
 
 	}
 }

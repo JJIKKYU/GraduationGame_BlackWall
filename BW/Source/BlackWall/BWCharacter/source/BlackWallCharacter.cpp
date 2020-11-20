@@ -188,14 +188,20 @@ void ABlackWallCharacter::Tick(float DeltaTime)
 	}
 
 	// 타게팅
-	if (TargetingEnemy)
+	if (bIsLock)
 	{
+		if (!TargetingEnemy) return;
 		APlayerCameraManager* camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 		TargetingEnemyRotator = UKismetMathLibrary::FindLookAtRotation(camManager->GetCameraLocation(), TargetingEnemy->GetActorLocation());
 		auto rotator = FMath::RInterpTo(GetController()->GetControlRotation(), TargetingEnemyRotator, DeltaTime, 0.f);
-
+		TargetingEnemy->bIsTarget = true;
 		GetController()->SetControlRotation(rotator);
-		bIsLock = true;
+	}
+	else
+	{
+		if (!TargetingEnemy) return;
+		TargetingEnemy->bIsTarget = false;
+		TargetingEnemy->SetTargetingComponentVisible(false);
 	}
 	
 	
@@ -530,46 +536,61 @@ void ABlackWallCharacter::ComboInputChecking()
 void ABlackWallCharacter::AttackB()
 {
 	if (!bWeaponEquipped) return;
-	if (bDashing || bAttacking || MovementStatus == EMovementStatus::EMS_Dash) return;
+	if (bDashing || MovementStatus == EMovementStatus::EMS_Dash) return;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!AnimInstance || !AttackMontage) return;
 
 	bAttacking = true;
 	SetInterpToEnemy(true);
+	////////////////// Return 검사 끝
 
-	if (comboCntB == 0)
+	const char* ComboBList[] = { "ComboB1", "ComboB2", "ComboB3" };
+	if (comboCntB == 1)
 	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboB1"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
+		EquippedWeapon->setAttackType(EAttackType::EAT_Upper);
 	}
-	else if (comboCntB == 1)
+	else
 	{
-		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboB2"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
-		//AnimInstance->Montage_SetNextSection(FName("ComboB1"), FName("ComboB2"), AttackMontage);
+		EquippedWeapon->setAttackType(EAttackType::EAT_Normal);
 	}
-	else if (comboCntB == 2)
+	
+
+	// 왼쪽 마우스 버튼을 눌렀을 경우
+	if (!(AnimInstance->Montage_IsPlaying(AttackMontage)))
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == false, just play AttackMontage."));
 		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboB3"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
-		//AnimInstance->Montage_SetNextSection(FName("ComboB2"), FName("ComboB3"), AttackMontage);
+		AnimInstance->Montage_JumpToSection(FName(ComboBList[comboCntB]), AttackMontage);
 	}
-	else if (comboCntB == 3)
+	else if (AnimInstance->Montage_IsPlaying(AttackMontage))
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying == true, jump to section montage to comboCntA : %d"), comboCntA);
 		AnimInstance->Montage_Play(AttackMontage);
-		AnimInstance->Montage_JumpToSection(FName("ComboB4"), AttackMontage);
-		SetMovementStatus(EMovementStatus::EMS_Attack);
-		GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("%d"), comboCntB));
-		//AnimInstance->Montage_SetNextSection(FName("ComboB3"), FName("ComboB4"), AttackMontage);
-		comboCntB = -1;
+		AnimInstance->Montage_JumpToSection(FName(ComboBList[comboCntB]), AttackMontage);
+	}
+
+	SetMovementStatus(EMovementStatus::EMS_Attack);
+	// UE_LOG(LogTemp, Warning, TEXT("Attack function called : ComboAList : %s"), ComboAList[comboCntA]);
+}
+
+void ABlackWallCharacter::ComboInputCheckingAttackB()
+{
+	if (comboCntB >= 2)
+	{
+//		UE_LOG(LogTemp, Warning, TEXT("ComboInputChecking Function call return, because ComboCntA >= 4, So ComboCntA initialize 0"));
+		comboCntB = 0;
+		return;
+	}
+
+	if (bPressedAttackButtonWhenAttack)
+	{
+		comboCntB += 1;
+		bPressedAttackButtonWhenAttack = false;
+		UE_LOG(LogTemp, Warning, TEXT("ComboInputchecking() function called : ComboCntA : %d"), comboCntB);
+		AttackB();
 	}
 }
+
 
 void ABlackWallCharacter::AirAttack()
 {
@@ -619,7 +640,6 @@ void ABlackWallCharacter::AirComboInputChecking()
 	
 	if (bPressedAttackButtonWhenAirAttack)
 	{
-		
 		airComboCntA += 1;
 		bPressedAttackButtonWhenAirAttack = false;
 		UE_LOG(LogTemp, Warning, TEXT("airComboInputchecking() function called : AirComboCntA : %d"), airComboCntA);
@@ -693,6 +713,7 @@ void ABlackWallCharacter::AttackEnd()
 void ABlackWallCharacter::LastAttackChecking()
 {
 	comboCntA = 0;
+	comboCntB = 0;
 }
 
 
@@ -757,11 +778,11 @@ void ABlackWallCharacter::RMBDown()
 	{
 		if (bAltDown)
 		{
-			AirBoneAttack(true);
-		}
-		else
-		{
+			// AirBoneAttack(true);
 			AirDashAttack();
+		}
+		{
+			//AirDashAttack();
 		}
 	}
 	// 지상에 있을 경우에
@@ -772,12 +793,17 @@ void ABlackWallCharacter::RMBDown()
 		{
 			AirBoneAttack(false);
 		}
-		else
+
+		if (bAttacking == false)
 		{
 			AttackB();
-			comboCntA = 0;
-			comboCntB += 1;
-		}	
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAttacking == false) => Attack()"));
+		}
+		else if (bAttacking == true)
+		{
+			bPressedAttackButtonWhenAttack = true;
+			UE_LOG(LogTemp, Warning, TEXT("LMBDOWN() => (bAttacking == true) => Attack()"));
+		}
 	}
 }
 
@@ -846,6 +872,24 @@ void ABlackWallCharacter::AirBoneAttackJumping()
 {
 	// 머리방향(Z축)으로 Launch
 	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * airBoneAttackJumpDistance, true, true);
+
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopAirBoneAttackJumping, 0.4f, false);
+}
+
+void ABlackWallCharacter::AirBoneAttackJumping_AttackB()
+{
+	float distance = 300.f;
+	// 머리방향(Z축)으로 Launch
+	LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * airBoneAttackJumpDistance, true, true);
+
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopAirBoneAttackJumping, 0.4f, false);
+}
+
+void ABlackWallCharacter::AirBoneAttackJumpingReverse()
+{
+	// 머리방향(Z축)으로 Launch
+	// LaunchCharacter(FVector(0, 0, 1).GetSafeNormal() * -airBoneAttackJumpDistance * 50, true, true);
+	LaunchCharacter((FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0).GetSafeNormal() * dashDistance) + (FVector(0,0,1).GetSafeNormal() * -2000), true, true);
 
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABlackWallCharacter::StopAirBoneAttackJumping, 0.4f, false);
 }
@@ -1002,11 +1046,6 @@ void ABlackWallCharacter::UpdateCombatTarget()
 
 void ABlackWallCharacter::TargetingCameraLockOn()
 {
-	if (bIsLock)
-	{
-		bIsLock = false;
-		return;
-	}
 	GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("TargetingCameraLockOn")));
 
 	FVector Loc;
@@ -1030,7 +1069,11 @@ void ABlackWallCharacter::TargetingCameraLockOn()
 	{
 		// GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White, FString::Printf(TEXT("hi")));
 		TargetingEnemy = enemy;
-		enemy->bIsTarget = true;
+		bIsLock = true;
+	}
+	else
+	{
+		bIsLock = false;
 	}
 }
 

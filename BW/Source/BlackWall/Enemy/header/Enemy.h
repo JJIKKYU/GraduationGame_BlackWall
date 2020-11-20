@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
@@ -203,6 +204,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	bool bIsTarget;
+
+	FORCEINLINE void SetTargetingComponentVisible(bool flag) { targetingComponent->bHiddenInGame = !flag; }
 
 	/*
 	* Pickups 

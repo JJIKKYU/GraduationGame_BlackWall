@@ -60,6 +60,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
 	float damage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | Damage")
 	float damageRef;
 
 ///////////////////// Mesh

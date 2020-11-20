@@ -19,7 +19,7 @@ class BLACKWALL_API UMainGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 	UMainGameInstance(){ };
-	UQuestSystemManager* QuestManager;
+	// UQuestSystemManager* QuestManager;
 	
 public:
 
@@ -124,6 +124,9 @@ public:
 	// 스테이지 클리어 횟수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Clear")
 	int stageClearCounts;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Clear")
+	FName stageClearCounts_FNAME;
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int GetStageClearCounts() { return stageClearCounts; }

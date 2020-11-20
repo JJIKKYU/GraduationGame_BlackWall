@@ -121,7 +121,7 @@ public: ///////////////////
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
 	float maxHP;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Stats")
 	float hp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character | Stats")
@@ -367,6 +367,9 @@ public:
 	void ComboInputChecking();
 
 	UFUNCTION(BlueprintCallable)
+	void ComboInputCheckingAttackB();
+
+	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
@@ -410,6 +413,13 @@ public:
 	// AirBoneAttack 애니메이션 진행 중, Jump 타이밍 조절을 위한 함수 (엔진에서 Notify로 호출)
 	UFUNCTION(BlueprintCallable)
 	void AirBoneAttackJumping();
+
+	UFUNCTION(BlueprintCallable)
+	 void AirBoneAttackJumping_AttackB();
+
+	UFUNCTION(BlueprintCallable)
+	void AirBoneAttackJumpingReverse();
+
 	void StopAirBoneAttackJumping();
 
 	// 공중 공격시 LMBDown할 경우, bPressedAttackButtonWhenAirAttack change true or false
